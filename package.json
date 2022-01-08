@@ -1,0 +1,23 @@
+{
+  "name": "ms-ra-forwarder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "vercel": "vercel",
+    "vercel dev": "vercel dev --debug"
+  },
+  "dependencies": {
+    "@types/websocket": "^1.0.4",
+    "websocket": "^1.0.34"
+  },
+  "author": "Conor",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "@vercel/node": "^1.12.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4",
+    "vercel": "^23.1.2"
+  }
+}

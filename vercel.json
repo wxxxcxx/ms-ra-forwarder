@@ -1,0 +1,7 @@
+{
+    "routes": [
+        {
+            "handle": "filesystem"
+        }
+    ]
+}
