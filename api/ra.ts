@@ -4,7 +4,7 @@ import { convert, FORMAT_CONTENT_TYPE } from '../ra';
 
 module.exports = async (request: VercelRequest, response: VercelResponse) => {
 
-    let token = process.env['TOKEN'];
+    let token = process.env.TOKEN;
     if (token) {
         let authorization = request.headers['authorization'];
         console.log('verify token...', authorization);
