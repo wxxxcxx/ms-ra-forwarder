@@ -1,14 +1,18 @@
 # ms-ra-forwarder
 
-此项目的初衷是为了能够在[阅读](https://github.com/gedoor/legado)中能够使用“晓晓”听书。
-
-由于其中的脚本引擎不支持 WebSocket ，所以用 [Vercel](https://vercel.com/) 的 Serverless Function 包装了一下微软 Edge 浏览器“大声朗读”的接口，使其可以在这个APP中使用。
+创建这个项目的初衷是为了能够在[阅读（legado）](https://github.com/gedoor/legado)中听“晓晓”念书。由于其中的脚本引擎不支持 WebSocket ，所以用 [Vercel](https://vercel.com/) 的 Serverless Function 包装了一下微软 Edge 浏览器“大声朗读”的接口。
 
 如果你的项目可以使用 WebSocket ，请直接在项目中调用原接口。具体代码可以参考 [ra/index.ts](ra/index.ts)。
 
 ## 使用
 
-请 Fork 一份代码然后部署到自己的 Vercel 中。
+请先 Fork 一份代码然后部署到自己的 Vercel 中。
+
+### 导入到阅读（legado）
+
+请访问你部署好的网站，在页面中测试没有问题后点击“生成阅读（legoda）语音引擎链接”，然后在阅读（legoda）中导入。
+
+### 手动调用
 
 接口地址为：
 ```
@@ -31,12 +35,13 @@ Content-Type: text/plain
 [通过语音合成标记语言 (SSML) 改善合成](https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/speech-synthesis-markup?tabs=csharp)
 
 
+
 ### 音频格式
 默认的音频格式为 mp3 ，如果需要获取为其他格式的音频请修改请求头的 `FORMAT`（可用的选项可以在 [ra/index.ts](ra/index.ts#L5) 中查看）。
 
 ### 限制访问
 
-由于 Vercel 并非无限制的免费，如果需要防止他人滥用你的部署的服务，可以在应用的环境变量中添加 `TOKEN`，然后在请求头中添加 `Authorization: Bearer <TOKEN>`访问。注意：这只会阻止未授权的请求调用微软的接口，并不会减少  Vercel Serverless Function 限额的用量（大概会减少一点流量吧。
+由于 Vercel 并非无限制的免费，如果需要防止他人滥用你的部署的服务，可以在应用的环境变量中添加 `TOKEN`，然后在请求头中添加 `Authorization: Bearer <TOKEN>`访问。注意：这只会阻止未授权的请求调用微软的接口，并不会减少  Vercel Serverless Function 限额的用量（大概会减少一点流量）。
 
 ## 其他说明
 
@@ -46,4 +51,4 @@ Content-Type: text/plain
 
 - 本项目使用的是Edge浏览器“大声朗读”功能的接口，不保证后续可用性和稳定性。
 
-- **本项目只供学习和参考，请勿商用。**
+- **本项目仅供学习和参考，请勿商用。**
