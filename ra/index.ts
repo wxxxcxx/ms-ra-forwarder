@@ -15,7 +15,7 @@ export const FORMAT_CONTENT_TYPE = new Map([
     ['riff-24khz-16bit-mono-pcm', 'audio/x-wav'],
     ['riff-48khz-16bit-mono-pcm', 'audio/x-wav'],
     ['riff-8khz-8bit-mono-mulaw', 'audio/x-wav'],
-    ['riff-8khz-8bit-mono-mulaw', 'audio/x-wav'],
+    ['riff-8khz-8bit-mono-alaw', 'audio/x-wav'],
 
     ['audio-16khz-32kbitrate-mono-mp3', 'audio/mpeg'],
     ['audio-16khz-64kbitrate-mono-mp3', 'audio/mpeg'],
