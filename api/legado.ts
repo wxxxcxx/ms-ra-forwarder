@@ -1,23 +1,34 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { FORMAT_CONTENT_TYPE } from '../ra';
 module.exports = async (request: VercelRequest, response: VercelResponse) => {
-    console.log(request.headers);
     let api = request.query['api'];
+    let name = request.query['name'] ?? '大声朗读';
     let voiceName = request.query['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
+    let voiceFormat = request.query['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
     let styleName = request.query['styleName'] ?? 'normal';
     let styleDegree = request.query['styleDegree'] ?? 1.00;
     let token = request.query['token'] ?? '';
+
+    if (Array.isArray(voiceFormat)) {
+        throw `Invalid format ${voiceFormat}`;
+    }
+    if (!FORMAT_CONTENT_TYPE.has(voiceFormat)) {
+        throw `Invalid format ${voiceFormat}`;
+    }
+
     const data = {};
+    data['name'] = name == '' ? '大声朗读' : name;
     data['concurrentRate'] = '1';
-    data['contentType'] = 'audio/mpeg';
+    data['contentType'] = FORMAT_CONTENT_TYPE.get(voiceFormat);
     data['id'] = Date.now();
     data['loginCheckJs'] = '';
     data['loginUi'] = '';
     data['loginUrl'] = '';
-    data['name'] = '大声朗读';
 
     let header = {
         'Content-Type': 'text/plain',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + token,
+        'Format': voiceFormat
     }
     data['header'] = JSON.stringify(header);
 

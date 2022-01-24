@@ -22,7 +22,12 @@
     </div>
   </nav>
   <div class="container" style="margin-top: 30px;">
-    <form >
+    <form>
+      <div class="mb-3">
+        <label for="name" class="form-label">配置名称:</label>
+        <input name="name" type="text" class="form-control" value="大声朗读" />
+        <div class="form-text">在阅读中显示的名称。默认为“大声朗读”。</div>
+      </div>
       <div class="mb-3">
         <label for="voiceName" class="form-label">声音:</label>
         <select name="voiceName" class="form-select">
@@ -30,7 +35,7 @@
         <div class="form-text">貌似接口就支持4种声音？推荐使用晓晓（晓晓yyds）。</div>
       </div>
       <div class="mb-3">
-        <label for="styleName" class="form-label">说话风格:</label>
+        <label for="styleName" class="form-label">讲话风格:</label>
         <div class="input-group">
           <span class="input-group-text">名称</span>
           <input name="styleName" class="form-control" type="text" value="normal">
@@ -43,7 +48,38 @@
       </div>
 
       <div class="mb-3">
-        <label for="token" class="form-label">密钥(Token):</label>
+        <label for="voiceFormat" class="form-label">音频格式:</label>
+        <select name="voiceFormat" class="form-select">
+          <option value="raw-16khz-16bit-mono-pcm" disabled>raw-16khz-16bit-mono-pcm</option>
+          <option value="raw-48khz-16bit-mono-pcm" disabled>raw-48khz-16bit-mono-pcm</option>
+          <option value="raw-8khz-8bit-mono-mulaw" disabled>raw-8khz-8bit-mono-mulaw</option>
+          <option value="raw-8khz-8bit-mono-alaw" disabled>raw-8khz-8bit-mono-alaw</option>
+          <option value="raw-16khz-16bit-mono-truesilk" disabled>raw-16khz-16bit-mono-truesilk</option>
+          <option value="raw-24khz-16bit-mono-truesilk" disabled>raw-24khz-16bit-mono-truesilk</option>
+          <option value="riff-16khz-16bit-mono-pcm">riff-16khz-16bit-mono-pcm</option>
+          <option value="riff-24khz-16bit-mono-pcm">riff-24khz-16bit-mono-pcm</option>
+          <option value="riff-48khz-16bit-mono-pcm">riff-48khz-16bit-mono-pcm</option>
+          <option value="riff-8khz-8bit-mono-mulaw">riff-8khz-8bit-mono-mulaw</option>
+          <option value="riff-8khz-8bit-mono-alaw">riff-8khz-8bit-mono-alaw</option>
+          <option value="audio-16khz-32kbitrate-mono-mp3" selected>audio-16khz-32kbitrate-mono-mp3</option>
+          <option value="audio-16khz-64kbitrate-mono-mp3">audio-16khz-64kbitrate-mono-mp3</option>
+          <option value="audio-16khz-128kbitrate-mono-mp3">audio-16khz-128kbitrate-mono-mp3</option>
+          <option value="audio-24khz-48kbitrate-mono-mp3">audio-24khz-48kbitrate-mono-mp3</option>
+          <option value="audio-24khz-96kbitrate-mono-mp3">audio-24khz-96kbitrate-mono-mp3</option>
+          <option value="audio-24khz-160kbitrate-mono-mp3">audio-24khz-160kbitrate-mono-mp3</option>
+          <option value="audio-48khz-96kbitrate-mono-mp3">audio-48khz-96kbitrate-mono-mp3</option>
+          <option value="audio-48khz-192kbitrate-mono-mp3">audio-48khz-192kbitrate-mono-mp3</option>
+          <option value="webm-16khz-16bit-mono-opus" disabled>webm-16khz-16bit-mono-opus</option>
+          <option value="webm-24khz-16bit-mono-opus" disabled>webm-24khz-16bit-mono-opus</option>
+          <option value="ogg-16khz-16bit-mono-opus">ogg-16khz-16bit-mono-opus</option>
+          <option value="ogg-24khz-16bit-mono-opus">ogg-24khz-16bit-mono-opus</option>
+          <option value="ogg-48khz-16bit-mono-opus">ogg-48khz-16bit-mono-opus</option>
+        </select>
+        <div class="form-text">可以调整音频的格式和质量。质量越高，生成的文件越大，对网速和流量的需求越高。请根据自己的情况选择。（我禁用了一些在阅读中播放不了的格式）</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="token" class="form-label">密钥(TOKEN):</label>
         <input name="token" class="form-control" type="text" value="">
         <div class="form-text">如果没有设置 TOKEN 环境变量请留空。</div>
       </div>
@@ -54,9 +90,9 @@
       </div>
 
       <div class="col-auto">
-        <button type="button" class="btn btn-secondary" onclick='preview()'>测试</button>
+        <button id="previewButton" type="button" class="btn btn-secondary" onclick="preview()">测试</button>
 
-        <button type="button" class="btn btn-primary" onclick='createLegadoUrl()'>生成阅读（legoda）语音引擎链接</button>
+        <button type="button" class="btn btn-primary" onclick="createLegadoUrl()">生成阅读（legoda）语音引擎链接</button>
       </div>
     </form>
   </div>
@@ -132,8 +168,9 @@
     }
 
     function preview() {
-      var headers = {'Content-Type': 'text/plain'}
+      var headers = {'Content-Type': 'text/plain'};
       var voiceName = document.getElementsByName('voiceName')[0].value;
+      var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       var styleName = document.getElementsByName('styleName')[0].value;
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
@@ -143,6 +180,10 @@
         headers['Authorization'] = 'Bearer ' + token;
       }
 
+      headers['Format'] = voiceFormat;
+
+      var button = document.getElementById('previewButton');
+      button.disabled = true;
       var ctx = new AudioContext();
       fetch('/api/ra', {
         method: 'post',
@@ -157,24 +198,37 @@
           console.log(response);
           throw '未知错误';
         }
-      }).then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
-        .then(audio => {
-          var player = ctx.createBufferSource();
-          player.buffer = audio;
-          player.connect(ctx.destination);
-          player.start(ctx.currentTime);
-        }).catch(reason => {
-          alert(reason);
-        });
+      })
+      .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+      .then(audio => {
+        var player = ctx.createBufferSource();
+        player.buffer = audio;
+        player.connect(ctx.destination);
+        player.start(ctx.currentTime);
+      })
+      .catch(reason => {
+        alert(reason);
+      })
+      .finally(()=>{
+        button.disabled = false;
+      });
     }
 
     function createLegadoUrl() {
+      var name = document.getElementsByName('name')[0].value;
       var voiceName = document.getElementsByName('voiceName')[0].value;
+      var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       var styleName = document.getElementsByName('styleName')[0].value;
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
-      var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra') + '&voiceName=' + voiceName + '&styleName=' + styleName + '&styleDegree=' + styleDegree + '&token=' + token;
+      var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
+        + '&name=' + encodeURI(name)
+        + '&voiceName=' + voiceName
+        + '&voiceFormat=' + voiceFormat
+        + '&styleName=' + styleName
+        + '&styleDegree=' + styleDegree
+        + '&token=' + token;
       var svg = new QRCode(url).svg();
       var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
       modal.show();
