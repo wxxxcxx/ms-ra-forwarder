@@ -37,7 +37,7 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
           <voice name="'+ voiceName + '">\
             <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '" >\
               <prosody rate="{{speakSpeed * 2}}%" pitch="0%">\
-                {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\
+                {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\
               </prosody>\
             </mstts:express-as>\
           </voice>\
