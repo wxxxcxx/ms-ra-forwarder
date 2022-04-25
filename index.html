@@ -145,10 +145,10 @@
     function refreshVoice() {
       let voice = document.getElementsByName('voiceName')[0];
       voices.forEach(item => {
-        if (item['FriendlyName'].indexOf('Chinese') >= 0) {
+        if (item['LocaleName'].indexOf('Chinese') >= 0) {
           let option = document.createElement('option');
           option.value = item['ShortName'];
-          option.innerText = item['FriendlyName'];
+          option.innerText = item['LocalName'];
           voice.append(option)
         }
       });
