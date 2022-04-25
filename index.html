@@ -39,6 +39,28 @@
         <div class="input-group">
           <span class="input-group-text">名称</span>
           <select name="styleName" class="form-select">
+          <option value="affectionate>affectionate</option>
+          <option value="angry>angry</option>
+          <option value="assistant>assistant</option>
+          <option value="calm>calm</option>
+          <option value="chat>chat</option>
+          <option value="cheerful>cheerful</option>
+          <option value="customerservice>customerservice</option>
+          <option value="depressed>depressed</option>
+          <option value="disgruntled>disgruntled</option>
+          <option value="embarrassed>embarrassed</option>
+          <option value="empathetic>empathetic</option>
+          <option value="envious>envious</option>
+          <option value="fearful>fearful</option>
+          <option value="gentle>gentle</option>
+          <option value="lyrical>lyrical</option>
+          <option value="narration-professional>narration-professional</option>
+          <option value="narration-relaxed>narration-relaxed</option>
+          <option value="newscast>newscast</option>
+          <option value="newscast-casual>newscast-casual</option>
+          <option value="newscast-formal>newscast-formal</option>
+          <option value="sad>sad</option>
+          <option value="serious>sad</option>
           </select>
           <span class="input-group-text">风格强度</span>
           <input name="styleDegree" class="form-control" type="number" min="0.01" max="2.00" step=".01" value="1.00">
@@ -128,8 +150,6 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode-svg@1.1.0/lib/qrcode.min.js"></script>
   <script>
     var voices = [];
-    var styles=['normal','affectionate','angry','assistant','calm','chat','cheerful','customerservice','depressed','disgruntled','embarrassed','empathetic','envious','fearful','gentle','lyrical','narration-professional','narration-relaxed','newscast','newscast-casual','newscast-formal','sad','serious'];
-    refreshstyle();
     fetch('https://raw.githubusercontent.com/rogueme/ms-ra-forwarder/master/TTSedge.json')
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
       .then(response => {
@@ -154,17 +174,6 @@
           option.value = item['ShortName'];
           option.innerText = item['LocalName'];
           voice.append(option)
-        }
-      });
-    }
-    function refreshstyle() {
-      let style = document.getElementsByName('styleName')[0];
-      let i = 0;
-        for i==0 in i<=22{
-          let option2 = document.createElement('option2');
-          option2.value = styles[i];
-          option2.innerText = styles[i];
-          style.append(option2)
         }
       });
     }
