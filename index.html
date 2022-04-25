@@ -38,7 +38,8 @@
         <label for="styleName" class="form-label">讲话风格：</label>
         <div class="input-group">
           <span class="input-group-text">名称</span>
-          <input name="styleName" class="form-control" type="text" value="normal">
+          <select name="styleName" class="form-select">
+          </select>
           <span class="input-group-text">风格强度</span>
           <input name="styleDegree" class="form-control" type="number" min="0.01" max="2.00" step=".01" value="1.00">
         </div>
@@ -127,6 +128,8 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode-svg@1.1.0/lib/qrcode.min.js"></script>
   <script>
     var voices = [];
+    var styles=['normal','affectionate','angry','assistant','calm','chat','cheerful','customerservice','depressed','disgruntled','embarrassed','empathetic','envious','fearful','gentle','lyrical','narration-professional','narration-relaxed','newscast','newscast-casual','newscast-formal','sad','serious'];
+    refreshstyle();
     fetch('https://raw.githubusercontent.com/rogueme/ms-ra-forwarder/master/TTSedge.json')
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
       .then(response => {
@@ -154,7 +157,17 @@
         }
       });
     }
-
+    function refreshstyle() {
+      let style = document.getElementsByName('styleName')[0];
+      let i = 0;
+        for i==0 in i<=22{
+          let option = document.createElement('option');
+          option.value = styles[i];
+          option.innerText = styles[i];
+          voice.append(option)
+        }
+      });
+    }
     function createSSML(text, voiceName, styleName, styleDegree) {
       var ssml = '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
