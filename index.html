@@ -163,7 +163,17 @@
         if (item['LocaleName'].indexOf('Chinese') >= 0) {
           let option = document.createElement('option');
           option.value = item['ShortName'];
-          option.innerText = item['LocalName'];
+          let Gender = "男";
+          if (item['Gender'] == "Gender"){
+            Gender = "女";
+          }
+          let Locale = "中国大陆";
+          if (item['Locale'] == "zh-HK"){
+            Locale = "中国香港";
+          } else if (item['Locale'] == "zh-TW"){
+            Locale = "中国台湾";
+          }
+          option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale;
           voice.append(option)
         }
       });
