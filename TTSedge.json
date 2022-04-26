@@ -1,4 +1,4 @@
-[
+var data = [
     {
         "Name":"Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxiaoNeural)",
         "DisplayName":"Xiaoxiao",
