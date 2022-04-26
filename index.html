@@ -39,29 +39,29 @@
         <div class="input-group">
           <span class="input-group-text">名称</span>
           <select name="styleName" class="form-select">
-            <option value="normal">normal</option>
-            <option value="affectionate">affectionate</option>
-            <option value="angry">angry</option>
-            <option value="assistant">assistant</option>
-            <option value="calm">calm</option>
-            <option value="chat">chat</option>
-            <option value="cheerful">cheerful</option>
-            <option value="customerservice">customerservice</option>
-            <option value="depressed">depressed</option>
-            <option value="disgruntled">disgruntled</option>
-            <option value="embarrassed">embarrassed</option>
-            <option value="empathetic">empathetic</option>
-            <option value="envious">envious</option>
-            <option value="fearful">fearful</option>
-            <option value="gentle">gentle</option>
-            <option value="lyrical">lyrical</option>
-            <option value="narration-professional">narration-professional</option>
-            <option value="narration-relaxed">narration-relaxed</option>
-            <option value="newscast">newscast</option>
-            <option value="newscast-casual">newscast-casual</option>
-            <option value="newscast-formal">newscast-formal</option>
-            <option value="sad">sad</option>
-            <option value="serious">sad</option>
+            <option value="normal">normal[默认]</option>
+            <option value="affectionate">affectionate[撒娇]</option>
+            <option value="angry">angry[恼怒]</option>
+            <option value="assistant">assistant[助理]</option>
+            <option value="calm">calm[冷静]</option>
+            <option value="chat">chat[聊天]</option>
+            <option value="cheerful">cheerful[开心]</option>
+            <option value="customerservice">customerservice[客服]</option>
+            <option value="depressed">depressed[沮丧]</option>
+            <option value="disgruntled">disgruntled[抱怨]</option>
+            <option value="embarrassed">embarrassed[尴尬]</option>
+            <option value="empathetic">empathetic[关心]</option>
+            <option value="envious">envious[渴望]</option>
+            <option value="fearful">fearful[恐惧]</option>
+            <option value="gentle">gentle[温柔]</option>
+            <option value="lyrical">lyrical[抒情]</option>
+            <option value="narration-professional">narration-professional[旁白-专业]</option>
+            <option value="narration-relaxed">narration-relaxed[轻松阅读]</option>
+            <option value="newscast">newscast[新闻]</option>
+            <option value="newscast-casual">newscast-casual[新闻-休闲]</option>
+            <option value="newscast-formal">newscast-formal[新闻-正式]</option>
+            <option value="sad">sad[悲伤]</option>
+            <option value="serious">serious[严肃]</option>
           </select>
           <span class="input-group-text">风格强度</span>
           <input name="styleDegree" class="form-control" type="number" min="0.01" max="2.00" step=".01" value="1.00">
@@ -70,7 +70,7 @@
           每个声音支持的讲话风格都不一样，具体可以参考：https://docs.microsoft.com/zh-CN/azure/cognitive-services/speech-service/speech-synthesis-markup?tabs=csharp#adjust-speaking-styles
         </div>
         <div class="form-text">
-          normal[默认], affectionate[撒娇], angry[恼怒], assistant[助理], calm[冷静], chat[聊天], cheerful[开心], customerservice[客服], depressed[沮丧], disgruntled[抱怨], embarrassed[犹豫], empathetic[关心], envious[渴望], fearful[恐惧], gentle[温柔], lyrical[抒情], narration-professional[专业], narration-relaxed[舒缓], newscast[新闻], newscast-casual[随意], newscast-formal[正式], sad[悲伤], serious[严肃]
+          normal[默认], affectionate[撒娇], angry[恼怒], assistant[助理], calm[冷静], chat[聊天], cheerful[开心], customerservice[客服], depressed[沮丧], disgruntled[抱怨], embarrassed[尴尬], empathetic[关心], envious[渴望], fearful[恐惧], gentle[温柔], lyrical[抒情], narration-professional[旁白-专业], narration-relaxed[轻松阅读], newscast[新闻], newscast-casual[新闻-休闲], newscast-formal[新闻-正式], sad[悲伤], serious[严肃]
         </div>
       </div>
 
@@ -113,7 +113,7 @@
 
       <div class="mb-3">
         <label for="previewText" class="form-label">测试文本：</label>
-        <textarea name="previewText" class="form-control" rows="3" cols="">如果喜欢这个项目的话请点个 Star 吧。</textarea>
+        <textarea name="previewText" class="form-control" rows="3" cols="">Hi,我是小爱同学,我可以为你做任何事噢,请输入你想要表达的意思!</textarea>
       </div>
 
       <div class="col-auto">
@@ -145,27 +145,17 @@
     </div>
   </div>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script type="text/javascript" src="TTSedge.json"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-svg@1.1.0/lib/qrcode.min.js"></script>
   <script>
     var voices = [];
-    fetch('https://raw.githubusercontent.com/rogueme/ms-ra-forwarder/master/TTSedge.json')
+    //fetch('https://raw.githubusercontent.com/rogueme/ms-ra-forwarder/master/TTSedge.json')
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
-      .then(response => {
-        if (response.status == 200) {
-          return response.json();
-        } else {
-          console.log(response);
-          throw '加载失败';
-        }
-      }).then(data => {
-        voices = data;
-        refreshVoice();
-      }).catch(reason => {
-        alert(reason);
-      });
+    voices = data;
+    refreshVoice();
 
     function refreshVoice() {
       let voice = document.getElementsByName('voiceName')[0];
@@ -180,7 +170,7 @@
     }
     function createSSML(text, voiceName, styleName, styleDegree) {
       var ssml = '\
-        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
+        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="zh-CN">\
           <voice name="'+ voiceName + '">\
             <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '">\
               <prosody rate="0%" pitch="0%">\
