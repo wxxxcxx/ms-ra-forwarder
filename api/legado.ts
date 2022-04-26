@@ -36,7 +36,7 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="zh-CN">\
           <voice name="'+ voiceName + '">\
             <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '" >\
-              <prosody rate="{{speakSpeed + 60}}%" pitch="0%" volume="+80%">\
+              <prosody rate="{{speakSpeed + 55}}%" pitch="0%" volume="+100%">\
                 {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\
               </prosody>\
             </mstts:express-as>\
