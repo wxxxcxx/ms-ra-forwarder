@@ -1,4 +1,5 @@
 # ms-ra-forwarder
+本次更新同步微软最新的发音角色数据,较于上次的27种又多了5种,达到32种,本次同步时间为2022年05月17日
 
 创建这个项目的初衷是为了能够在[阅读（legado）](https://github.com/gedoor/legado)中听“晓晓”念书。由于其中的脚本引擎不支持 WebSocket ，所以用 [Vercel](https://vercel.com/) 的 Serverless Function 包装了一下微软 Edge 浏览器“大声朗读”的接口。
 
