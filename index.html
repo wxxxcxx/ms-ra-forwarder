@@ -12,11 +12,11 @@
 <body>
   <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" target="_blank" href="https://github.com/rogueme/ms-ra-forwarder">ms-ra-forwarder</a>
+      <a class="navbar-brand" target="_blank" href="https://github.com/meetcw/ms-ra-forwarder">ms-ra-forwarder</a>
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="github-button" href="https://github.com/rogueme/ms-ra-forwarder" data-size="large"
-            data-show-count="true" aria-label="Star rogueme/ms-ra-forwarder on GitHub">Star</a>
+          <a class="github-button" href="https://github.com/meetcw/ms-ra-forwarder" data-size="large"
+            data-show-count="true" aria-label="Star meetcw/ms-ra-forwarder on GitHub">Star</a>
         </li>
       </ul>
     </div>
@@ -30,38 +30,15 @@
       </div>
       <div class="mb-3">
         <label for="voiceName" class="form-label">声音：</label>
-        <select name="voiceName" class="form-select">
+        <select name="voiceName" class="form-select"  onchange="selectOnchang(this)">
         </select>
-        <div class="form-text">目前有32种声音，更新于2022/05/17！推荐使用晓晓或者云扬的（晓晓yyds）。</div>
+        <div class="form-text">目前有32种声音，风格列表仅列出该角色支持的风格，更新于2022/05/18！推荐使用晓晓或者云扬的（晓晓yyds）。</div>
       </div>
       <div class="mb-3">
         <label for="styleName" class="form-label">讲话风格：</label>
         <div class="input-group">
           <span class="input-group-text">名称</span>
           <select name="styleName" class="form-select">
-            <option value="normal">normal[默认]</option>
-            <option value="affectionate">affectionate[撒娇]</option>
-            <option value="angry">angry[恼怒]</option>
-            <option value="assistant">assistant[助理]</option>
-            <option value="calm">calm[冷静]</option>
-            <option value="chat">chat[聊天]</option>
-            <option value="cheerful">cheerful[开心]</option>
-            <option value="customerservice">customerservice[客服]</option>
-            <option value="depressed">depressed[沮丧]</option>
-            <option value="disgruntled">disgruntled[抱怨]</option>
-            <option value="embarrassed">embarrassed[尴尬]</option>
-            <option value="empathetic">empathetic[关心]</option>
-            <option value="envious">envious[渴望]</option>
-            <option value="fearful">fearful[恐惧]</option>
-            <option value="gentle">gentle[温柔]</option>
-            <option value="lyrical">lyrical[抒情]</option>
-            <option value="narration-professional">narration-professional[旁白-专业]</option>
-            <option value="narration-relaxed">narration-relaxed[轻松阅读]</option>
-            <option value="newscast">newscast[新闻]</option>
-            <option value="newscast-casual">newscast-casual[新闻-休闲]</option>
-            <option value="newscast-formal">newscast-formal[新闻-正式]</option>
-            <option value="sad">sad[悲伤]</option>
-            <option value="serious">serious[严肃]</option>
           </select>
           <span class="input-group-text">风格强度</span>
           <input name="styleDegree" class="form-control" type="number" min="0.01" max="2.00" step=".01" value="1.00">
@@ -153,7 +130,10 @@
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
     voices = data;
     refreshVoice();
-
+    function selectOnchang(obj){ 
+    //获取被选中的option标签选项 
+    getstyleName(obj.selectedIndex);
+    }
     function refreshVoice() {
       let voice = document.getElementsByName('voiceName')[0];
       voices.forEach(item => {
@@ -171,10 +151,31 @@
             Locale = "中国台湾";
           }
           option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale;
-          voice.append(option)
+          voice.append(option);
+		  getstyleName(0);
         }
       });
     }
+	function getstyleName(styleIndex){
+		let style = document.getElementsByName('styleName')[0];
+		let stylearr = {"affectionate":"撒娇","angry":"恼怒","assistant":"助理","calm":"冷静","chat":"聊天","cheerful":"开心","customerservice":"客服","depressed":"沮丧","disgruntled":"抱怨","embarrassed":"尴尬","empathetic":"关心","envious":"渴望","fearful":"恐惧","gentle":"温柔","lyrical":"抒情","narration-professional":"旁白-专业","narration-relaxed":"轻松阅读","newscast":"新闻","newscast-casual":"新闻-休闲","newscast-formal":"新闻-正式","sad":"悲伤","serious":"严肃"}
+		style.options.length=0;
+		let option = document.createElement('option');
+		option.value = "normal";
+		option.innerText = "normal[默认]";
+		style.append(option);
+		let styles = voices[styleIndex].StyleList;
+		styles.forEach(styleName =>{
+			let option2 = document.createElement('option');
+			option2.value = styleName;
+			let opvalue = stylearr[styleName.toLowerCase()];
+			if (opvalue == undefined){
+				opvalue = "未知";
+				}
+			option2.innerText = styleName + "[" + opvalue + "]";
+			style.append(option2);
+		});
+	}
     function createSSML(text, voiceName, styleName, styleDegree) {
       var ssml = '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="zh-CN">\
