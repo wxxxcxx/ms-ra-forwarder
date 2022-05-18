@@ -261,22 +261,7 @@
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = url;
-      var legadodata = [];
-      fetch(url)
-      .then(response => {
-        if (response.status == 200) {
-          return response.json();
-        } else {
-          console.log(response);
-          throw '加载失败';
-        }
-      }).then(data => {
-        legadodata = data;
-        refreshVoice();
-      }).catch(reason => {
-        alert(reason);
-      });
-      document.getElementById('legadoUrlA').href = '"legado://import/auto?src="' + legadodata + '"';
+      document.getElementById('legadoUrlA').href = '"legado://import/auto?src=" + url;
     }
   </script>
 </body>
