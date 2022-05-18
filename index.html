@@ -129,7 +129,6 @@
   <script src="./qrcode-svg/lib/qrcode.min.js"></script>
   <script>
     var voices = [];
-    //fetch('https://raw.githubusercontent.com/rogueme/ms-ra-forwarder/master/TTSedge.json')
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
     voices = data;
     refreshVoice();
@@ -261,7 +260,7 @@
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = url;
-      document.getElementById('legadoUrlA').href = '"legado://import/auto?src=" + url;
+      document.getElementById('legadoUrlA').href = "legado://import/auto?src=" + url;
     }
   </script>
 </body>
