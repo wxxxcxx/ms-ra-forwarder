@@ -248,6 +248,16 @@
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
+      var str = {};
+	  str['api'] = encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra');
+	  str['name'] = encodeURI(name);
+	  str['voiceName'] = voiceName;
+	  str['voiceFormat'] = voiceFormat;
+	  str['styleName'] = styleName;
+	  str['styleDegree'] = styleDegree;
+	  str['token'] = token;
+      let base64Str = Buffer.from('Hello 中国!','utf-8').toString('base64')
+      console.log(base64Str)
       var url = window.location.protocol + '//' + window.location.host + '/api/legado?name=' + encodeURI(name)
         + '&voiceName=' + voiceName
         + '&voiceFormat=' + voiceFormat
