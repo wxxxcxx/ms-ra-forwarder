@@ -264,7 +264,7 @@
       var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'));
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
-      document.getElementById('legadoUrl').value = allurl+'    ' + JSON.stringify(base64arr);
+      document.getElementById('legadoUrl').value = allurl;
       document.getElementById('legadoUrlA').href = "legado://import/auto?src=" + allurl;
     }
   </script>
