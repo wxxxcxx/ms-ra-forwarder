@@ -167,7 +167,7 @@
     option.value = "normal";
     option.innerText = "normal[默认]";
     style.append(option);
-    document.getElementsByName('name')[0] = '微软' + voices[styleIndex].LocalName;
+    document.getElementsByName('name')[0].value = '微软' + voices[styleIndex].LocalName;
     let styles = voices[styleIndex].StyleList;
     styles.forEach(styleName =>{
       let option2 = document.createElement('option');
