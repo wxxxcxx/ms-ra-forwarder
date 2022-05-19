@@ -243,6 +243,7 @@
     }
 
     function createLegadoUrl() {
+      var url = window.location.protocol + '//' + window.location.host;
       var name = document.getElementsByName('name')[0].value;
       var voiceName = document.getElementsByName('voiceName')[0].value;
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
@@ -256,15 +257,15 @@
         'styleName':styleName,
         'styleDegree':styleDegree,
         'token':token,
-        'url':window.location.protocol + '//' + window.location.host,
+        'url':url,
       };
-      var url = window.location.protocol + '//' + window.location.host + '/api/legado?json=' + Base64.encode(JSON.stringify(base64arr));
-      var svg = new QRCode(url).svg();
-      var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
+      var allurl = url + '/api/legado?json=' + Base64.encode(JSON.stringify(base64arr));
+      var svg = new QRCode(allurl).svg();
+      var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'));
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
-      document.getElementById('legadoUrl').value = url;
-      document.getElementById('legadoUrlA').href = "legado://import/auto?src=" + url;
+      document.getElementById('legadoUrl').value = allurl;
+      document.getElementById('legadoUrlA').href = "legado://import/auto?src=" + allurl;
     }
   </script>
 </body>
