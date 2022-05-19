@@ -155,31 +155,31 @@
           }
           option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale;
           voice.append(option);
-		  getstyleName(0);
+      getstyleName(0);
         }
       });
     }
-	function getstyleName(styleIndex){
-		let style = document.getElementsByName('styleName')[0];
-		let stylearr = {"affectionate":"撒娇","angry":"恼怒","assistant":"助理","calm":"冷静","chat":"聊天","cheerful":"开心","customerservice":"客服","depressed":"沮丧","disgruntled":"抱怨","embarrassed":"尴尬","empathetic":"关心","envious":"渴望","fearful":"恐惧","gentle":"温柔","lyrical":"抒情","narration-professional":"旁白-专业","narration-relaxed":"轻松阅读","newscast":"新闻","newscast-casual":"新闻-休闲","newscast-formal":"新闻-正式","sad":"悲伤","serious":"严肃"}
-		style.options.length=0;
-		let option = document.createElement('option');
-		option.value = "normal";
-		option.innerText = "normal[默认]";
-		style.append(option);
-		document.getElementsByName('name')[0] = '微软' + voices[styleIndex].LocalName;
-		let styles = voices[styleIndex].StyleList;
-		styles.forEach(styleName =>{
-			let option2 = document.createElement('option');
-			option2.value = styleName;
-			let opvalue = stylearr[styleName.toLowerCase()];
-			if (opvalue == undefined){
-				opvalue = "未知";
-				}
-			option2.innerText = styleName + "[" + opvalue + "]";
-			style.append(option2);
-		});
-	}
+  function getstyleName(styleIndex){
+    let style = document.getElementsByName('styleName')[0];
+    let stylearr = {"affectionate":"撒娇","angry":"恼怒","assistant":"助理","calm":"冷静","chat":"聊天","cheerful":"开心","customerservice":"客服","depressed":"沮丧","disgruntled":"抱怨","embarrassed":"尴尬","empathetic":"关心","envious":"渴望","fearful":"恐惧","gentle":"温柔","lyrical":"抒情","narration-professional":"旁白-专业","narration-relaxed":"轻松阅读","newscast":"新闻","newscast-casual":"新闻-休闲","newscast-formal":"新闻-正式","sad":"悲伤","serious":"严肃"}
+    style.options.length=0;
+    let option = document.createElement('option');
+    option.value = "normal";
+    option.innerText = "normal[默认]";
+    style.append(option);
+    document.getElementsByName('name')[0] = '微软' + voices[styleIndex].LocalName;
+    let styles = voices[styleIndex].StyleList;
+    styles.forEach(styleName =>{
+      let option2 = document.createElement('option');
+      option2.value = styleName;
+      let opvalue = stylearr[styleName.toLowerCase()];
+      if (opvalue == undefined){
+        opvalue = "未知";
+        }
+      option2.innerText = styleName + "[" + opvalue + "]";
+      style.append(option2);
+    });
+  }
     function createSSML(text, voiceName, styleName, styleDegree) {
       var ssml = '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="zh-CN">\
@@ -249,14 +249,16 @@
       var styleName = document.getElementsByName('styleName')[0].value;
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
-      var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + Base64.encode(encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
-        + '&name=' + encodeURI(name)
-        + '&voiceName=' + voiceName
-        + '&voiceFormat=' + voiceFormat
-        + '&styleName=' + styleName
-        + '&styleDegree=' + styleDegree
-        + '&token=' + token);
-	    
+      var base64arr = {
+        'name':name,
+        'voiceName':voiceName,
+        'voiceFormat':voiceFormat,
+        'styleName':styleName,
+        'styleDegree':styleDegree,
+        'token':token,
+        'url':window.location.protocol + '//' + window.location.host,
+      };
+      var url = window.location.protocol + '//' + window.location.host + '/api/legado?json=' + Base64.encode(JSON.stringify(base64arr));
       var svg = new QRCode(url).svg();
       var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
       modal.show();
