@@ -4,6 +4,7 @@ import { encode, decode } from 'js-base64';
 module.exports = async (request: VercelRequest, response: VercelResponse) => {
     let jsondatastr = decode(request.query['json']);
     let jsondata = json.parse(jsondatastr);
+    let api = let name = jsondata['url'] ?? '';
     let name = jsondata['name'] ?? '大声朗读';
     let voiceName = jsondata['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
     let voiceFormat = jsondata['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
@@ -48,6 +49,6 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         'method': 'POST',
         'body': ssml
     }
-    data['url'] = api + ',' + JSON.stringify(body);
+    data['url'] = api + '/api/ra,' + JSON.stringify(body);
     response.status(200).json(data);
 }
