@@ -50,6 +50,6 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         'body': ssml
     }
     data['url'] = api + '/api/ra,' + JSON.stringify(body);
-    data['test'] = jsondatastr;
+    data['test'] = request.query['json'];
     response.status(200).json(data);
 }
