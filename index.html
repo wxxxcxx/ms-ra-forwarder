@@ -248,22 +248,13 @@
       var styleName = document.getElementsByName('styleName')[0].value;
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
-      var previewText = document.getElementsByName('previewText')[0].value;
-      var str = {};
-	  str['api'] = encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra');
-	  str['name'] = encodeURI(name);
-	  str['voiceName'] = voiceName;
-	  str['voiceFormat'] = voiceFormat;
-	  str['styleName'] = styleName;
-	  str['styleDegree'] = styleDegree;
-	  str['token'] = token;
       var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + Base64.encode(encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
         + '&name=' + encodeURI(name)
         + '&voiceName=' + voiceName
         + '&voiceFormat=' + voiceFormat
         + '&styleName=' + styleName
         + '&styleDegree=' + styleDegree
-        + '&token=' + token};
+        + '&token=' + token);
 	    
       var svg = new QRCode(url).svg();
       var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
