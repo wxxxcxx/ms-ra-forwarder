@@ -5,8 +5,8 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
     let jsonstr = request.query['json'];
     let jsondatastr = decode(jsonstr.trim());
     let jsondata = JSON.parse(jsondatastr) ?? '';
-    let api = jsondata['url'] ?? '';
-    let name = jsondata['name'] ?? '大声朗读';
+    let api = decodeURIComponent(jsondata['url']) ?? '';
+    let name = decodeURIComponent(jsondata['name']) ?? '大声朗读';
     let voiceName = jsondata['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
     let voiceFormat = jsondata['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
     let styleName = jsondata['styleName'] ?? 'normal';
