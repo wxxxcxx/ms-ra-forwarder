@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { FORMAT_CONTENT_TYPE } from '../ra';
 import { encode, decode } from '../base64/base64';
 module.exports = async (request: VercelRequest, response: VercelResponse) => {
+    let jsondatastr = decode(request.query['json']);
     let jsondata = '';
     let api = jsondata['url'] ?? '';
     let name = jsondata['name'] ?? '大声朗读';
@@ -49,5 +50,6 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         'body': ssml
     }
     data['url'] = api + '/api/ra,' + JSON.stringify(body);
+    data['test'] = jsondatastr;
     response.status(200).json(data);
 }
