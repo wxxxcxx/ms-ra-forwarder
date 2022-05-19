@@ -257,15 +257,14 @@
 	  str['styleName'] = styleName;
 	  str['styleDegree'] = styleDegree;
 	  str['token'] = token;
-      let base64Str = Buffer.from('Hello 中国!','utf-8').toString('base64')
-      console.log(base64Str)
-      var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
+      var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + Base64.encode(encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
         + '&name=' + encodeURI(name)
         + '&voiceName=' + voiceName
         + '&voiceFormat=' + voiceFormat
         + '&styleName=' + styleName
         + '&styleDegree=' + styleDegree
-        + '&token=' + token;
+        + '&token=' + token};
+	    
       var svg = new QRCode(url).svg();
       var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
       modal.show();
