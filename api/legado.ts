@@ -1,13 +1,16 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { FORMAT_CONTENT_TYPE } from '../ra';
+import { encode, decode } from '../base64/base64';
 module.exports = async (request: VercelRequest, response: VercelResponse) => {
-    let api = request.query['api'];
-    let name = request.query['name'] ?? '大声朗读';
-    let voiceName = request.query['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
-    let voiceFormat = request.query['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
-    let styleName = request.query['styleName'] ?? 'normal';
-    let styleDegree = request.query['styleDegree'] ?? 1.00;
-    let token = request.query['token'] ?? '';
+    let jsondatastr = decode(request.query['json']);
+    let jsondata = JSON.parse(jsondatastr);
+    let api = jsondata['url'] ?? '';
+    let name = jsondata['name'] ?? '大声朗读';
+    let voiceName = jsondata['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
+    let voiceFormat = jsondata['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
+    let styleName = jsondata['styleName'] ?? 'normal';
+    let styleDegree = jsondata['styleDegree'] ?? 1.00;
+    let token = jsondata['token'] ?? '';
 
     if (Array.isArray(voiceFormat)) {
         throw `Invalid format ${voiceFormat}`;
@@ -46,6 +49,6 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         'method': 'POST',
         'body': ssml
     }
-    data['url'] = api + ',' + JSON.stringify(body);
+    data['url'] = api + '/api/ra,' + JSON.stringify(body);
     response.status(200).json(data);
 }
