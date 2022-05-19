@@ -251,13 +251,13 @@
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var base64arr = {
-        'name':name,
+        'name':encodeURI(name),
         'voiceName':voiceName,
         'voiceFormat':voiceFormat,
         'styleName':styleName,
         'styleDegree':styleDegree,
         'token':token,
-        'url':url,
+        'url':encodeURI(url),
       };
       var allurl = url + '/api/legado?json=' + Base64.encode(JSON.stringify(base64arr));
       var svg = new QRCode(allurl).svg();
