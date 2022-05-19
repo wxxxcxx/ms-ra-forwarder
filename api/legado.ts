@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { FORMAT_CONTENT_TYPE } from '../ra';
-import { encode, decode } from '../base64/js-base64';
+import { encode, decode } from '../base64/base64';
 module.exports = async (request: VercelRequest, response: VercelResponse) => {
     let jsondatastr = decode(request.query['json']);
     let jsondata = json.parse(jsondatastr);
