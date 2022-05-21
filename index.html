@@ -172,9 +172,9 @@
           } else if (item['Locale'] == "en-US"){
             Locale = "美国";
           }
-          let count = 0;
+          let count = 1;
           if (Array.isArray(item['StyleList'])){
-            count = item['StyleList'].length;
+            count = item['StyleList'].length + 1;
           }
           option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale + "-" + count;
           voice.append(option);
