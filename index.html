@@ -176,7 +176,7 @@
           if (Array.isArray(item['StyleList'])){
             count = item['StyleList'].length + 1;
           }
-          option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale + "-" + count;
+          option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale + "-" + count + "个";
           voice.append(option);
       });
       getstyleName(0);
