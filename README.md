@@ -1,5 +1,5 @@
 # ms-ra-forwarder
-本次更新同步微软最新的发音角色数据,较于上次的27种又多了5种,达到32种,本次同步时间为2022年05月17日
+本次更新同步微软最新支持中文的发音角色数据,较于上次的32种又多了1种,达到33种,本次同步时间为2022年05月22日
 
 创建这个项目的初衷是为了能够在[阅读（legado）](https://github.com/gedoor/legado)中听“晓晓”念书。由于其中的脚本引擎不支持 WebSocket ，所以用 [Vercel](https://vercel.com/) 的 Serverless Function 包装了一下微软 Edge 浏览器“大声朗读”的接口。
 
@@ -8,6 +8,9 @@
 
 
 ## 使用
+首先要有github账号和Vercel账号。
+
+如果没有Vercel账号，请不要选择第三方账号登陆如github账号,因为后面绑定手机号是通不过的,提示不存在账号,最好使用电子邮件方式注册账号!
 
 请先 Fork 一份代码然后部署到自己的 Vercel 中 （[演示视频](https://www.youtube.com/watch?v=vRC6umZp8hI)）。
 
