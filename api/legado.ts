@@ -37,11 +37,11 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
     data['header'] = JSON.stringify(header);
 
     let ssml = '\
-        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="zh-CN">\
+        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
           <voice name="'+ voiceName + '">\
             <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '" >\
-              <prosody rate="{{speakSpeed + 55}}%" pitch="0%" volume="+100%">\
-                {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\
+              <prosody rate="{{speakSpeed + 55}}%" pitch="0%" volume="+100%">\<lang xml:lang="zh-CN">\
+                {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\</lang>\
               </prosody>\
             </mstts:express-as>\
           </voice>\
