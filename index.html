@@ -131,16 +131,34 @@
   <script>
     var voices = [];
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
-    voices = data;
+    getdata();
     refreshVoice();
     function selectOnchang(obj){ 
     //获取被选中的option标签选项 
     getstyleName(obj.selectedIndex);
     }
+    function getdata() {
+      let itemIndex = 0;
+      data.forEach(item => {
+        if (item['LocaleName'].indexOf('Chinese') >= 0) {
+          voices[itemIndex] = item;
+          itemIndex += 1;
+        }
+        else if (Array.isArray(item['SecondaryLocaleList'])) {
+          console.log(item['LocalName']);
+          item['SecondaryLocaleList'].forEach(localitem => {
+            if (localitem == "zh-CN" || localitem == "zh-HK" || localitem == "zh-TW") {
+              voices[itemIndex] = item;
+              itemIndex += 1;
+              return;
+            }
+          })
+        }
+      })
+    }
     function refreshVoice() {
       let voice = document.getElementsByName('voiceName')[0];
       voices.forEach(item => {
-        if (item['LocaleName'].indexOf('Chinese') >= 0) {
           let option = document.createElement('option');
           option.value = item['ShortName'];
           let Gender = "男";
@@ -152,16 +170,16 @@
             Locale = "中国香港";
           } else if (item['Locale'] == "zh-TW"){
             Locale = "中国台湾";
+          } else if (item['Locale'] == "en-US"){
+            Locale = "美国";
           }
           option.innerText = item['LocalName'] + "-" + Gender + "-" + Locale;
           voice.append(option);
-      getstyleName(0);
-        }
       });
+      getstyleName(0);
     }
   function getstyleName(styleIndex){
     let style = document.getElementsByName('styleName')[0];
-    let stylearr = {"affectionate":"撒娇","angry":"恼怒","assistant":"助理","calm":"冷静","chat":"聊天","cheerful":"开心","customerservice":"客服","depressed":"沮丧","disgruntled":"抱怨","embarrassed":"尴尬","empathetic":"关心","envious":"渴望","fearful":"恐惧","gentle":"温柔","lyrical":"抒情","narration-professional":"旁白-专业","narration-relaxed":"轻松阅读","newscast":"新闻","newscast-casual":"新闻-休闲","newscast-formal":"新闻-正式","sad":"悲伤","serious":"严肃"}
     style.options.length=0;
     let option = document.createElement('option');
     option.value = "normal";
@@ -172,7 +190,7 @@
     styles.forEach(styleName =>{
       let option2 = document.createElement('option');
       option2.value = styleName;
-      let opvalue = stylearr[styleName.toLowerCase()];
+      let opvalue = styledata[styleName.toLowerCase()];
       if (opvalue == undefined){
         opvalue = "未知";
         }
