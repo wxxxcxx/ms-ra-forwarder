@@ -49,32 +49,35 @@
 
       <div class="mb-3">
         <label for="voiceFormat" class="form-label">音频格式：</label>
-        <select name="voiceFormat" class="form-select">
-          <option value="raw-16khz-16bit-mono-pcm" disabled>raw-16khz-16bit-mono-pcm</option>
-          <option value="raw-48khz-16bit-mono-pcm" disabled>raw-48khz-16bit-mono-pcm</option>
-          <option value="raw-8khz-8bit-mono-mulaw" disabled>raw-8khz-8bit-mono-mulaw</option>
-          <option value="raw-8khz-8bit-mono-alaw" disabled>raw-8khz-8bit-mono-alaw</option>
-          <option value="raw-16khz-16bit-mono-truesilk" disabled>raw-16khz-16bit-mono-truesilk</option>
-          <option value="raw-24khz-16bit-mono-truesilk" disabled>raw-24khz-16bit-mono-truesilk</option>
-          <option value="riff-16khz-16bit-mono-pcm">riff-16khz-16bit-mono-pcm</option>
-          <option value="riff-24khz-16bit-mono-pcm">riff-24khz-16bit-mono-pcm</option>
-          <option value="riff-48khz-16bit-mono-pcm">riff-48khz-16bit-mono-pcm</option>
-          <option value="riff-8khz-8bit-mono-mulaw">riff-8khz-8bit-mono-mulaw</option>
-          <option value="riff-8khz-8bit-mono-alaw">riff-8khz-8bit-mono-alaw</option>
-          <option value="audio-16khz-32kbitrate-mono-mp3">audio-16khz-32kbitrate-mono-mp3</option>
-          <option value="audio-16khz-64kbitrate-mono-mp3">audio-16khz-64kbitrate-mono-mp3</option>
-          <option value="audio-16khz-128kbitrate-mono-mp3">audio-16khz-128kbitrate-mono-mp3</option>
-          <option value="audio-24khz-48kbitrate-mono-mp3">audio-24khz-48kbitrate-mono-mp3</option>
-          <option value="audio-24khz-96kbitrate-mono-mp3">audio-24khz-96kbitrate-mono-mp3</option>
-          <option value="audio-24khz-160kbitrate-mono-mp3">audio-24khz-160kbitrate-mono-mp3</option>
-          <option value="audio-48khz-96kbitrate-mono-mp3">audio-48khz-96kbitrate-mono-mp3</option>
-          <option value="audio-48khz-192kbitrate-mono-mp3">audio-48khz-192kbitrate-mono-mp3</option>
-          <option value="webm-16khz-16bit-mono-opus" disabled>webm-16khz-16bit-mono-opus</option>
-          <option value="webm-24khz-16bit-mono-opus" disabled>webm-24khz-16bit-mono-opus</option>
-          <option value="ogg-16khz-16bit-mono-opus" selected>ogg-16khz-16bit-mono-opus</option>
-          <option value="ogg-24khz-16bit-mono-opus">ogg-24khz-16bit-mono-opus</option>
-          <option value="ogg-48khz-16bit-mono-opus">ogg-48khz-16bit-mono-opus</option>
-        </select>
+        <div class="input-group">
+          <select name="voiceFormat" class="form-select">
+            <option value="raw-16khz-16bit-mono-pcm" disabled>raw-16khz-16bit-mono-pcm</option>
+            <option value="raw-48khz-16bit-mono-pcm" disabled>raw-48khz-16bit-mono-pcm</option>
+            <option value="raw-8khz-8bit-mono-mulaw" disabled>raw-8khz-8bit-mono-mulaw</option>
+            <option value="raw-8khz-8bit-mono-alaw" disabled>raw-8khz-8bit-mono-alaw</option>
+            <option value="raw-16khz-16bit-mono-truesilk" disabled>raw-16khz-16bit-mono-truesilk</option>
+            <option value="raw-24khz-16bit-mono-truesilk" disabled>raw-24khz-16bit-mono-truesilk</option>
+            <option value="riff-16khz-16bit-mono-pcm">riff-16khz-16bit-mono-pcm</option>
+            <option value="riff-24khz-16bit-mono-pcm">riff-24khz-16bit-mono-pcm</option>
+            <option value="riff-48khz-16bit-mono-pcm">riff-48khz-16bit-mono-pcm</option>
+            <option value="riff-8khz-8bit-mono-mulaw">riff-8khz-8bit-mono-mulaw</option>
+            <option value="riff-8khz-8bit-mono-alaw">riff-8khz-8bit-mono-alaw</option>
+            <option value="audio-16khz-32kbitrate-mono-mp3">audio-16khz-32kbitrate-mono-mp3</option>
+            <option value="audio-16khz-64kbitrate-mono-mp3">audio-16khz-64kbitrate-mono-mp3</option>
+            <option value="audio-16khz-128kbitrate-mono-mp3">audio-16khz-128kbitrate-mono-mp3</option>
+            <option value="audio-24khz-48kbitrate-mono-mp3">audio-24khz-48kbitrate-mono-mp3</option>
+            <option value="audio-24khz-96kbitrate-mono-mp3">audio-24khz-96kbitrate-mono-mp3</option>
+            <option value="audio-24khz-160kbitrate-mono-mp3">audio-24khz-160kbitrate-mono-mp3</option>
+            <option value="audio-48khz-96kbitrate-mono-mp3">audio-48khz-96kbitrate-mono-mp3</option>
+            <option value="audio-48khz-192kbitrate-mono-mp3">audio-48khz-192kbitrate-mono-mp3</option>
+            <option value="webm-16khz-16bit-mono-opus" disabled>webm-16khz-16bit-mono-opus</option>
+            <option value="webm-24khz-16bit-mono-opus" disabled>webm-24khz-16bit-mono-opus</option>
+            <option value="ogg-16khz-16bit-mono-opus" selected>ogg-16khz-16bit-mono-opus</option>
+            <option value="ogg-24khz-16bit-mono-opus">ogg-24khz-16bit-mono-opus</option>
+            <option value="ogg-48khz-16bit-mono-opus">ogg-48khz-16bit-mono-opus</option>
+          </select>
+          <button type="button" class="btn btn-primary" onclick='createjson()'>批量加入</button>
+        </div>
         <div class="form-text">可以调整音频的格式和质量。质量越高，生成的文件越大，对网速和流量的需求越高。请根据自己的情况选择。（我禁用了一些在阅读中播放不了的格式）</div>
       </div>
 
@@ -91,13 +94,14 @@
 
       <div class="col-auto">
         <button id="previewButton" type="button" class="btn btn-secondary" onclick="preview()">测试</button>
-        <button type="button" class="btn btn-primary" onclick='createLegadoUrl()'>生成阅读（legado）语音引擎链接</button>
+        <button type="button" class="btn btn-primary" onclick='checkLegadoUrl()'>查看生成链接</button>
+        <button type="button" class="btn btn-primary" onclick='createLegadoUrl()'>生成引擎链接</button>
       </div>
     </form>
   </div>
 
 
-  <div id="legadoUrlModal" class="modal " tabindex="-1">
+  <div id="createlegadoUrlModal" class="modal " tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -123,6 +127,29 @@
       </div>
     </div>
   </div>
+    <div id="checklegadoUrlModal" class="modal " tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">查询阅读链接</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered" id="ttstb">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>角色名称</th>
+                <th>讲话风格</th>
+                <th>强度</th>
+                <th>音频格式</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script type="text/javascript" src="TTSedge.json"></script>
   <script src="./base64/base64.js"></script>
@@ -130,6 +157,7 @@
   <script src="./qrcode-svg/lib/qrcode.min.js"></script>
   <script>
     var voices = [];
+    var alljson = [];
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
     getdata();
     refreshVoice();
@@ -269,28 +297,73 @@
 
     function createLegadoUrl() {
       var url = window.location.protocol + '//' + window.location.host;
-      var name = document.getElementsByName('name')[0].value;
-      var voiceName = document.getElementsByName('voiceName')[0].value;
-      var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
-      var styleName = document.getElementsByName('styleName')[0].value;
-      var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
+      var alljson2 = alljson;
+      if (alljson.length == 0){
+        createjson();
+      }
       var base64arr = {
-        'name':encodeURI(name),
-        'voiceName':voiceName,
-        'voiceFormat':voiceFormat,
-        'styleName':styleName,
-        'styleDegree':styleDegree,
+        'ttsdata':JSON.stringify(alljson),
         'token':token,
         'url':encodeURI(url),
       };
       var allurl = url + '/api/legado?json=' + Base64.encode(JSON.stringify(base64arr));
       var svg = new QRCode(allurl).svg();
-      var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'));
+      var modal = new bootstrap.Modal(document.getElementById('createlegadoUrlModal'));
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = allurl;
-      document.getElementById('legadoUrlA').href = "legado://import/auto?src=" + allurl;
+      document.getElementById('legadoUrlA').href = "legado://import/httpTTS?src=" + allurl;
+      alljson = alljson2;
+    }
+    function createjson() {
+      var name = document.getElementsByName('name')[0].value;
+      var voiceName = document.getElementsByName('voiceName')[0].value;
+      var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
+      var styleName = document.getElementsByName('styleName')[0].value;
+      var styleDegree = document.getElementsByName('styleDegree')[0].value;
+      var ttsarr = {
+        'name':encodeURI(name),
+        'voiceName':voiceName,
+        'voiceFormat':voiceFormat,
+        'styleName':styleName,
+        'styleDegree':styleDegree,
+      };
+      alljson.push(ttsarr);
+    }
+    function gettabletd(text){
+      let lTd = document.createElement("td");
+      let lText = document.createTextNode(text);
+      lTd.appendChild(lText);
+      return lTd;
+    }
+    function checkLegadoUrl() {
+      let jsonIndex = 0;
+      let table = document.getElementById("ttstb");
+      let tbody = table.getElementsByTagName("tbody");
+      if (tbody.length > 0){
+        table.removeChild(tbody[0]);
+      }
+      tbody = document.createElement('tbody');
+      table.appendChild(tbody);
+      alljson.forEach(item =>{
+        let tr = document.createElement("tr");
+        let idTd = gettabletd(jsonIndex + 1);
+        let nameTd = gettabletd(decodeURIComponent(item['name']));
+        let voiceNameTd = gettabletd(item['voiceName']);
+        let voiceFormatTd = gettabletd(item['voiceFormat']);
+        let styleNameTd = gettabletd(item['styleName']);
+        let styleDegreeTd = gettabletd(item['styleDegree']);
+        tr.appendChild(idTd);
+        tr.appendChild(voiceNameTd);
+        tr.appendChild(styleNameTd);
+        tr.appendChild(styleDegreeTd);
+        tr.appendChild(voiceFormatTd);
+        tbody.appendChild(tr);
+        jsonIndex += 1;
+      })
+      var modal = new bootstrap.Modal(document.getElementById('checklegadoUrlModal'));
+      modal.show();
     }
   </script>
 </body>
