@@ -14,7 +14,7 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         let voiceFormat = item['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
         let styleName = item['styleName'] ?? 'normal';
         let styleDegree = item['styleDegree'] ?? 1.00;
-        let speakSpeed = item['speakSpeed'] ?? '25%';
+        let speakSpeed = item['speakSpeed'] ?? 25;
 
         if (Array.isArray(voiceFormat)) {
             throw `Invalid format ${voiceFormat}`;
