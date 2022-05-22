@@ -118,7 +118,7 @@
           </div>
           <div style="text-align:center">
               <a id="legadoUrlA" href>
-                <button type="button" class="btn btn-primary">一键导入到阅读
+                <button id="legadoUrlB" type="button" class="btn btn-primary">导入
                 </button>
               </a>
             </div>
@@ -136,7 +136,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">查询阅读链接</h5>
+          <h5 class="modal-title">语音参数</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body table-responsive">
@@ -321,6 +321,8 @@
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = allurl;
+      document.getElementById('legadoUrlB').innerHTML = '一键导入' + alljson.length + '条语音到阅读'
+      
       document.getElementById('legadoUrlA').href = "legado://import/httpTTS?src=" + allurl;
       ceshi();
       alljson = alljson2;
