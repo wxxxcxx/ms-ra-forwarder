@@ -14,7 +14,7 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         let voiceFormat = item['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
         let styleName = item['styleName'] ?? 'normal';
         let styleDegree = item['styleDegree'] ?? 1.00;
-        
+        let speakSpeed = item['speakSpeed'] ?? '25%';
 
         if (Array.isArray(voiceFormat)) {
             throw `Invalid format ${voiceFormat}`;
@@ -42,7 +42,7 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
             <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
               <voice name="'+ voiceName + '">\
                 <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '" >\
-                  <prosody rate="{{speakSpeed + 55}}%" pitch="0%" volume="+100%">\<lang xml:lang="zh-CN">\
+                  <prosody rate="{{speakSpeed + ' + speakSpeed + '}}%" pitch="0%" volume="+100%">\<lang xml:lang="zh-CN">\
                     {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\</lang>\
                   </prosody>\
                 </mstts:express-as>\
