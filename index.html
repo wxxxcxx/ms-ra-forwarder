@@ -39,8 +39,13 @@
           <span class="input-group-text">名称</span>
           <select name="styleName" class="form-select">
           </select>
+        </div>
+        <div class="input-group">
           <span class="input-group-text">风格强度</span>
           <input name="styleDegree" class="form-control" type="number" min="0.01" max="2.00" step=".01" value="1.00">
+          <span class="input-group-text">讲话语速</span>
+          <input name="speakSpeed" class="form-control" type="number" min="0" max="100" step="1" value="25">
+          <span class="input-group-text">%</span>
         </div>
         <div class="form-text">
           每个声音支持的讲话风格都不一样，具体可以参考：https://docs.microsoft.com/zh-CN/azure/cognitive-services/speech-service/speech-synthesis-markup?tabs=csharp#adjust-speaking-styles
@@ -94,7 +99,7 @@
 
       <div class="col-auto">
         <button id="previewButton" type="button" class="btn btn-secondary" onclick="preview()">测试</button>
-        <button type="button" class="btn btn-primary" onclick='checkLegadoUrl()'>查看生成数据</button>
+        <button type="button" class="btn btn-primary" onclick='checkLegadoUrl()'>查看生成链接</button>
         <button type="button" class="btn btn-primary" onclick='createLegadoUrl()'>生成引擎链接</button>
       </div>
     </form>
@@ -142,6 +147,7 @@
                 <th>角色名称</th>
                 <th>讲话风格</th>
                 <th>强度</th>
+                <th>语速</th>
                 <th>音频格式</th>
               </tr>
             </thead>
@@ -158,6 +164,7 @@
   <script>
     var voices = [];
     var alljson = [];
+    var base64arr = {};
     //fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
     getdata();
     refreshVoice();
@@ -233,12 +240,12 @@
 
     
   }
-    function createSSML(text, voiceName, styleName, styleDegree) {
+    function createSSML(text, voiceName, styleName, styleDegree,speakSpeed) {
       var ssml = '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
           <voice name="'+ voiceName + '">\
             <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '">\
-              <prosody rate="0%" pitch="0%">\<lang xml:lang="zh-CN">\
+              <prosody rate="' + speakSpeed + '%" pitch="0%">\<lang xml:lang="zh-CN">\
                   '+ text + '\
               </lang>\</prosody >\
             </mstts:express-as>\
@@ -256,7 +263,8 @@
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
-      var ssml = createSSML(previewText, voiceName, styleName, styleDegree)
+      var speakSpeed = document.getElementsByName('speakSpeed')[0].value;
+      var ssml = createSSML(previewText, voiceName, styleName, styleDegree,speakSpeed)
       if (token) {
         headers['Authorization'] = 'Bearer ' + token;
       }
@@ -302,7 +310,7 @@
       if (alljson.length == 0){
         createjson();
       }
-      var base64arr = {
+      base64arr = {
         'ttsdata':alljson,
         'token':token,
         'url':encodeURI(url),
@@ -314,6 +322,7 @@
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = allurl;
       document.getElementById('legadoUrlA').href = "legado://import/httpTTS?src=" + allurl;
+      ceshi();
       alljson = alljson2;
     }
     function createjson() {
@@ -322,12 +331,14 @@
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       var styleName = document.getElementsByName('styleName')[0].value;
       var styleDegree = document.getElementsByName('styleDegree')[0].value;
+      var speakSpeed = document.getElementsByName('speakSpeed')[0].value;
       var ttsarr = {
         'name':encodeURI(name),
         'voiceName':voiceName,
         'voiceFormat':voiceFormat,
         'styleName':styleName,
         'styleDegree':styleDegree,
+        'speakSpeed':speakSpeed
       };
       alljson.push(ttsarr);
     }
@@ -353,11 +364,13 @@
         let voiceNameTd = gettabletd(item['voiceName']);
         let voiceFormatTd = gettabletd(item['voiceFormat']);
         let styleNameTd = gettabletd(item['styleName']);
+        let speakSpeed = gettabletd(item['speakSpeed']);
         let styleDegreeTd = gettabletd(item['styleDegree']);
         tr.appendChild(idTd);
         tr.appendChild(voiceNameTd);
         tr.appendChild(styleNameTd);
         tr.appendChild(styleDegreeTd);
+        tr.appendChild(speakSpeed);
         tr.appendChild(voiceFormatTd);
         tbody.appendChild(tr);
         jsonIndex += 1;
