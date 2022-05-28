@@ -77,8 +77,8 @@
             <option value="audio-48khz-192kbitrate-mono-mp3">audio-48khz-192kbitrate-mono-mp3</option>
             <option value="webm-16khz-16bit-mono-opus" disabled>webm-16khz-16bit-mono-opus</option>
             <option value="webm-24khz-16bit-mono-opus" disabled>webm-24khz-16bit-mono-opus</option>
-            <option value="ogg-16khz-16bit-mono-opus" selected>ogg-16khz-16bit-mono-opus</option>
-            <option value="ogg-24khz-16bit-mono-opus">ogg-24khz-16bit-mono-opus</option>
+            <option value="ogg-16khz-16bit-mono-opus">ogg-16khz-16bit-mono-opus</option>
+            <option value="ogg-24khz-16bit-mono-opus" selected>ogg-24khz-16bit-mono-opus</option>
             <option value="ogg-48khz-16bit-mono-opus">ogg-48khz-16bit-mono-opus</option>
           </select>
           <button type="button" class="btn btn-primary" onclick='createjson()'>添加语音</button>
@@ -99,7 +99,7 @@
 
       <div class="col-auto">
         <button id="previewButton" type="button" class="btn btn-secondary" onclick="preview()">测试</button>
-        <button type="button" class="btn btn-primary" onclick='checkLegadoUrl()'>查看语音参数</button>
+        <button type="button" class="btn btn-primary" onclick='checkLegadoUrl()'>查看引擎参数</button>
         <button type="button" class="btn btn-primary" onclick='createLegadoUrl()'>生成引擎链接</button>
       </div>
     </form>
@@ -136,7 +136,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">语音参数</h5>
+          <h5 class="modal-title">引擎参数</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body table-responsive">
