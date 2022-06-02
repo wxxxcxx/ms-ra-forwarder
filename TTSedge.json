@@ -27,6 +27,10 @@ var styledata = {
      "shouting":"远处传声",
     "friendly":"温柔关怀",
     "excited":"乐观",
+    "Poetry-reading":"诗歌朗诵",
+    "Sports_commentary":"体育评论",
+    "Sports_commentary_excited":"体育评论-激昂",
+    "Advertisement_upbeat":"广告策划"
 };
 var data = [
   {
