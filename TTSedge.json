@@ -4849,7 +4849,8 @@ var data = [
       "gentle",
       "lyrical",
       "sad",
-      "serious"
+      "serious",
+      "poetry-reading"
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
