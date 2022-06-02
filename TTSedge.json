@@ -24,7 +24,7 @@ var styledata = {
     "unfriendly":"冷漠",
     "terrified":"胆颤",
     "whispering":"柔细",
-     "shouting":"远处传声",
+    "shouting":"远处传声",
     "friendly":"温柔关怀",
     "excited":"乐观",
     "Poetry-reading":"诗歌朗诵",
