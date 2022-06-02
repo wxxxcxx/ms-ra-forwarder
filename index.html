@@ -81,7 +81,7 @@
             <option value="ogg-24khz-16bit-mono-opus" selected>ogg-24khz-16bit-mono-opus</option>
             <option value="ogg-48khz-16bit-mono-opus">ogg-48khz-16bit-mono-opus</option>
           </select>
-          <button type="button" class="btn btn-primary" onclick='createjson()'>添加引擎</button>
+          <button type="button" class="btn btn-success" onclick='createjson()'>添加引擎</button>
         </div>
         <div class="form-text">可以调整音频的格式和质量。质量越高，生成的文件越大，对网速和流量的需求越高。请根据自己的情况选择。（我禁用了一些在阅读中播放不了的格式）</div>
       </div>
@@ -99,7 +99,7 @@
 
       <div class="col-auto">
         <button id="previewButton" type="button" class="btn btn-secondary" onclick="preview()">测试</button>
-        <button type="button" class="btn btn-primary" onclick='checkLegadoUrl()'>查看引擎参数</button>
+        <button type="button" class="btn btn-info" onclick='checkLegadoUrl()'>查看引擎参数</button>
         <button type="button" class="btn btn-primary" onclick='createLegadoUrl()'>生成引擎链接</button>
       </div>
     </form>
@@ -118,7 +118,7 @@
           </div>
           <div style="text-align:center">
               <a id="legadoUrlA" href>
-                <button id="legadoUrlB" type="button" class="btn btn-primary">导入
+                <button id="legadoUrlB" type="button" class="btn btn-warning">导入
                 </button>
               </a>
             </div>
@@ -152,6 +152,9 @@
               </tr>
             </thead>
           </table>
+          <div class="col-auto">
+           <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="delallttsdata()">清空引擎</button>
+         </div>
         </div>
       </div>
     </div>
@@ -303,6 +306,10 @@
       });
     }
 
+    function delallttsdata(){
+      alljson.length = 0;
+    }
+    
     function createLegadoUrl() {
       var url = window.location.protocol + '//' + window.location.host;
       var token = document.getElementsByName('token')[0].value;
