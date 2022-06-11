@@ -262,6 +262,30 @@ var data = [
     "Status": "GA"
   },
   {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ar-LB, LaylaNeural)",
+    "DisplayName": "Layla",
+    "LocalName": "ليلى",
+    "ShortName": "ar-LB-LaylaNeural",
+    "Gender": "Female",
+    "Locale": "ar-LB",
+    "LocaleName": "Arabic (Lebanon)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ar-LB, RamiNeural)",
+    "DisplayName": "Rami",
+    "LocalName": "رامي",
+    "ShortName": "ar-LB-RamiNeural",
+    "Gender": "Male",
+    "Locale": "ar-LB",
+    "LocaleName": "Arabic (Lebanon)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
     "Name": "Microsoft Server Speech Text to Speech Voice (ar-LY, ImanNeural)",
     "DisplayName": "Iman",
     "LocalName": "إيمان",
@@ -305,6 +329,30 @@ var data = [
     "Gender": "Female",
     "Locale": "ar-MA",
     "LocaleName": "Arabic (Morocco)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ar-OM, AbdullahNeural)",
+    "DisplayName": "Abdullah",
+    "LocalName": "عبدالله",
+    "ShortName": "ar-OM-AbdullahNeural",
+    "Gender": "Male",
+    "Locale": "ar-OM",
+    "LocaleName": "Arabic (Oman)​",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ar-OM, AyshaNeural)",
+    "DisplayName": "Aysha",
+    "LocalName": "عائشة",
+    "ShortName": "ar-OM-AyshaNeural",
+    "Gender": "Female",
+    "Locale": "ar-OM",
+    "LocaleName": "Arabic (Oman)​",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA"
@@ -442,6 +490,30 @@ var data = [
     "Status": "GA"
   },
   {
+    "Name": "Microsoft Server Speech Text to Speech Voice (az-AZ, BabekNeural)",
+    "DisplayName": "Babek",
+    "LocalName": "Babək",
+    "ShortName": "az-AZ-BabekNeural",
+    "Gender": "Female",
+    "Locale": "az-AZ",
+    "LocaleName": "Azerbaijani (Azerbaijan)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (az-AZ, BanuNeural)",
+    "DisplayName": "Banu",
+    "LocalName": "Banu",
+    "ShortName": "az-AZ-BanuNeural",
+    "Gender": "Male",
+    "Locale": "az-AZ",
+    "LocaleName": "Azerbaijani (Azerbaijan)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
     "Name": "Microsoft Server Speech Text to Speech Voice (bg-BG, BorislavNeural)",
     "DisplayName": "Borislav",
     "LocalName": "Борислав",
@@ -521,6 +593,30 @@ var data = [
     "Gender": "Female",
     "Locale": "bn-IN",
     "LocaleName": "Bengali (India)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (bs-BA, GoranNeural)",
+    "DisplayName": "Goran",
+    "LocalName": "Goran",
+    "ShortName": "bs-BA-GoranNeural",
+    "Gender": "Male",
+    "Locale": "bs-BA",
+    "LocaleName": "Bosnian (Bosnia)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (bs-BA, VesnaNeural)",
+    "DisplayName": "Vesna",
+    "LocalName": "Vesna",
+    "ShortName": "bs-BA-VesnaNeural",
+    "Gender": "Female",
+    "Locale": "bs-BA",
+    "LocaleName": "Bosnian (Bosnia)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA"
@@ -763,7 +859,8 @@ var data = [
     "LocaleName": "German (Germany)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "128"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (de-DE, AmalaNeural)",
@@ -991,7 +1088,8 @@ var data = [
     "LocaleName": "English (Australia)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "139"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-AU, WilliamNeural)",
@@ -1003,7 +1101,8 @@ var data = [
     "LocaleName": "English (Australia)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "157"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)",
@@ -1039,7 +1138,8 @@ var data = [
     "LocaleName": "English (Canada)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "167"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-CA, LiamNeural)",
@@ -1051,7 +1151,8 @@ var data = [
     "LocaleName": "English (Canada)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "180"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-CA, HeatherRUS)",
@@ -1087,7 +1188,8 @@ var data = [
     "LocaleName": "English (United Kingdom)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "138"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-GB, RyanNeural)",
@@ -1099,7 +1201,8 @@ var data = [
     "LocaleName": "English (United Kingdom)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "158"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-GB, SoniaNeural)",
@@ -1111,7 +1214,8 @@ var data = [
     "LocaleName": "English (United Kingdom)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "150"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-GB, AbbiNeural)",
@@ -1583,7 +1687,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "152"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, JennyMultilingualNeural)",
@@ -1610,7 +1715,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "190"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)",
@@ -1636,10 +1742,7 @@ var data = [
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA",
-    "WordPerMinute": {
-      "default": "215",
-      "newscast": "210"
-    }
+    "WordsPerMinute": "215"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, AmberNeural)",
@@ -1651,7 +1754,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "152"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, AnaNeural)",
@@ -1663,7 +1767,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "135"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)",
@@ -1693,7 +1798,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "150"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, AshleyNeural)",
@@ -1706,9 +1812,7 @@ var data = [
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA",
-    "WordPerMinute": {
-      "default": "149"
-    }
+    "WordsPerMinute": "149"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, BrandonNeural)",
@@ -1720,7 +1824,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "156"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, ChristopherNeural)",
@@ -1732,7 +1837,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "149"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, CoraNeural)",
@@ -1744,7 +1850,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "146"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, ElizabethNeural)",
@@ -1756,7 +1863,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "152"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, EricNeural)",
@@ -1768,7 +1876,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "147"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, JacobNeural)",
@@ -1780,7 +1889,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "154"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, MichelleNeural)",
@@ -1792,7 +1902,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "154"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, MonicaNeural)",
@@ -1804,7 +1915,8 @@ var data = [
     "LocaleName": "English (United States)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "145"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, SaraNeural)",
@@ -1828,7 +1940,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "157"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (en-US, DavisNeural)",
@@ -2225,7 +2338,8 @@ var data = [
     "LocaleName": "Spanish (Spain)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "148"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (es-ES, ElviraNeural)",
@@ -2237,7 +2351,8 @@ var data = [
     "LocaleName": "Spanish (Spain)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "148"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (es-ES, HelenaRUS)",
@@ -2357,7 +2472,8 @@ var data = [
     "LocaleName": "Spanish (Mexico)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "145"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, JorgeNeural)",
@@ -2369,7 +2485,164 @@ var data = [
     "LocaleName": "Spanish (Mexico)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "145"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, BeatrizNeural)",
+    "DisplayName": "Beatriz",
+    "LocalName": "Beatriz",
+    "ShortName": "es-MX-BeatrizNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, CandelaNeural)",
+    "DisplayName": "Candela",
+    "LocalName": "Candela",
+    "ShortName": "es-MX-CandelaNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, CarlotaNeural)",
+    "DisplayName": "Carlota",
+    "LocalName": "Carlota",
+    "ShortName": "es-MX-CarlotaNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, CecilioNeural)",
+    "DisplayName": "Cecilio",
+    "LocalName": "Cecilio",
+    "ShortName": "es-MX-CecilioNeural",
+    "Gender": "Male",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, GerardoNeural)",
+    "DisplayName": "Gerardo",
+    "LocalName": "Gerardo",
+    "ShortName": "es-MX-GerardoNeural",
+    "Gender": "Male",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, LarissaNeural)",
+    "DisplayName": "Larissa",
+    "LocalName": "Larissa",
+    "ShortName": "es-MX-LarissaNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, LibertoNeural)",
+    "DisplayName": "Liberto",
+    "LocalName": "Liberto",
+    "ShortName": "es-MX-LibertoNeural",
+    "Gender": "Male",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, LucianoNeural)",
+    "DisplayName": "Luciano",
+    "LocalName": "Luciano",
+    "ShortName": "es-MX-LucianoNeural",
+    "Gender": "Male",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, MarinaNeural)",
+    "DisplayName": "Marina",
+    "LocalName": "Marina",
+    "ShortName": "es-MX-MarinaNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, NuriaNeural)",
+    "DisplayName": "Nuria",
+    "LocalName": "Nuria",
+    "ShortName": "es-MX-NuriaNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, PelayoNeural)",
+    "DisplayName": "Pelayo",
+    "LocalName": "Pelayo",
+    "ShortName": "es-MX-PelayoNeural",
+    "Gender": "Male",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, RenataNeural)",
+    "DisplayName": "Renata",
+    "LocalName": "Renata",
+    "ShortName": "es-MX-RenataNeural",
+    "Gender": "Female",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, YagoNeural)",
+    "DisplayName": "Yago",
+    "LocalName": "Yago",
+    "ShortName": "es-MX-YagoNeural",
+    "Gender": "Male",
+    "Locale": "es-MX",
+    "LocaleName": "Spanish (Mexico)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)",
@@ -2765,7 +3038,8 @@ var data = [
     "LocaleName": "French (Canada)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "154"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (fr-CA, AntoineNeural)",
@@ -2777,7 +3051,8 @@ var data = [
     "LocaleName": "French (Canada)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "159"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (fr-CA, JeanNeural)",
@@ -2789,7 +3064,8 @@ var data = [
     "LocaleName": "French (Canada)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "133"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)",
@@ -2865,7 +3141,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "155"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (fr-FR, HenriNeural)",
@@ -2877,7 +3154,8 @@ var data = [
     "LocaleName": "French (France)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "168"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (fr-FR, AlainNeural)",
@@ -3357,7 +3635,8 @@ var data = [
     "LocaleName": "Italian (Italy)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "135"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, DiegoNeural)",
@@ -3369,7 +3648,8 @@ var data = [
     "LocaleName": "Italian (Italy)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "135"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, ElsaNeural)",
@@ -3382,6 +3662,150 @@ var data = [
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, BenignoNeural)",
+    "DisplayName": "Benigno",
+    "LocalName": "Benigno",
+    "ShortName": "it-IT-BenignoNeural",
+    "Gender": "Male",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, CalimeroNeural)",
+    "DisplayName": "Calimero",
+    "LocalName": "Calimero",
+    "ShortName": "it-IT-CalimeroNeural",
+    "Gender": "Male",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, CataldoNeural)",
+    "DisplayName": "Cataldo",
+    "LocalName": "Cataldo",
+    "ShortName": "it-IT-CataldoNeural",
+    "Gender": "Male",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, FabiolaNeural)",
+    "DisplayName": "Fabiola",
+    "LocalName": "Fabiola",
+    "ShortName": "it-IT-FabiolaNeural",
+    "Gender": "Female",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, FiammaNeural)",
+    "DisplayName": "Fiamma",
+    "LocalName": "Fiamma",
+    "ShortName": "it-IT-FiammaNeural",
+    "Gender": "Female",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, GianniNeural)",
+    "DisplayName": "Gianni",
+    "LocalName": "Gianni",
+    "ShortName": "it-IT-GianniNeural",
+    "Gender": "Male",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, ImeldaNeural)",
+    "DisplayName": "Imelda",
+    "LocalName": "Imelda",
+    "ShortName": "it-IT-ImeldaNeural",
+    "Gender": "Female",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, IrmaNeural)",
+    "DisplayName": "Irma",
+    "LocalName": "Irma",
+    "ShortName": "it-IT-IrmaNeural",
+    "Gender": "Female",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, LisandroNeural)",
+    "DisplayName": "Lisandro",
+    "LocalName": "Lisandro",
+    "ShortName": "it-IT-LisandroNeural",
+    "Gender": "Male",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, PalmiraNeural)",
+    "DisplayName": "Palmira",
+    "LocalName": "Palmira",
+    "ShortName": "it-IT-PalmiraNeural",
+    "Gender": "Female",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, PierinaNeural)",
+    "DisplayName": "Pierina",
+    "LocalName": "Pierina",
+    "ShortName": "it-IT-PierinaNeural",
+    "Gender": "Female",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, RinaldoNeural)",
+    "DisplayName": "Rinaldo",
+    "LocalName": "Rinaldo",
+    "ShortName": "it-IT-RinaldoNeural",
+    "Gender": "Male",
+    "Locale": "it-IT",
+    "LocaleName": "Italian (Italy)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (it-IT, Cosimo)",
@@ -3422,7 +3846,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "305"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (ja-JP, KeitaNeural)",
@@ -3434,7 +3859,8 @@ var data = [
     "LocaleName": "Japanese (Japan)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "337"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi)",
@@ -3492,6 +3918,30 @@ var data = [
     "Gender": "Female",
     "Locale": "jv-ID",
     "LocaleName": "Javanese (Indonesia)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ka-GE, EkaNeural)",
+    "DisplayName": "Eka",
+    "LocalName": "ეკა",
+    "ShortName": "ka-GE-EkaNeural",
+    "Gender": "Female",
+    "Locale": "ka-GE",
+    "LocaleName": "Georgian (Georgia)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ka-GE, GiorgiNeural)",
+    "DisplayName": "Giorgi",
+    "LocalName": "გიორგი",
+    "ShortName": "ka-GE-GiorgiNeural",
+    "Gender": "Male",
+    "Locale": "ka-GE",
+    "LocaleName": "Georgian (Georgia)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA"
@@ -3578,7 +4028,8 @@ var data = [
     "LocaleName": "Korean (Korea)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "274"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (ko-KR, InJoonNeural)",
@@ -3590,7 +4041,8 @@ var data = [
     "LocaleName": "Korean (Korea)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "253"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (ko-KR, HeamiRUS)",
@@ -3720,6 +4172,30 @@ var data = [
     "Gender": "Female",
     "Locale": "ml-IN",
     "LocaleName": "Malayalam (India)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (mn-MN, BataaNeural)",
+    "DisplayName": "Bataa",
+    "LocalName": "Батаа",
+    "ShortName": "mn-MN-BataaNeural",
+    "Gender": "Male",
+    "Locale": "mn-MN",
+    "LocaleName": "Mongolian (Mongolia)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (mn-MN, YesuiNeural)",
+    "DisplayName": "Yesui",
+    "LocalName": "Есүй",
+    "ShortName": "mn-MN-YesuiNeural",
+    "Gender": "Female",
+    "Locale": "mn-MN",
+    "LocaleName": "Mongolian (Mongolia)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA"
@@ -3881,6 +4357,30 @@ var data = [
     "Status": "Deprecated"
   },
   {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ne-NP, HemkalaNeural)",
+    "DisplayName": "Hemkala",
+    "LocalName": "हेमकला",
+    "ShortName": "ne-NP-HemkalaNeural",
+    "Gender": "Female",
+    "Locale": "ne-NP",
+    "LocaleName": "Nepali (Nepal)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ne-NP, SagarNeural)",
+    "DisplayName": "Sagar",
+    "LocalName": "सागर",
+    "ShortName": "ne-NP-SagarNeural",
+    "Gender": "Male",
+    "Locale": "ne-NP",
+    "LocaleName": "Nepali (Nepal)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
     "Name": "Microsoft Server Speech Text to Speech Voice (nl-BE, ArnaudNeural)",
     "DisplayName": "Arnaud",
     "LocalName": "Arnaud",
@@ -4037,7 +4537,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "134"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, AntonioNeural)",
@@ -4049,7 +4550,164 @@ var data = [
     "LocaleName": "Portuguese (Brazil)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "138"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, BrendaNeural)",
+    "DisplayName": "Brenda",
+    "LocalName": "Brenda",
+    "ShortName": "pt-BR-BrendaNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, DonatoNeural)",
+    "DisplayName": "Donato",
+    "LocalName": "Donato",
+    "ShortName": "pt-BR-DonatoNeural",
+    "Gender": "Male",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, ElzaNeural)",
+    "DisplayName": "Elza",
+    "LocalName": "Elza",
+    "ShortName": "pt-BR-ElzaNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, FabioNeural)",
+    "DisplayName": "Fabio",
+    "LocalName": "Fabio",
+    "ShortName": "pt-BR-FabioNeural",
+    "Gender": "Male",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, GiovannaNeural)",
+    "DisplayName": "Giovanna",
+    "LocalName": "Giovanna",
+    "ShortName": "pt-BR-GiovannaNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, HumbertoNeural)",
+    "DisplayName": "Humberto",
+    "LocalName": "Humberto",
+    "ShortName": "pt-BR-HumbertoNeural",
+    "Gender": "Male",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, JulioNeural)",
+    "DisplayName": "Julio",
+    "LocalName": "Julio",
+    "ShortName": "pt-BR-JulioNeural",
+    "Gender": "Male",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, LeilaNeural)",
+    "DisplayName": "Leila",
+    "LocalName": "Leila",
+    "ShortName": "pt-BR-LeilaNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, LeticiaNeural)",
+    "DisplayName": "Leticia",
+    "LocalName": "Leticia",
+    "ShortName": "pt-BR-LeticiaNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, ManuelaNeural)",
+    "DisplayName": "Manuela",
+    "LocalName": "Manuela",
+    "ShortName": "pt-BR-ManuelaNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, NicolauNeural)",
+    "DisplayName": "Nicolau",
+    "LocalName": "Nicolau",
+    "ShortName": "pt-BR-NicolauNeural",
+    "Gender": "Male",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, ValerioNeural)",
+    "DisplayName": "Valerio",
+    "LocalName": "Valerio",
+    "ShortName": "pt-BR-ValerioNeural",
+    "Gender": "Male",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, YaraNeural)",
+    "DisplayName": "Yara",
+    "LocalName": "Yara",
+    "ShortName": "pt-BR-YaraNeural",
+    "Gender": "Female",
+    "Locale": "pt-BR",
+    "LocaleName": "Portuguese (Brazil)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "Preview"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (pt-BR, Daniel)",
@@ -4352,6 +5010,30 @@ var data = [
     "Status": "GA"
   },
   {
+    "Name": "Microsoft Server Speech Text to Speech Voice (sq-AL, AnilaNeural)",
+    "DisplayName": "Anila",
+    "LocalName": "Anila",
+    "ShortName": "sq-AL-AnilaNeural",
+    "Gender": "Female",
+    "Locale": "sq-AL",
+    "LocaleName": "Albanian (Albania)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (sq-AL, IlirNeural)",
+    "DisplayName": "Ilir",
+    "LocalName": "Ilir",
+    "ShortName": "sq-AL-IlirNeural",
+    "Gender": "Male",
+    "Locale": "sq-AL",
+    "LocaleName": "Albanian (Albania)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
     "Name": "Microsoft Server Speech Text to Speech Voice (sr-RS, NicholasNeural)",
     "DisplayName": "Nicholas",
     "LocalName": "Никола",
@@ -4551,6 +5233,30 @@ var data = [
     "Gender": "Female",
     "Locale": "ta-LK",
     "LocaleName": "Tamil (Sri Lanka)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ta-MY, KaniNeural)",
+    "DisplayName": "Kani",
+    "LocalName": "கனி",
+    "ShortName": "ta-MY-KaniNeural",
+    "Gender": "Female",
+    "Locale": "ta-MY",
+    "LocaleName": "Tamil (Malaysia)",
+    "SampleRateHertz": "24000",
+    "VoiceType": "Neural",
+    "Status": "GA"
+  },
+  {
+    "Name": "Microsoft Server Speech Text to Speech Voice (ta-MY, SuryaNeural)",
+    "DisplayName": "Surya",
+    "LocalName": "சூர்யா",
+    "ShortName": "ta-MY-SuryaNeural",
+    "Gender": "Male",
+    "Locale": "ta-MY",
+    "LocaleName": "Tamil (Malaysia)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
     "Status": "GA"
@@ -4875,7 +5581,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "293"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaochenNeural)",
@@ -4911,7 +5618,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "259"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaomoNeural)",
@@ -4947,7 +5655,8 @@ var data = [
       "SeniorMale",
       "Girl",
       "Boy"
-    ]
+    ],
+    "WordsPerMinute": "286"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoqiuNeural)",
@@ -4959,7 +5668,8 @@ var data = [
     "LocaleName": "Chinese (Mandarin, Simplified)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "232"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoruiNeural)",
@@ -4977,7 +5687,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "243"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoshuangNeural)",
@@ -4992,7 +5703,8 @@ var data = [
     ],
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "225"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoxuanNeural)",
@@ -5024,7 +5736,8 @@ var data = [
       "SeniorMale",
       "Girl",
       "Boy"
-    ]
+    ],
+    "WordsPerMinute": "273"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyanNeural)",
@@ -5036,7 +5749,8 @@ var data = [
     "LocaleName": "Chinese (Mandarin, Simplified)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "279"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, XiaoyouNeural)",
@@ -5048,7 +5762,8 @@ var data = [
     "LocaleName": "Chinese (Mandarin, Simplified)",
     "SampleRateHertz": "24000",
     "VoiceType": "Neural",
-    "Status": "GA"
+    "Status": "GA",
+    "WordsPerMinute": "211"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunxiNeural)",
@@ -5079,7 +5794,8 @@ var data = [
       "Narrator",
       "YoungAdultMale",
       "Boy"
-    ]
+    ],
+    "WordsPerMinute": "293"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN, YunyeNeural)",
@@ -5111,7 +5827,8 @@ var data = [
       "SeniorMale",
       "Girl",
       "Boy"
-    ]
+    ],
+    "WordsPerMinute": "278"
   },
   {
     "Name": "Microsoft Server Speech Text to Speech Voice (zh-CN-LN, XiaobeiNeural)",
