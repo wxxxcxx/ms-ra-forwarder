@@ -34,18 +34,6 @@
         </select>
         <div class="form-text">貌似接口就支持4种声音？推荐使用晓晓（晓晓yyds）。</div>
       </div>
-      <div class="mb-3">
-        <label for="styleName" class="form-label">讲话风格：</label>
-        <div class="input-group">
-          <span class="input-group-text">名称</span>
-          <input name="styleName" class="form-control" type="text" value="normal">
-          <span class="input-group-text">风格强度</span>
-          <input name="styleDegree" class="form-control" type="number" min="0.01" max="2.00" step=".01" value="1.00">
-        </div>
-        <div class="form-text">
-          每个声音支持的讲话风格都不一样，具体可以参考：https://docs.microsoft.com/zh-CN/azure/cognitive-services/speech-service/speech-synthesis-markup?tabs=csharp#adjust-speaking-styles
-        </div>
-      </div>
 
       <div class="mb-3">
         <label for="voiceFormat" class="form-label">音频格式：</label>
@@ -151,15 +139,13 @@
       });
     }
 
-    function createSSML(text, voiceName, styleName, styleDegree) {
+    function createSSML(text, voiceName) {
       var ssml = '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
           <voice name="'+ voiceName + '">\
-            <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '">\
               <prosody rate="0%" pitch="0%">\
                   '+ text + '\
               </prosody >\
-            </mstts:express-as>\
           </voice >\
         </speak > '
 
@@ -170,11 +156,9 @@
       var headers = {'Content-Type': 'text/plain'};
       var voiceName = document.getElementsByName('voiceName')[0].value;
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
-      var styleName = document.getElementsByName('styleName')[0].value;
-      var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
-      var ssml = createSSML(previewText, voiceName, styleName, styleDegree)
+      var ssml = createSSML(previewText, voiceName)
       if (token) {
         headers['Authorization'] = 'Bearer ' + token;
       }
@@ -217,16 +201,12 @@
       var name = document.getElementsByName('name')[0].value;
       var voiceName = document.getElementsByName('voiceName')[0].value;
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
-      var styleName = document.getElementsByName('styleName')[0].value;
-      var styleDegree = document.getElementsByName('styleDegree')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
       var url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
         + '&name=' + encodeURI(name)
         + '&voiceName=' + voiceName
         + '&voiceFormat=' + voiceFormat
-        + '&styleName=' + styleName
-        + '&styleDegree=' + styleDegree
         + '&token=' + token;
       var svg = new QRCode(url).svg();
       var modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
