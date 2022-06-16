@@ -5,8 +5,6 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
     let name = request.query['name'] ?? '大声朗读';
     let voiceName = request.query['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
     let voiceFormat = request.query['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3';
-    let styleName = request.query['styleName'] ?? 'normal';
-    let styleDegree = request.query['styleDegree'] ?? 1.00;
     let token = request.query['token'] ?? '';
 
     if (Array.isArray(voiceFormat)) {
@@ -35,11 +33,9 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
     let ssml = '\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
           <voice name="'+ voiceName + '">\
-            <mstts:express-as style="'+ styleName + '" styledegree="' + styleDegree + '" >\
-              <prosody rate="{{speakSpeed * 2}}%" pitch="0%">\
-                {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\
-              </prosody>\
-            </mstts:express-as>\
+            <prosody rate="{{speakSpeed * 2}}%" pitch="0%">\
+              {{String(speakText).replace(/&/g, \'&amp;\').replace(/\"/g, \'&quot;\').replace(/\'/g, \'&apos;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\')}}\
+            </prosody>\
           </voice>\
         </speak>'
     let body = {
