@@ -4,9 +4,9 @@
 
 如果你的项目可以使用 WebSocket ，请直接在项目中调用原接口。具体代码可以参考 [ra/index.ts](ra/index.ts)。
 
-**Update**
+## 更新日志
 
-2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了[#12](https://github.com/meetcw/ms-ra-forwarder/issues/12#issuecomment-1157258261)。若发现不能使用，请获取更新，并在阅读APP中重新导入阅读引擎。
+**2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/meetcw/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。**
 
 ## 使用
 
