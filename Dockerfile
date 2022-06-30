@@ -4,9 +4,10 @@ WORKDIR /app
 
 COPY ./ ./
 RUN npm install
+RUN npm run build
 
-EXPOSE 3000
+ENV TOKEN= LOG_LEVEL=info PORT=3000
 
-ENV TOKEN= LOG_LEVEL=info
+EXPOSE $PORT
 
-ENTRYPOINT [ "npm", "run", "start" ]
+CMD [ "node", "./dist/app.js" ]

@@ -3,3 +3,11 @@ node_modules
 .vscode
 .vercel
 vercel.json
+
+# 无关的文件
+.dockerignore
+.gitignore
+app.json
+heroku.yml
+Dockerfile
+README.md

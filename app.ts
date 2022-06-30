@@ -4,8 +4,9 @@ import * as logger from 'log'
 
 require('log-node')()
 const app = express()
-const port = 3000
 
+const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+logger.notice(port)
 app.use(bodyParser.text({ type: '*/*' }))
 app.use(express.static('public'))
 

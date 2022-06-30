@@ -4,7 +4,8 @@
   "description": "",
   "main": "",
   "scripts": {
-    "start": "ts-node ./app.ts"
+    "start": "ts-node ./app.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "body-parser": "^1.20.0",

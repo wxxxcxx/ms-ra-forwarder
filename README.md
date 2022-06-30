@@ -6,6 +6,8 @@
 
 ## 更新日志
 
+**2022-06-30: Vercel 的 IP 好像被微软拉黑了**
+
 **2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/meetcw/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。**
 
 ## 使用
