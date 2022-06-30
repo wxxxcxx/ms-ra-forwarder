@@ -9,7 +9,7 @@ const port = 3000
 app.use(bodyParser.text({ type: '*/*' }))
 app.use(express.static('public'))
 
-app.post('/api/legado', require('./api/legado'))
+app.get('/api/legado', require('./api/legado'))
 app.post('/api/ra', require('./api/ra'))
 
 app.listen(port, () => {
