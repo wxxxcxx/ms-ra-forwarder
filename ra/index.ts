@@ -109,7 +109,7 @@ export function convert(ssml: string, format: string) {
             console.log('ws response status', response.statusCode, response.statusMessage);
         });
 
-        ws.connect('wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4');
+        ws.connect('wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=ca9909153a137e18cf9a789978002bf9');
     });
 
 }
