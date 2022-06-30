@@ -7,6 +7,6 @@ RUN npm install
 
 EXPOSE 3000
 
-ENV TOKEN=
+ENV TOKEN= LOG_LEVEL=info
 
 ENTRYPOINT [ "npm", "run", "start" ]
