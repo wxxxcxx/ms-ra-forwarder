@@ -1,3 +1,4 @@
-.vercel
 dist
 node_modules
+.vscode
+.vercel

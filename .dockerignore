@@ -1,4 +1,5 @@
-.vercel
-vercel.json
 dist
 node_modules
+.vscode
+.vercel
+vercel.json

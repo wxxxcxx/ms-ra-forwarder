@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto'
-import { client as WebSocketClient } from 'websocket'
-import * as https from 'https'
+import { client as WebSocketClient, connection as Conntection } from 'websocket'
+import * as log from 'log'
 
 export const FORMAT_CONTENT_TYPE = new Map([
   ['raw-16khz-16bit-mono-pcm', 'audio/basic'],
@@ -34,102 +34,181 @@ export const FORMAT_CONTENT_TYPE = new Map([
   ['ogg-48khz-16bit-mono-opus', 'audio/ogg; codecs=opus; rate=48000'],
 ])
 
-export function convert(ssml: string, format: string) {
-  return new Promise((resolve, reject) => {
-    https.get('https://ipinfo.io/').on('response', (response) => {
-      let data = ''
-      response.on('data', (chunk) => {
-        data = data + chunk
-      })
-      response.on('end', () => {
-        console.log(data)
-      })
-    })
-    let buffers: Array<Buffer> = []
-    let ws = new WebSocketClient()
-    ws.on('connect', (connection) => {
-      console.log('ws connected')
-      connection.on('close', (code, desc) => {
-        if (code == 1000) {
-          // console.log('ws disconnected');
-        } else {
-          console.log('ws connection was closed by', code, desc)
-          reject(`ws connection was closed by: [${code} ${desc}]`)
-        }
-      })
+interface PromiseExecutor {
+  resolve: (value?: any) => void
+  reject: (reason?: any) => void
+}
 
-      connection.on('message', (message) => {
-        if (message.type == 'utf8') {
-          console.log('ws received text:', JSON.stringify(message.utf8Data))
-          if (message.utf8Data.includes('Path:turn.end')) {
-            let result = Buffer.concat(buffers)
-            console.log('ws total received binary', result.length)
+const logger = log.get('service')
 
-            console.log('ws task complete')
-            connection.close(1000, 'CLOSE_NORMAL')
+export class Service {
+  private ws: WebSocketClient
 
-            resolve(result)
+  private connection: Conntection | null = null
+
+  private executorMap: Map<string, PromiseExecutor>
+  private bufferMap: Map<string, Buffer>
+
+  private timer: NodeJS.Timer | null = null
+
+  constructor() {
+    this.executorMap = new Map()
+    this.bufferMap = new Map()
+  }
+
+  private async connect(): Promise<Conntection> {
+    this.ws = new WebSocketClient()
+    return new Promise((resolve, reject) => {
+      this.ws.on('connect', (connection) => {
+        connection.on('close', (code, desc) => {
+          // 服务器会自动断开空闲超过30秒的连接
+          this.connection = null
+          for (let [key, value] of this.executorMap) {
+            value.reject(`连接已关闭: ${desc} ${code}`)
           }
-        } else if (message.type == 'binary') {
-          // console.log('ws received binary:', message.binaryData.length);
-          let separator = 'Path:audio\r\n'
-          let contentIndex =
-            message.binaryData.indexOf(separator) + separator.length
-          let content = message.binaryData.slice(
-            contentIndex,
-            message.binaryData.length,
-          )
-          buffers.push(content)
-        }
+          this.executorMap.clear()
+          this.bufferMap.clear()
+          logger.notice(`连接已关闭： ${desc} ${code}`)
+        })
+
+        connection.on('message', (message) => {
+          let pattern = /X-RequestId:(?<id>[a-z|0-9]*)/
+          if (message.type == 'utf8') {
+            logger.debug('收到文本消息：', message.utf8Data)
+            let data = message.utf8Data
+            if (data.includes('Path:turn.start')) {
+              // 开始传输
+
+              let matches = data.match(pattern)
+              let requestId = matches.groups.id
+              logger.debug(`开始传输：${requestId}……`)
+              this.bufferMap.set(requestId, Buffer.from([]))
+            } else if (data.includes('Path:turn.end')) {
+              // 结束传输
+              let matches = data.match(pattern)
+              let requestId = matches.groups.id
+              let result = this.bufferMap.get(requestId)
+              logger.debug(`传输完成：${requestId}……`)
+
+              let executor = this.executorMap.get(matches.groups.id)
+              this.executorMap.delete(matches.groups.id)
+              logger.info(`剩余 ${this.executorMap.size} 个任务`)
+              executor.resolve(result)
+            }
+          } else if (message.type == 'binary') {
+            let separator = 'Path:audio\r\n'
+            let contentIndex =
+              message.binaryData.indexOf(separator) + separator.length
+
+            let headers = message.binaryData.slice(0, contentIndex).toString()
+            let matches = headers.match(pattern)
+            let requestId = matches.groups.id
+
+            logger.debug(`收到音频片段：${requestId}……`)
+
+            let content = message.binaryData.slice(
+              contentIndex,
+              message.binaryData.length,
+            )
+
+            let buffer = this.bufferMap.get(requestId)
+            buffer = Buffer.concat([buffer, content])
+            this.bufferMap.set(requestId, buffer)
+          }
+        })
+
+        resolve(connection)
       })
+      this.ws.on('connectFailed', (error) => {
+        logger.error(`连接失败： ${error}`)
+        reject(`连接失败： ${error}`)
+      })
+      this.ws.on('httpResponse', (response, client) => {
+        logger.debug('收到响应：', response.statusCode, response.statusMessage)
+      })
+      const connectionId = randomBytes(16).toString('hex').toLowerCase()
+      this.ws.connect(
+        `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`,
+      )
+    })
+  }
+
+  public async convert(ssml: string, format: string) {
+    if (this.connection == null || this.connection.connected == false) {
+      logger.notice('准备连接服务器……')
+      let connection = await this.connect()
+      this.connection = connection
+      logger.notice('连接成功！')
+    }
+    const requestId = randomBytes(16).toString('hex').toLowerCase()
+    let result = new Promise((resolve, reject) => {
+      // 等待服务器返回后这个方法才会返回结果
+      this.executorMap.set(requestId, {
+        resolve,
+        reject,
+      })
+      // 发送配置消息
       let configData = {
         context: {
           synthesis: {
             audio: {
               metadataoptions: {
-                sentenceBoundaryEnabled: 'false',
-                wordBoundaryEnabled: 'false',
+                sentenceBoundaryEnabled: false,
+                wordBoundaryEnabled: false,
               },
               outputFormat: format,
             },
           },
         },
       }
-
       let configMessage =
         'Content-Type:application/json; charset=utf-8\r\nPath:speech.config\r\n\r\n' +
         JSON.stringify(configData)
+      logger.notice(`开始转换：${requestId}……`)
+      logger.debug(`准备发送配置请求：${requestId}\n`, configMessage)
+      this.connection.send(configMessage, (configError) => {
+        if (configError) {
+          logger.error(`配置请求发送失败：${requestId}\n`, configError)
+        }
 
-      console.log('ws send:', JSON.stringify(configMessage))
-      connection.send(configMessage, () => {
-        const requestId = randomBytes(16).toString('hex')
-        let message =
+        // 发送SSML消息
+        let ssmlMessage =
           `X-RequestId:${requestId}\r\nContent-Type:application/ssml+xml\r\nPath:ssml\r\n\r\n` +
           ssml
-        console.log('ws send:', JSON.stringify(message))
-        connection.send(message, (error) => {
-          if (error) {
-            console.log('ws send failed', error)
-            reject(`ws send failed: ${error}`)
+        logger.debug(`准备发送SSML消息：${requestId}\n`, ssmlMessage)
+        this.connection.send(ssmlMessage, (ssmlError) => {
+          if (ssmlError) {
+            logger.error(`SSML消息发送失败：${requestId}\n`, ssmlError)
           }
         })
       })
     })
+    // 收到请求，清除超时定时器
+    if (this.timer) {
+      logger.debug('收到新的请求，清除超时定时器')
+      clearTimeout(this.timer)
+    }
+    // 设置定时器，超过10秒没有收到请求，主动断开连接
+    logger.debug('创建新的超时定时器')
+    this.timer = setTimeout(() => {
+      logger.debug('已经 10 秒没有请求，主动关闭连接')
+      this.connection.close(1000)
+      this.timer = null
+    }, 10000)
 
-    ws.on('connectFailed', (error) => {
-      console.log('ws connect failed', error)
-      reject(`ws connect failed: ${error}`)
+    // 创建超时结果
+    let timeout = new Promise((resolve, reject) => {
+      // 如果超过 20 秒没有返回结果，则清除请求并返回超时
+      setTimeout(() => {
+        this.executorMap.delete(requestId)
+        this.bufferMap.delete(requestId)
+        reject('转换超时')
+      }, 10000)
     })
-    ws.on('httpResponse', (response, client) => {
-      console.log(
-        'ws response status',
-        response.statusCode,
-        response.statusMessage,
-      )
-    })
-
-    ws.connect(
-      'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=ca9909153a137e18cf9a789978002bf9',
-    )
-  })
+    let data = await Promise.race([result, timeout])
+    logger.notice(`转换完成：${requestId}`)
+    return data
+  }
 }
+
+export const service=new Service()

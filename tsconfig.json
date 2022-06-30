@@ -8,7 +8,7 @@
         "sourceMap": true
     },
     "typedocOptions": {
-        "entryPoints": ["src/index.ts"],
+        "entryPoints": ["src/app.ts"],
         "out": "docs",
         "excludePrivate": true
     }
