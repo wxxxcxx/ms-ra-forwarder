@@ -4,7 +4,8 @@
         "module": "commonjs",
         "target": "ES6",
         "declaration": true,
-        "outDir": "dist"
+        "outDir": "dist",
+        "sourceMap": true
     },
     "typedocOptions": {
         "entryPoints": ["src/index.ts"],

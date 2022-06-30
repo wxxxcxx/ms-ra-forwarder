@@ -1,6 +1,6 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { Request, Response } from 'express';
 import { FORMAT_CONTENT_TYPE } from '../ra';
-module.exports = async (request: VercelRequest, response: VercelResponse) => {
+module.exports = async (request: Request, response: Response) => {
     let api = request.query['api'];
     let name = request.query['name'] ?? '大声朗读';
     let voiceName = request.query['voiceName'] ?? 'zh-CN-XiaoxiaoNeural';
@@ -10,14 +10,14 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
     if (Array.isArray(voiceFormat)) {
         throw `Invalid format ${voiceFormat}`;
     }
-    if (!FORMAT_CONTENT_TYPE.has(voiceFormat)) {
+    if (!FORMAT_CONTENT_TYPE.has(voiceFormat as string)) {
         throw `Invalid format ${voiceFormat}`;
     }
 
     const data = {};
     data['name'] = name == '' ? '大声朗读' : name;
     data['concurrentRate'] = '1';
-    data['contentType'] = FORMAT_CONTENT_TYPE.get(voiceFormat);
+    data['contentType'] = FORMAT_CONTENT_TYPE.get(voiceFormat as string);
     data['id'] = Date.now();
     data['loginCheckJs'] = '';
     data['loginUi'] = '';

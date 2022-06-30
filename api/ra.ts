@@ -1,8 +1,8 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { Request, Response } from 'express';
 import { convert, FORMAT_CONTENT_TYPE } from '../ra';
 
 
-module.exports = async (request: VercelRequest, response: VercelResponse) => {
+module.exports = async (request: Request, response: Response) => {
 
     let token = process.env.TOKEN;
     if (token) {
@@ -24,6 +24,7 @@ module.exports = async (request: VercelRequest, response: VercelResponse) => {
         if (!FORMAT_CONTENT_TYPE.has(format)) {
             throw `Invalid format ${format}`;
         }
+        console.log(request.body);
         let ssml = request.body;
         if (ssml == null) {
             throw `Invalid ssml: ${ssml}`;
