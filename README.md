@@ -1,18 +1,57 @@
 # ms-ra-forwarder
 
-创建这个项目的初衷是为了能够在[阅读（legado）](https://github.com/gedoor/legado)中听“晓晓”念书。由于其中的脚本引擎不支持 WebSocket ，所以用 [Vercel](https://vercel.com/) 的 Serverless Function 包装了一下微软 Edge 浏览器“大声朗读”的接口。
+创建这个项目的初衷是为了能够在[阅读（legado）](https://github.com/gedoor/legado)中听“晓晓”念书。由于其中的脚本引擎不支持 WebSocket ，所以包装了一下微软 Edge 浏览器“大声朗读”的接口。
 
 如果你的项目可以使用 WebSocket ，请直接在项目中调用原接口。具体代码可以参考 [ra/index.ts](ra/index.ts)。
 
 ## 更新日志
 
-**2022-06-30: Vercel 的 IP 好像被微软拉黑了**
+**2022-07-01: Vercel 用不了了，等我修复吧！**
 
-**2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/meetcw/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。**
 
 ## 使用
 
-请先 Fork 一份代码然后部署到自己的 Vercel 中 （[演示视频](https://www.youtube.com/watch?v=vRC6umZp8hI)）。
+### 手动运行
+
+手动运行需要事先安装好 git 和 nodejs。
+
+```bash
+# 获取代码
+git clone https://github.com/meetcw/ms-ra-forwarder.git
+
+cd ms-ra-forwarder
+# 安装依赖
+npm install 
+# 运行
+npm run start
+```
+### docker
+
+需要安装 docker（目前镜像只支持 amd64 处理器）。
+
+``` bash
+# 拉取镜像
+docker pull meetcw/ms-ra-forwarder:latest
+# 运行
+docker run --name ms-ra-forwarder -d -p 3000:3000 meetcw/ms-ra-forwarder
+# 浏览器访问 http://localhost:3000
+```
+
+### docker compose
+
+创建 `docker-compose.yml` 写入以下内容并保存。
+
+``` yaml
+version: '3'
+
+services:
+  ms-ra-forwarder:
+    container_name: ms-ra-forwarder
+    image: meetcw/ms-ra-forwarder:latest
+```
+
+在 `docker-compose.yml` 目录下执行 `docker compose up -d`。
+
 
 ### 导入到阅读（legado）
 
@@ -58,3 +97,5 @@ Content-Type: text/plain
 - 本项目使用的是Edge浏览器“大声朗读”功能的接口，不保证后续可用性和稳定性。
 
 - **本项目仅供学习和参考，请勿商用。**
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
