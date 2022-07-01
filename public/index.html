@@ -153,7 +153,7 @@
     }
 
     function preview() {
-      var headers = {'Content-Type': 'text/plain'};
+      var headers = { 'Content-Type': 'text/plain' };
       var voiceName = document.getElementsByName('voiceName')[0].value;
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       var token = document.getElementsByName('token')[0].value;
@@ -178,23 +178,21 @@
         } else if (response.status == 401) {
           throw '无效的密钥';
         } else {
-          console.log(response);
-          throw '未知错误';
+          return response.text().then(text=>Promise.reject(text));
         }
-      })
-      .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
-      .then(audio => {
-        var player = ctx.createBufferSource();
-        player.buffer = audio;
-        player.connect(ctx.destination);
-        player.start(ctx.currentTime);
-      })
-      .catch(reason => {
-        alert(reason);
-      })
-      .finally(()=>{
-        button.disabled = false;
-      });
+      }).then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+        .then(audio => {
+          var player = ctx.createBufferSource();
+          player.buffer = audio;
+          player.connect(ctx.destination);
+          player.start(ctx.currentTime);
+        })
+        .catch(reason => {
+          alert(reason);
+        })
+        .finally(() => {
+          button.disabled = false;
+        });
     }
 
     function createLegadoUrl() {

@@ -38,8 +38,6 @@ module.exports = async (request: Request, response: Response) => {
       .send(result)
   } catch (error) {
     logger.error(error)
-    response.status(503).json({
-      message: error,
-    })
+    response.status(503).json(error)
   }
 }
