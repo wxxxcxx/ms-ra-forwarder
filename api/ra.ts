@@ -34,7 +34,7 @@ module.exports = async (request: Request, response: Response) => {
     response
       .status(200)
       .setHeader('Content-Type', FORMAT_CONTENT_TYPE.get(format))
-      .send(result)
+    response.end(result)
   } catch (error) {
     logger.error(error)
     response.status(503).json(error)
