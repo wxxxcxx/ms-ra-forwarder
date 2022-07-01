@@ -63,6 +63,10 @@ export class Service {
         connection.on('close', (code, desc) => {
           // 服务器会自动断开空闲超过30秒的连接
           this.connection = null
+          if(this.timer) {
+            clearTimeout(this.timer)
+            this.timer = null
+          }
           for (let [key, value] of this.executorMap) {
             value.reject(`连接已关闭: ${desc} ${code}`)
           }
@@ -191,9 +195,11 @@ export class Service {
     // 设置定时器，超过10秒没有收到请求，主动断开连接
     logger.debug('创建新的超时定时器')
     this.timer = setTimeout(() => {
-      logger.debug('已经 10 秒没有请求，主动关闭连接')
-      this.connection.close(1000)
-      this.timer = null
+      if (this.connection && this.connection.connected) {
+        logger.debug('已经 10 秒没有请求，主动关闭连接')
+        this.connection.close(1000)
+        this.timer = null
+      }
     }, 10000)
 
     // 创建超时结果
@@ -211,4 +217,4 @@ export class Service {
   }
 }
 
-export const service=new Service()
+export const service = new Service()
