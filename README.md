@@ -6,10 +6,53 @@
 
 ## 更新日志
 
-**2022-07-01: Vercel 用不了了，等我修复吧！**
+**2022-07-01: 部署在境外服务器上的服务目前只能选择 `webm-24khz-16bit-mono-opus` 格式的音频了！如果使用 docker 部署在国内其他音频格式应该还可以继续使用。**
 
 
-## 使用
+**2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/meetcw/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。**
+
+## 部署
+
+请参考下列部署方式。
+
+### 部署到 Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+### 部署到 Vercel
+
+请先 Fork 一份代码然后部署到自己的 Vercel 中 。参考 [演示视频](https://www.youtube.com/watch?v=vRC6umZp8hI)。
+
+**注：由于 Vercel 使用了无状态的云函数，每次请求都需要与重新微软的服务器建立连接，所以速度会相对较慢。**
+
+
+### Docker
+
+需要安装 docker（目前镜像只支持 amd64 处理器）。
+
+``` bash
+# 拉取镜像
+docker pull meetcw/ms-ra-forwarder:latest
+# 运行
+docker run --name ms-ra-forwarder -d -p 3000:3000 meetcw/ms-ra-forwarder
+# 浏览器访问 http://localhost:3000
+```
+
+### Docker Compose
+
+创建 `docker-compose.yml` 写入以下内容并保存。
+
+``` yaml
+version: '3'
+
+services:
+  ms-ra-forwarder:
+    container_name: ms-ra-forwarder
+    image: meetcw/ms-ra-forwarder:latest
+```
+
+在 `docker-compose.yml` 目录下执行 `docker compose up -d`。
+
 
 ### 手动运行
 
@@ -25,33 +68,8 @@ npm install
 # 运行
 npm run start
 ```
-### docker
 
-需要安装 docker（目前镜像只支持 amd64 处理器）。
-
-``` bash
-# 拉取镜像
-docker pull meetcw/ms-ra-forwarder:latest
-# 运行
-docker run --name ms-ra-forwarder -d -p 3000:3000 meetcw/ms-ra-forwarder
-# 浏览器访问 http://localhost:3000
-```
-
-### docker compose
-
-创建 `docker-compose.yml` 写入以下内容并保存。
-
-``` yaml
-version: '3'
-
-services:
-  ms-ra-forwarder:
-    container_name: ms-ra-forwarder
-    image: meetcw/ms-ra-forwarder:latest
-```
-
-在 `docker-compose.yml` 目录下执行 `docker compose up -d`。
-
+## 使用
 
 ### 导入到阅读（legado）
 
@@ -97,5 +115,3 @@ Content-Type: text/plain
 - 本项目使用的是Edge浏览器“大声朗读”功能的接口，不保证后续可用性和稳定性。
 
 - **本项目仅供学习和参考，请勿商用。**
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
