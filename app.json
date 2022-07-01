@@ -6,10 +6,6 @@
         "TOKEN": {
             "description": "保护您的服务不被其他人访问",
             "required": true
-        },
-        "LOG_LEVEL": {
-            "description": "日志级别，可选 debug、info、notice、warning、error",
-            "required": false
         }
     },
     "stack": "container"

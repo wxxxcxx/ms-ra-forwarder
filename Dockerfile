@@ -7,7 +7,7 @@ RUN npm install
 COPY ./ ./
 RUN npm run build
 
-ENV TOKEN= LOG_LEVEL=info PORT=3000
+ENV TOKEN= PORT=3000
 
 EXPOSE $PORT
 
