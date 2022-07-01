@@ -32,7 +32,14 @@
         <label for="voiceName" class="form-label">声音：</label>
         <select name="voiceName" class="form-select">
         </select>
-        <div class="form-text">貌似接口就支持4种声音？推荐使用晓晓（晓晓yyds）。</div>
+        <div class="form-text">接口明确支持的的中文就这几种声音，需要其他声音可以自己手动填写。推荐使用晓晓（晓晓yyds）。</div>
+      </div>
+      <div class="mb-3">
+        <label for="customVoiceName" class="form-label">自定义声音：</label>
+        <input name="customVoiceName" class="form-control" type="text" value="" />
+        <div class="form-text">如果上面没有你喜欢的声音，可以自己手动填写（不保证可用，不使用请留空）。【<a
+            href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/language-support?tabs=speechtotext#voice-styles-and-roles"
+            target="_blank">声音列表</a>】</div>
       </div>
 
       <div class="mb-3">
@@ -63,7 +70,10 @@
           <option value="ogg-24khz-16bit-mono-opus">ogg-24khz-16bit-mono-opus</option>
           <option value="ogg-48khz-16bit-mono-opus">ogg-48khz-16bit-mono-opus</option>
         </select>
-        <div class="form-text">可以调整音频的格式和质量。质量越高，生成的文件越大，对网速和流量的需求越高。请根据自己的情况选择。（我禁用了一些在阅读中播放不了的格式）</div>
+        <div class="form-text">
+          <p>可以调整音频的格式和质量。质量越高，生成的文件越大，对网速和流量的需求越高。请根据自己的情况选择。</p>
+          <p><b>2022-07-01：包括 Vercel 在内的某些地区只有 <code>webm-24khz-16bit-mono-opus</code> 这个格式可以使用了。</b></p>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -154,7 +164,8 @@
 
     function preview() {
       var headers = { 'Content-Type': 'text/plain' };
-      var voiceName = document.getElementsByName('voiceName')[0].value;
+      var customVoiceName = document.getElementsByName('customVoiceName')[0].value;
+      var voiceName = customVoiceName != '' ? customVoiceName : document.getElementsByName('voiceName')[0].value;
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
@@ -178,7 +189,7 @@
         } else if (response.status == 401) {
           throw '无效的密钥';
         } else {
-          return response.text().then(text=>Promise.reject(text));
+          return response.text().then(text => Promise.reject(text));
         }
       }).then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
         .then(audio => {
@@ -197,7 +208,8 @@
 
     function createLegadoUrl() {
       var name = document.getElementsByName('name')[0].value;
-      var voiceName = document.getElementsByName('voiceName')[0].value;
+      var customVoiceName = document.getElementsByName('customVoiceName')[0].value;
+      var voiceName = customVoiceName != '' ? customVoiceName : document.getElementsByName('voiceName')[0].value;
       var voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       var token = document.getElementsByName('token')[0].value;
       var previewText = document.getElementsByName('previewText')[0].value;
