@@ -91,7 +91,7 @@ Content-Type: text/plain
 ```
 
 #### 定制发音和音色
-请求的正文为 ssml 格式，支持定制发音人和说话风格，下面是相关的示例和文档：
+请求的正文为 ssml 格式，支持定制发音人和~~说话风格~~（最新接口不再支持定制说话风格），下面是相关的示例和文档：
 
 [文本转语音](https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/#overview)
 
