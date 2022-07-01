@@ -2,8 +2,9 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY ./ ./
+COPY ./package*.json ./
 RUN npm install
+COPY ./ ./
 RUN npm run build
 
 ENV TOKEN= LOG_LEVEL=info PORT=3000

@@ -5,8 +5,10 @@ node_modules
 vercel.json
 
 # 无关的文件
-.dockerignore
+.git
+.github
 .gitignore
+.dockerignore
 app.json
 heroku.yml
 Dockerfile
