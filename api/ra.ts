@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import log = require('log')
-import { client } from 'websocket'
 import { service, FORMAT_CONTENT_TYPE } from '../ra'
 
 module.exports = async (request: Request, response: Response) => {
