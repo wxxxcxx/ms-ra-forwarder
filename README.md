@@ -28,7 +28,7 @@
 
 ### Docker
 
-需要安装 docker（目前镜像只支持 amd64 处理器）。
+需要安装 docker。
 
 ``` bash
 # 拉取镜像
