@@ -57,13 +57,15 @@ export class Service {
   }
 
   private async connect(): Promise<Conntection> {
-    this.ws = new WebSocketClient()
+    this.ws = new WebSocketClient({
+      webSocketVersion: 13,
+    })
     return new Promise((resolve, reject) => {
       this.ws.on('connect', (connection) => {
         connection.on('close', (code, desc) => {
           // 服务器会自动断开空闲超过30秒的连接
           this.connection = null
-          if(this.timer) {
+          if (this.timer) {
             clearTimeout(this.timer)
             this.timer = null
           }
@@ -131,8 +133,25 @@ export class Service {
         logger.debug('收到响应：', response.statusCode, response.statusMessage)
       })
       const connectionId = randomBytes(16).toString('hex').toLowerCase()
+      let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
       this.ws.connect(
-        `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`,
+        url,
+        null,
+        'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
+        {
+          'Host': 'speech.platform.bing.com',
+          'Connection': 'Upgrade',
+          'Pragma': 'no-cache',
+          'Cache-Control': 'no-cache',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44',
+          'Upgrade': 'websocket',
+          'Origin': 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
+          'Sec-WebSocket-Version': '13',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Cookie': 'MUID=1BE48574F82A60192B0094A0F96F61CA; SUID=M; SRCHD=AF=NOFORM; SRCHUID=V=2&GUID=695BC3605ECD4386856523A79DC456AE&dmnchg=1; USRLOC=HS=1; SRCHUSR=DOB=20220701&T=1656668571000; ABDEF=V=13&ABDV=11&MRNB=1656669297926&MRB=0; SRCHS=PC=U531; _RwBf=ilt=5&ihpd=0&ispd=5&rc=0&rb=0&gb=0&rg=0&pc=0&mtu=0&rbb=0&g=0&cid=&clo=0&v=5&l=2022-07-01T07:00:00.0000000Z&lft=20220701&aof=0&o=2&p=&c=&t=0&s=0001-01-01T00:00:00.0000000+00:00&ts=2022-07-01T10:09:02.7670532+00:00&rwred=0; _SS=SID=1BE013E40213630525CB023003566201&PC=U531&R=0&RB=0&GB=0&RG=0&RP=0; SRCHHPGUSR=SRCHLANG=en&PV=7.0.0&BRW=S&BRH=M&CW=1034&CH=752&SW=1440&SH=900&DPR=1&UTC=0&DM=0&EXLTT=5&HV=1656670143&WTS=63792265371; ipv6=hit=1656673744600&t=4',
+          'Sec-WebSocket-Extensions': 'permessage-deflate; client_max_window_bits',
+        }
       )
     })
   }
@@ -157,8 +176,8 @@ export class Service {
           synthesis: {
             audio: {
               metadataoptions: {
-                sentenceBoundaryEnabled: false,
-                wordBoundaryEnabled: false,
+                sentenceBoundaryEnabled: 'false',
+                wordBoundaryEnabled: 'false',
               },
               outputFormat: format,
             },
@@ -166,7 +185,9 @@ export class Service {
         },
       }
       let configMessage =
-        'Content-Type:application/json; charset=utf-8\r\nPath:speech.config\r\n\r\n' +
+        `X-Timestamp:${Date()}\r\n` +
+        'Content-Type:application/json; charset=utf-8\r\n' +
+        'Path:speech.config\r\n\r\n' +
         JSON.stringify(configData)
       logger.notice(`开始转换：${requestId}……`)
       logger.debug(`准备发送配置请求：${requestId}\n`, configMessage)
@@ -177,7 +198,10 @@ export class Service {
 
         // 发送SSML消息
         let ssmlMessage =
-          `X-RequestId:${requestId}\r\nContent-Type:application/ssml+xml\r\nPath:ssml\r\n\r\n` +
+          `X-Timestamp:${Date()}\r\n` +
+          `X-RequestId:${requestId}\r\n` +
+          `Content-Type:application/ssml+xml\r\n` +
+          `Path:ssml\r\n\r\n` +
           ssml
         logger.debug(`准备发送SSML消息：${requestId}\n`, ssmlMessage)
         this.connection.send(ssmlMessage, (ssmlError) => {
