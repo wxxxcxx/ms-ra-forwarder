@@ -37,9 +37,12 @@
       <div class="mb-3">
         <label for="customVoiceName" class="form-label">自定义声音：</label>
         <input name="customVoiceName" class="form-control" type="text" value="" />
-        <div class="form-text">如果上面没有你喜欢的声音，可以自己手动填写（不保证可用，不使用请留空）。【<a
-            href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/language-support?tabs=speechtotext#voice-styles-and-roles"
-            target="_blank">声音列表</a>】</div>
+        <div class="form-text">
+          <p>如果上面没有你喜欢的声音，可以自己手动填写（不保证可用，不使用请留空）。【<a
+              href="https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/language-support?tabs=speechtotext#voice-styles-and-roles"
+              target="_blank">声音列表</a>】</p>
+          <p>如果出现 “Unsupported voice XXX” 错误，表示不支持当前声音。</p>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -72,7 +75,7 @@
         </select>
         <div class="form-text">
           <p>可以调整音频的格式和质量。质量越高，生成的文件越大，对网速和流量的需求越高。请根据自己的情况选择。</p>
-          <p><b>2022-07-01：包括 Vercel 在内的某些地区只有 <code>webm-24khz-16bit-mono-opus</code> 这个格式可以使用了。</b></p>
+          <p>如果出现 “Unsupported output format: XXX” 错误，表示不支持当前格式。</p>
         </div>
       </div>
 
