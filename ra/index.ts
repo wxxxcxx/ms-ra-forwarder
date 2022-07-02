@@ -54,7 +54,13 @@ export class Service {
   private async connect(): Promise<WebSocket> {
     const connectionId = randomBytes(16).toString('hex').toLowerCase()
     let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
-    let ws = new WebSocket(url)
+    let ws = new WebSocket(url,{
+      host:'speech.platform.bing.com',
+      origin:'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
+      headers:{
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44'
+      }
+    })
     return new Promise((resolve, reject) => {
       ws.on('open', () => {
         resolve(ws)
@@ -94,7 +100,6 @@ export class Service {
 
             let executor = this.executorMap.get(matches.groups.id)
             this.executorMap.delete(matches.groups.id)
-            console.info(`剩余 ${this.executorMap.size} 个任务`)
             executor.resolve(result)
           }
         } else if (isBinary) {
@@ -210,6 +215,7 @@ export class Service {
     })
     let data = await Promise.race([result, timeout])
     console.info(`转换完成：${requestId}`)
+    console.info(`剩余 ${this.executorMap.size} 个任务`)
     return data
   }
 }
