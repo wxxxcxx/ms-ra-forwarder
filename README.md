@@ -17,16 +17,21 @@
 
 请参考下列部署方式。
 
-### 部署到 Heroku
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
 ### 部署到 Vercel
 
 请先 Fork 一份代码然后部署到自己的 Vercel 中 。参考 [演示视频](https://www.youtube.com/watch?v=vRC6umZp8hI)。
 
 **注：由于 Vercel 使用了无状态的云函数，每次请求都需要与重新微软的服务器建立连接，所以速度会相对较慢。**
 
+### 部署到 Heroku
+
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+### 部署到 Railway
+
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/p8RU3T?referralCode=-hqLZp)
 
 ### Docker
 
