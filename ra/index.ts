@@ -1,5 +1,6 @@
 import { randomBytes } from 'crypto'
 import { WebSocket } from 'ws'
+import {v4 as uuidv4} from 'uuid'
 
 export const FORMAT_CONTENT_TYPE = new Map([
   ['raw-16khz-16bit-mono-pcm', 'audio/basic'],
@@ -54,11 +55,15 @@ export class Service {
   private async connect(): Promise<WebSocket> {
     const connectionId = randomBytes(16).toString('hex').toLowerCase()
     let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
+    let x_connection_id = uuidv4().replace("-","").toUpperCase();
     let ws = new WebSocket(url,{
       host:'speech.platform.bing.com',
-      origin:'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
+      origin:'http://speech.platform.bing.com',
       headers:{
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44'
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44',
+        'ProtoSec-WebSocket-Key':'wPEE5FzwR6mxpsslyRRpgP==',
+        'Sec-WebSocket-Version':'13',
+        'X-ConnectionId': x_connection_id
       }
     })
     return new Promise((resolve, reject) => {
