@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { service, FORMAT_CONTENT_TYPE } from '../service/edge'
 
 module.exports = async (request: Request, response: Response) => {
-  console.log(process.env.VERCEL)
   console.debug(`请求正文：${request.body}`)
   let token = process.env.TOKEN
   if (token) {
