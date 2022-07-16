@@ -8,10 +8,10 @@
     "build": "tsc"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "debug": "^4.3.4",
     "express": "^4.18.1",
-    "log-node": "^8.0.3",
     "ws": "^8.8.0"
   },
   "author": "Cw",
@@ -19,7 +19,6 @@
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/express": "^4.17.13",
-    "@types/log": "^6.3.0",
     "@types/node": "^17.0.8",
     "@types/ws": "^8.5.3",
     "ts-node": "^10.4.0",
