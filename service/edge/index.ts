@@ -215,16 +215,17 @@ export class Service {
       }
     }, 10000)
 
-    // 创建超时结果
-    let timeout = new Promise((resolve, reject) => {
-      // 如果超过 20 秒没有返回结果，则清除请求并返回超时
-      setTimeout(() => {
-        this.executorMap.delete(requestId)
-        this.bufferMap.delete(requestId)
-        reject('转换超时')
-      }, 10000)
-    })
-    let data = await Promise.race([result, timeout])
+    let data = await Promise.race([
+      result,
+      new Promise((resolve, reject) => {
+        // 如果超过 20 秒没有返回结果，则清除请求并返回超时
+        setTimeout(() => {
+          this.executorMap.delete(requestId)
+          this.bufferMap.delete(requestId)
+          reject('转换超时')
+        }, 10000)
+      }),
+    ])
     console.info(`转换完成：${requestId}`)
     console.info(`剩余 ${this.executorMap.size} 个任务`)
     return data
