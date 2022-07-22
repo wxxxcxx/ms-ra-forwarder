@@ -24,8 +24,16 @@
   <div class="container" style="margin-top: 30px;">
     <div class="row">
       <div class="col">
-        <div class="alert alert-primary" role="alert">
-          现在可以使用 Azure 版本的 API 啦！<a href="/azure.html">点我查看</a>！
+        <div class="alert alert-warning" role="alert">
+          Azure 版本。此版本使用了<a href="https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/"
+            target="_blank">Azure 演示页面</a>的接口，好像只有美国的节点能用，速度可能不及 Edge 的接口。而且我没怎么测试，可能有BUG。总之有问题请提 <a href="https://github.com/wxxxcxx/ms-ra-forwarder/issues">issue</a>。
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-warning" role="alert">
+          此版本的 API 需要获取授权，而 Vercel 无法保存授权状态，所以不建议使用 Vercel 部署的用户使用此版本。
         </div>
       </div>
     </div>
@@ -33,7 +41,7 @@
       <div class="row">
         <div class="col">
           <label for="name" class="form-label">配置名称：</label>
-          <input name="name" type="text" class="form-control" value="大声朗读" />
+          <input name="name" type="text" class="form-control" value="微软TTS" />
           <div class="form-text">在阅读APP中显示的名称。</div>
         </div>
       </div>
@@ -42,7 +50,22 @@
           <label for="voiceName" class="form-label">声音：</label>
           <select name="voiceName" class="form-select" onchange="updateConfigName()">
           </select>
-          <div class="form-text">声音列表加载可能有点慢，请耐心等待！</div>
+          <div class="form-text">声音列表加载可能有点慢，请稍等一下！</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label for="styleName" class="form-label">风格：</label>
+          <select name="styleName" class="form-select">
+            <option value="general">general</option>
+          </select>
+          <div class="form-text">指定讲话风格。 说话风格特定于语音。</div>
+        </div>
+        <div class="col">
+          <label for="styleDegree" class="form-label">风格强度：</label>
+          <input name="styleDegree" class="form-control" type="number" min="0.1" max="2.0" step="0.1" value="1.0">
+          <div class="form-text">指定说话风格的强度。 接受的值：0.01 到 2（含边界值）。 默认值为 1，表示预定义的风格强度。 最小单位为 0.01，表示略倾向于目标风格。 值为 2
+            表示是默认风格强度的两倍。</div>
         </div>
       </div>
       <div class="row">
@@ -132,8 +155,8 @@
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-svg@1.1.0/lib/qrcode.min.js"></script>
   <script>
-    let voices = [];
-    fetch('https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4')
+    let voices = {};
+    fetch('/api/azure')
       .then(response => {
         if (response.status == 200) {
           return response.json();
@@ -143,50 +166,72 @@
         }
       }).then(data => {
         voices = data;
-        refreshVoice();
+        refreshVoice(data);
       }).catch(reason => {
         alert(reason);
       });
 
-    function refreshVoice() {
-      let voiceElelement = document.getElementsByName('voiceName')[0];
-      voiceElelement.innerHTMl = '';
-      voices.forEach(item => {
-        if (item['FriendlyName'].indexOf('Chinese') >= 0) {
+    function refreshVoice(data) {
+      let voiceElement = document.getElementsByName('voiceName')[0];
+      voiceElement.innerHTMl = '';
+      data.forEach(item => {
+        if (['zh-CN', 'zh-TW', 'zh-HK'].includes(item['Locale'])) {
           let option = document.createElement('option');
           option.value = item['ShortName'];
-          option.innerText = item['FriendlyName'];
-          voiceElelement.append(option)
+          option.innerText = (item['LocalName'] ?? item['ShortName']) + '-' + item['LocaleName'];
+          voiceElement.appendChild(option);
+          voices[item['ShortName']] = item;
         }
       });
       updateConfigName();
     }
 
     function updateConfigName() {
-      let voice = document.getElementsByName('voiceName')[0].value;
-      document.getElementsByName('name')[0].value = '大声朗读（' + voice + '）';
+      let voiceName = document.getElementsByName('voiceName')[0].value;
+      let voice = voices[voiceName];
+      document.getElementsByName('name')[0].value = '微软TTS（' + voice['LocalName'] + '）';
+      let styleElement = document.getElementsByName('styleName')[0]
+      styleElement.innerHTML = '';
+      let option = document.createElement('option');
+      option.value = 'general';
+      option.innerText = 'general';
+      styleElement.appendChild(option);
+      let styleList = voice['StyleList']
+      if (styleList) {
+        styleList.forEach(style => {
+          let option = document.createElement('option');
+          option.value = style;
+          option.innerText = style;
+          styleElement.appendChild(option);
+        });
+      }
     }
 
-    function createSSML(text, voiceName) {
-      let ssml = '\
+    function createSSML(text, voiceName, styleName, styleDegree) {
+      let ssml = `\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
-          <voice name="'+ voiceName + '">\
+          <voice name="${voiceName}">\
+            <mstts:express-as style="${styleName}" styledegree="${styleDegree}">\
               <prosody rate="0%" pitch="0%">\
-                  '+ text + '\
+                  ${text}\
               </prosody >\
+            </mstts:express-as>
           </voice >\
-        </speak > '
+        </speak > `
 
       return ssml;
     }
 
     function preview() {
       let headers = { 'Content-Type': 'text/plain' };
+
       let voiceName = document.getElementsByName('voiceName')[0].value;
       let voiceFormat = document.getElementsByName('voiceFormat')[0].value;
+      let styleName = document.getElementsByName('styleName')[0].value;
+      let styleDegree = document.getElementsByName('styleDegree')[0].value;
       let token = document.getElementsByName('token')[0].value;
       let previewText = document.getElementsByName('previewText')[0].value;
-      let ssml = createSSML(previewText, voiceName)
+      let ssml = createSSML(previewText, voiceName, styleName, styleDegree)
       if (token) {
         headers['Authorization'] = 'Bearer ' + token;
       }
@@ -196,7 +241,7 @@
       let button = document.getElementById('previewButton');
       button.disabled = true;
       let ctx = new AudioContext();
-      fetch('/api/ra', {
+      fetch('/api/azure', {
         method: 'post',
         headers: headers,
         body: ssml
@@ -226,12 +271,16 @@
     function createLegadoUrl() {
       let name = document.getElementsByName('name')[0].value;
       let voiceName = document.getElementsByName('voiceName')[0].value;
+      let styleName = document.getElementsByName('styleName')[0].value;
+      let styleDegree = document.getElementsByName('styleDegree')[0].value;
       let voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       let token = document.getElementsByName('token')[0].value;
       let previewText = document.getElementsByName('previewText')[0].value;
-      let url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
+      let url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/azure')
         + '&name=' + encodeURI(name)
         + '&voiceName=' + voiceName
+        + '&styleName=' + styleName
+        + '&styleDegree=' + styleDegree
         + '&voiceFormat=' + voiceFormat
         + '&token=' + token;
       let svg = new QRCode(url).svg();
