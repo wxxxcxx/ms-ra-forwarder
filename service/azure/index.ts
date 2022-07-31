@@ -1,5 +1,7 @@
 import { randomBytes } from 'crypto'
 import { WebSocket } from 'ws'
+import axios from 'axios'
+import { config } from 'process'
 
 export const FORMAT_CONTENT_TYPE = new Map([
   ['raw-16khz-16bit-mono-pcm', 'audio/basic'],
@@ -44,33 +46,85 @@ export class Service {
   private executorMap: Map<string, PromiseExecutor>
   private bufferMap: Map<string, Buffer>
 
-  private timer: NodeJS.Timer | null = null
-
+  private heartbeatTimer: NodeJS.Timer | null = null
+  private _token = null
   constructor() {
     this.executorMap = new Map()
     this.bufferMap = new Map()
   }
 
-  private async connect(): Promise<WebSocket> {
-    const connectionId = randomBytes(16).toString('hex').toLowerCase()
-    let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
-    let ws = new WebSocket(url,{
-      host:'speech.platform.bing.com',
-      origin:'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
-      headers:{
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44'
+  private async refreshToken() {
+    let response = await axios.get(
+      'https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/',
+    )
+    let data = response.data
+    let matches = data.match(/token:\s\"(?<token>.*)\"/)
+    this._token = matches.groups.token
+    console.log('刷新访问令牌：', this._token)
+  }
+
+  public async getToken() {
+    try {
+      if (this._token == null) {
+        await this.refreshToken()
+      } else {
+        await axios.get(
+          'https://westus.tts.speech.microsoft.com/cognitiveservices/voices/list',
+          {
+            headers: {
+              authorization: `Bearer ${this._token}`,
+            },
+          },
+        )
       }
+    } catch (error) {
+      if (error.response.status == 401) {
+        console.log('访问令牌已失效！')
+        await this.refreshToken()
+      }
+    }
+    return this._token
+  }
+
+  private async sendHeartbeat() {
+    if (this.ws && this.ws.readyState == WebSocket.OPEN) {
+      const requestId = randomBytes(16).toString('hex').toLowerCase()
+      console.debug(`发送心跳：${requestId}`)
+      let ssml =
+        '<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-JennyNeural"><prosody rate="0%" pitch="0%">滴答</prosody></voice></speak>'
+      let ssmlMessage =
+        `X-Timestamp:${Date()}\r\n` +
+        `X-RequestId:${requestId}\r\n` +
+        `Content-Type:application/ssml+xml\r\n` +
+        `Path:ssml\r\n\r\n` +
+        ssml
+      await this.ws.ping()
+      await this.ws.send(ssmlMessage, (ssmlError) => {})
+    }
+  }
+
+  private async connect(): Promise<WebSocket> {
+    let token = await this.getToken()
+    const connectionId = randomBytes(16).toString('hex').toUpperCase()
+    let url = `wss://eastus.tts.speech.microsoft.com/cognitiveservices/websocket/v1?Authorization=bearer ${token}&X-ConnectionId=301148E0CF8E416D995BCF6E886A1F61${connectionId}`
+    let ws = new WebSocket(url, {
+      host: 'eastus.tts.speech.microsoft.com',
+      origin: 'https://azure.microsoft.com',
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44',
+      },
     })
     return new Promise((resolve, reject) => {
       ws.on('open', () => {
         resolve(ws)
       })
       ws.on('close', (code, reason) => {
-        // 服务器会自动断开空闲超过30秒的连接
+        // 服务器会自动断开空闲的连接
         this.ws = null
-        if (this.timer) {
-          clearTimeout(this.timer)
-          this.timer = null
+        if (this.heartbeatTimer) {
+          clearTimeout(this.heartbeatTimer)
+          this.heartbeatTimer = null
         }
         for (let [key, value] of this.executorMap) {
           value.reject(`连接已关闭: ${reason} ${code}`)
@@ -95,12 +149,14 @@ export class Service {
             // 结束传输
             let matches = data.match(pattern)
             let requestId = matches.groups.id
-            let result = this.bufferMap.get(requestId)
-            console.debug(`传输完成：${requestId}……`)
 
-            let executor = this.executorMap.get(matches.groups.id)
-            this.executorMap.delete(matches.groups.id)
-            executor.resolve(result)
+            let executor = this.executorMap.get(requestId)
+            if (executor) {
+              this.executorMap.delete(matches.groups.id)
+              let result = this.bufferMap.get(requestId)
+              executor.resolve(result)
+            }
+            console.debug(`传输完成：${requestId}`)
           }
         } else if (isBinary) {
           let separator = 'Path:audio\r\n'
@@ -113,22 +169,31 @@ export class Service {
 
           let content = data.slice(contentIndex)
 
-          console.debug(`收到音频片段：${requestId} Length: ${content.length}\n${headers}`)
-
+          console.debug(
+            `收到音频片段：${requestId} Length: ${content.length}\n${headers}`,
+          )
           let buffer = this.bufferMap.get(requestId)
-          buffer = Buffer.concat([buffer, content])
-          this.bufferMap.set(requestId, buffer)
+          if (buffer) {
+            buffer = Buffer.concat([buffer, content])
+            this.bufferMap.set(requestId, buffer)
+            console.debug(`保存片段：${requestId}`)
+          } else {
+            console.debug(`忽略片段：${requestId}`)
+          }
         }
       })
       ws.on('error', (error) => {
+        console.log(error)
         console.error(`连接失败： ${error}`)
         reject(`连接失败： ${error}`)
       })
       ws.on('ping', (data) => {
-        console.debug('ping %s', data)
+        console.debug('received ping %s', data)
+        ws.pong(data)
+        console.debug('sent pong %s', data)
       })
       ws.on('pong', (data) => {
-        console.debug('pong %s', data)
+        console.debug('received pong %s', data)
       })
     })
   }
@@ -190,30 +255,26 @@ export class Service {
     })
 
     // 收到请求，清除超时定时器
-    if (this.timer) {
+    if (this.heartbeatTimer) {
       console.debug('收到新的请求，清除超时定时器')
-      clearTimeout(this.timer)
+      clearTimeout(this.heartbeatTimer)
     }
-    // 设置定时器，超过10秒没有收到请求，主动断开连接
-    console.debug('创建新的超时定时器')
-    this.timer = setTimeout(() => {
-      if (this.ws && this.ws.readyState == WebSocket.OPEN) {
-        console.debug('已经 10 秒没有请求，主动关闭连接')
-        this.ws.close(1000)
-        this.timer = null
-      }
+    // 设置定时器，超过10秒没有收到请求，发送一个请求以维持连接。
+    this.heartbeatTimer = setInterval(() => {
+      this.sendHeartbeat()
     }, 10000)
 
-    // 创建超时结果
-    let timeout = new Promise((resolve, reject) => {
-      // 如果超过 20 秒没有返回结果，则清除请求并返回超时
-      setTimeout(() => {
-        this.executorMap.delete(requestId)
-        this.bufferMap.delete(requestId)
-        reject('转换超时')
-      }, 10000)
-    })
-    let data = await Promise.race([result, timeout])
+    let data = await Promise.race([
+      result,
+      new Promise((resolve, reject) => {
+        // 如果超过 60 秒没有返回结果，则清除请求并返回超时
+        setTimeout(() => {
+          this.executorMap.delete(requestId)
+          this.bufferMap.delete(requestId)
+          reject('转换超时')
+        }, 60000)
+      }),
+    ])
     console.info(`转换完成：${requestId}`)
     console.info(`剩余 ${this.executorMap.size} 个任务`)
     return data

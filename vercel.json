@@ -4,5 +4,8 @@
             "src": "/",
             "dest": "/public"
         }
-    ]
+    ],
+    "env":{
+        "VERCEL": "true"
+    }
 }
