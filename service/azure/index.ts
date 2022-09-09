@@ -47,43 +47,9 @@ export class Service {
   private bufferMap: Map<string, Buffer>
 
   private heartbeatTimer: NodeJS.Timer | null = null
-  private _token = null
   constructor() {
     this.executorMap = new Map()
     this.bufferMap = new Map()
-  }
-
-  private async refreshToken() {
-    let response = await axios.get(
-      'https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/',
-    )
-    let data = response.data
-    let matches = data.match(/token:\s\"(?<token>.*)\"/)
-    this._token = matches.groups.token
-    console.log('刷新访问令牌：', this._token)
-  }
-
-  public async getToken() {
-    try {
-      if (this._token == null) {
-        await this.refreshToken()
-      } else {
-        await axios.get(
-          'https://westus.tts.speech.microsoft.com/cognitiveservices/voices/list',
-          {
-            headers: {
-              authorization: `Bearer ${this._token}`,
-            },
-          },
-        )
-      }
-    } catch (error) {
-      if (error.response.status == 401) {
-        console.log('访问令牌已失效！')
-        await this.refreshToken()
-      }
-    }
-    return this._token
   }
 
   private async sendHeartbeat() {
@@ -104,9 +70,8 @@ export class Service {
   }
 
   private async connect(): Promise<WebSocket> {
-    let token = await this.getToken()
     const connectionId = randomBytes(16).toString('hex').toUpperCase()
-    let url = `wss://eastus.tts.speech.microsoft.com/cognitiveservices/websocket/v1?Authorization=bearer ${token}&X-ConnectionId=301148E0CF8E416D995BCF6E886A1F61${connectionId}`
+    let url = `wss://eastus.api.speech.microsoft.com/cognitiveservices/websocket/v1?TrafficType=AzureDemo&X-ConnectionId=${connectionId}`
     let ws = new WebSocket(url, {
       host: 'eastus.tts.speech.microsoft.com',
       origin: 'https://azure.microsoft.com',

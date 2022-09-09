@@ -6,14 +6,8 @@ import { service, FORMAT_CONTENT_TYPE } from '../service/azure'
 module.exports = async (request: Request, response: Response) => {
   try {
     if (request.method === 'GET') {
-      let token = await service.getToken()
       let listResponse = await axios.get(
-        'https://westus.tts.speech.microsoft.com/cognitiveservices/voices/list',
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        },
+        'https://eastus.api.speech.microsoft.com/cognitiveservices/voices/list'
       )
       let data = listResponse.data
       response
@@ -53,7 +47,7 @@ module.exports = async (request: Request, response: Response) => {
       response.end(result)
     }
   } catch (error) {
-    console.error('发生错误', error)
+    console.error('发生错误', error.message)
     response.status(503).json(error)
   }
 }
