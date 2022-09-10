@@ -45,6 +45,9 @@ Railway 增加了每个月500小时的限制，而且不会自动停机，所以
 docker pull wxxxcxx/ms-ra-forwarder:latest
 # 运行
 docker run --name ms-ra-forwarder -d -p 3000:3000 wxxxcxx/ms-ra-forwarder
+# or
+docker run --name ms-ra-forwarder -d -p 3000:3000 -e TOKEN:自定义TOKEN wxxxcxx/ms-ra-forwarder
+
 # 浏览器访问 http://localhost:3000
 ```
 
@@ -60,9 +63,11 @@ services:
     container_name: ms-ra-forwarder
     image: wxxxcxx/ms-ra-forwarder:latest
     restart: unless-stopped
+    ports:
+      - 3000:3000
     environment:
       # 不需要可以不用设置环境变量
-      - TOKEN=自定义密钥
+      - TOKEN=自定义TOKEN
 ```
 
 在 `docker-compose.yml` 目录下执行 `docker compose up -d`。
