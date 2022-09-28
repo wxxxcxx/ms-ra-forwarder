@@ -8,15 +8,17 @@
 
 ## 重要更改
 
-**2022-09-01：Azure TTS API 好像又改了，旧版用户可能会无法正常使用，请更新到最新版。**
+**2022-09-10：修改 docker 仓库地址，后面构建的 docker 镜像会迁移到 wxxxcxx/ms-ra-forwarder（原仓库旧版本镜像依然有效）。**
+
+2022-09-01：Azure TTS API 好像又改了，旧版用户可能会无法正常使用，请更新到最新版。
 
 2022-07-17：添加 Azure TTS API 支持（没怎么测试，不知道用起来稳不稳定）。因为调用 Azure TTS API 需要获取授权码。其它方式只需要或取一次就可以使用一段时间，而 Vercel 每次调用 API 都需要重新获取授权码。容易超时不说，也加剧了微软服务器的负担，所以不是很推荐部署在 Vercel 的用户使用（虽然也不是不能用～但是万一微软被薅痛了，又改接口就不好了😂）。
 
-2022-07-02：测试目前还支持的格式有 `webm-24khz-16bit-mono-opu`、`audio-24khz-48kbitrate-mono-mp3`、`audio-24khz-96kbitrate-mono-mp3`。另外今天下午开始，使用不在下拉列表中声音会出现类似 “Unsupported voice zh-CN-YunyeNeural.” 错误，后续可能也会被砍掉。且用且珍惜吧！
+2022-07-02：Edge 版本的 API 目前测试还支持的格式有 `webm-24khz-16bit-mono-opu`、`audio-24khz-48kbitrate-mono-mp3`、`audio-24khz-96kbitrate-mono-mp3`。另外今天下午开始，使用不在下拉列表中声音会出现类似 “Unsupported voice zh-CN-YunyeNeural.” 错误，后续可能也会被砍掉。且用且珍惜吧！
 
 2022-07-01：~~部署在中国大陆以外服务器上的服务目前只能选择 `webm-24khz-16bit-mono-opus` 格式的音频了！~~ 所以使用 Vercel 的用户需要重新部署一下。
 
-2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/meetcw/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。
+2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/wxxxcxx/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。
 
 
 ## 部署
@@ -24,24 +26,30 @@
 请参考下列部署方式。
 
 
-### 部署到 Railway（推荐）
+### 部署到 Railway
+
+Railway 增加了每个月500小时的限制，而且不会自动停机，所以每个月会有一段时间无法是使用。有条件的还是使用docker部署吧。
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/p8RU3T?referralCode=-hqLZp)
 
 ### 部署到 Heroku
 
+
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 
-### Docker
+### Docker（推荐）
 
 需要安装 docker。
 
 ``` bash
 # 拉取镜像
-docker pull meetcw/ms-ra-forwarder:latest
+docker pull wxxxcxx/ms-ra-forwarder:latest
 # 运行
-docker run --name ms-ra-forwarder -d -p 3000:3000 meetcw/ms-ra-forwarder
+docker run --name ms-ra-forwarder -d -p 3000:3000 wxxxcxx/ms-ra-forwarder
+# or
+docker run --name ms-ra-forwarder -d -p 3000:3000 -e TOKEN:自定义TOKEN wxxxcxx/ms-ra-forwarder
+
 # 浏览器访问 http://localhost:3000
 ```
 
@@ -55,7 +63,13 @@ version: '3'
 services:
   ms-ra-forwarder:
     container_name: ms-ra-forwarder
-    image: meetcw/ms-ra-forwarder:latest
+    image: wxxxcxx/ms-ra-forwarder:latest
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      # 不需要可以不用设置环境变量
+      - TOKEN=自定义TOKEN
 ```
 
 在 `docker-compose.yml` 目录下执行 `docker compose up -d`。
@@ -73,7 +87,7 @@ services:
 
 ```bash
 # 获取代码
-git clone https://github.com/meetcw/ms-ra-forwarder.git
+git clone https://github.com/wxxxcxx/ms-ra-forwarder.git
 
 cd ms-ra-forwarder
 # 安装依赖
@@ -90,7 +104,7 @@ npm run start
 
 ### 手动调用
 
-接口地址为：
+接口地址为 `api/azure` 或 `api/ra`。格式为：
 ```
 POST /api/ra
 FORMAT: audio-16khz-128kbitrate-mono-mp3
@@ -98,13 +112,13 @@ Content-Type: text/plain
 
 <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US">
   <voice name="zh-CN-XiaoxiaoNeural">
-    表征这个词印象中就没在中文里见到过
+    如果喜欢这个项目的话请点个 Star 吧。
   </voice>
 </speak>
 ```
 
 #### 定制发音和音色
-请求的正文为 ssml 格式，支持定制发音人和~~说话风格~~（最新接口不再支持定制说话风格），下面是相关的示例和文档：
+请求的正文为 ssml 格式，支持定制发音人和讲话风格（目前仅 Azure 版本支持定制讲话风格），下面是相关的示例和文档：
 
 [文本转语音](https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/#overview)
 
@@ -113,11 +127,11 @@ Content-Type: text/plain
 
 
 #### 音频格式
-默认的音频格式为 mp3 ，如果需要获取为其他格式的音频请修改请求头的 `FORMAT`（可用的选项可以在 [ra/index.ts](ra/index.ts#L5) 中查看）。
+默认的音频格式为 webm ，如果需要获取为其他格式的音频请修改请求头的 `FORMAT`（可用的选项可以在 [ra/index.ts](ra/index.ts#L5) 中查看）。
 
 ### 限制访问
 
-由于 Vercel 并非无限制的免费，如果需要防止他人滥用你的部署的服务，可以在应用的环境变量中添加 `TOKEN`，然后在请求头中添加 `Authorization: Bearer <TOKEN>`访问。注意：这只会阻止未授权的请求调用微软的接口，并不会减少  Vercel Serverless Function 限额的用量（大概会减少一点流量）。
+如果需要防止他人滥用你的部署的服务，可以在应用的环境变量中添加 `TOKEN`，然后在请求头中添加 `Authorization: Bearer <TOKEN>`访问。
 
 ## 相关项目
 
@@ -130,6 +144,6 @@ Content-Type: text/plain
 
 - 如果只需要为固定的文本生成语音，可以使用[有声内容创作](https://speech.microsoft.com/audiocontentcreation)。它提供了更丰富的功能可以生成更自然的声音。
 
-- 本项目使用的是Edge浏览器“大声朗读”功能的接口，不保证后续可用性和稳定性。
+- 本项目使用的是 Edge 浏览器“大声朗读”和 Azure TTS 演示页面的接口，不保证后续可用性和稳定性。
 
 - **本项目仅供学习和参考，请勿商用。**
