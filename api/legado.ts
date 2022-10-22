@@ -19,7 +19,6 @@ module.exports = async (request: Request, response: Response) => {
 
   const data = {}
   data['name'] = name == '' ? 'TTS' : name
-  data['concurrentRate'] = '1'
   data['contentType'] = FORMAT_CONTENT_TYPE.get(voiceFormat as string)
   data['id'] = Date.now()
   data['loginCheckJs'] = ''
