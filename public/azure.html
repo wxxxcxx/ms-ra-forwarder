@@ -168,13 +168,14 @@
       let voiceElement = document.getElementsByName('voiceName')[0];
       voiceElement.innerHTMl = '';
       data.forEach(item => {
-        if (['zh-CN', 'zh-TW', 'zh-HK'].includes(item['Locale'])) {
-          let option = document.createElement('option');
-          option.value = item['ShortName'];
-          option.innerText = (item['LocalName'] ?? item['ShortName']) + '-' + item['LocaleName'];
-          voiceElement.appendChild(option);
-          voices[item['ShortName']] = item;
+        let option = document.createElement('option');
+        option.value = item['ShortName'];
+        option.innerText = (item['LocalName'] ?? item['ShortName']) + '-' + item['LocaleName'];
+        if (item['ShortName'] == 'zh-CN-XiaoxiaoNeural') {
+          option.selected = true;
         }
+        voiceElement.appendChild(option);
+        voices[item['ShortName']] = item;
       });
       updateConfigName();
     }
