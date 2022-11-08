@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { Request, Response } from 'express'
-import e = require('express')
 import { service, FORMAT_CONTENT_TYPE } from '../service/azure'
 import { retry } from '../retry'
 
@@ -9,8 +8,18 @@ module.exports = async (request: Request, response: Response) => {
     if (request.method === 'GET') {
       let listResponse = await axios.get(
         'https://eastus.api.speech.microsoft.com/cognitiveservices/voices/list',
+        {
+          headers : {
+            'origin':'https://azure.microsoft.com',
+          }
+        }
       )
       let data = listResponse.data
+      if(!data) {
+        console.error('获取声音列表失败')
+        response.status(500).json('获取声音列表失败')
+        return
+      }
       response
         .status(200)
         .setHeader('Content-Type', 'application/json; charset=utf-8')

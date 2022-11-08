@@ -139,7 +139,7 @@
           return response.json();
         } else {
           console.log(response);
-          throw '加载失败';
+          return response.text().then(text => Promise.reject(text));
         }
       }).then(data => {
         voices = data;
