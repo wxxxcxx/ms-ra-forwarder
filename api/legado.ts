@@ -8,6 +8,7 @@ module.exports = async (request: Request, response: Response) => {
   let styleDegree = request.query['styleDegree']
   let voiceFormat =
     request.query['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3'
+  let lexicon = request.query['lexicon'] ?? ''
   let token = request.query['token'] ?? ''
 
   if (Array.isArray(voiceFormat)) {
@@ -19,7 +20,6 @@ module.exports = async (request: Request, response: Response) => {
 
   const data = {}
   data['name'] = name == '' ? 'TTS' : name
-  data['concurrentRate'] = '1'
   data['contentType'] = FORMAT_CONTENT_TYPE.get(voiceFormat as string)
   data['id'] = Date.now()
   data['loginCheckJs'] = ''
@@ -35,6 +35,7 @@ module.exports = async (request: Request, response: Response) => {
   let ssml =
     `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">` +
     `<voice name="${voiceName}">` +
+    (lexicon==='' ? '' : `<lexicon uri="${lexicon}"/>`)+
     (styleName
       ? `<mstts:express-as style="${styleName}" styledegree="${styleDegree}">`
       : ``) +

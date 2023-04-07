@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 
 env: 
-  DOCKER_REPOSITORY: meetcw/ms-ra-forwarder
+  DOCKER_REPOSITORY: wxxxcxx/ms-ra-forwarder
 
 jobs:
   build:

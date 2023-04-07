@@ -139,7 +139,7 @@
           return response.json();
         } else {
           console.log(response);
-          throw '加载失败';
+          return response.text().then(text => Promise.reject(text));
         }
       }).then(data => {
         voices = data;
@@ -152,12 +152,13 @@
       let voiceElelement = document.getElementsByName('voiceName')[0];
       voiceElelement.innerHTMl = '';
       voices.forEach(item => {
-        if (item['FriendlyName'].indexOf('Chinese') >= 0) {
-          let option = document.createElement('option');
-          option.value = item['ShortName'];
-          option.innerText = item['FriendlyName'];
-          voiceElelement.append(option)
+        let option = document.createElement('option');
+        option.value = item['ShortName'];
+        option.innerText = item['FriendlyName'];
+        if (item['ShortName'] == 'zh-CN-XiaoxiaoNeural') {
+          option.selected = true;
         }
+        voiceElelement.append(option)
       });
       updateConfigName();
     }

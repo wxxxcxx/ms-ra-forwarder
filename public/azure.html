@@ -26,14 +26,8 @@
       <div class="col">
         <div class="alert alert-warning" role="alert">
           Azure 版本。此版本使用了<a href="https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/"
-            target="_blank">Azure 演示页面</a>的接口，好像只有美国的节点能用，速度可能不及 Edge 的接口。而且我没怎么测试，可能有BUG。总之有问题请提 <a href="https://github.com/wxxxcxx/ms-ra-forwarder/issues">issue</a>。
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="alert alert-warning" role="alert">
-          此版本的 API 需要获取授权，而 Vercel 无法保存授权状态，所以不建议使用 Vercel 部署的用户使用此版本。
+            target="_blank">Azure 演示页面</a>的接口。有问题请提 <a
+            href="https://github.com/wxxxcxx/ms-ra-forwarder/issues">issue</a>。
         </div>
       </div>
     </div>
@@ -50,7 +44,9 @@
           <label for="voiceName" class="form-label">声音：</label>
           <select name="voiceName" class="form-select" onchange="updateConfigName()">
           </select>
-          <div class="form-text">声音列表加载可能有点慢，请稍等一下！</div>
+          <div class="form-text">
+            <p>声音列表加载可能有点慢，请稍等一下！</p>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -59,13 +55,17 @@
           <select name="styleName" class="form-select">
             <option value="general">general</option>
           </select>
-          <div class="form-text">指定讲话风格。 说话风格特定于语音。</div>
+          <div class="form-text">
+            <p>指定讲话风格。 说话风格特定于语音。</p>
+          </div>
         </div>
         <div class="col">
           <label for="styleDegree" class="form-label">风格强度：</label>
           <input name="styleDegree" class="form-control" type="number" min="0.1" max="2.0" step="0.1" value="1.0">
-          <div class="form-text">指定说话风格的强度。 接受的值：0.01 到 2（含边界值）。 默认值为 1，表示预定义的风格强度。 最小单位为 0.01，表示略倾向于目标风格。 值为 2
-            表示是默认风格强度的两倍。</div>
+          <div class="form-text">
+            <p>指定说话风格的强度。 接受的值：0.01 到 2（含边界值）。 默认值为 1，表示预定义的风格强度。 最小单位为 0.01，表示略倾向于目标风格。 值为 2
+              表示是默认风格强度的两倍。</p>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -102,12 +102,24 @@
             <p>如果出现 “Unsupported output format: XXX” 错误，表示不支持当前格式。</p>
           </div>
         </div>
-
+        <div class="row">
+          <div>
+            <label for="lexicon" class="form-label">词典文件：</label>
+            <input name="lexicon" class="form-control" type="text" value="" placeholder="文件链接（http 或 https 开头）">
+            <div class="form-text">
+              <p>词典文件的链接，用于改善多音字的发音，默认为空。（可以参考<a href="https://github.com/wxxxcxx/azure-tts-lexicon-cn"
+                  target="_blank">wxxxcxx/azure-tts-lexicon-cn</a>）
+              </p>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div>
             <label for="token" class="form-label">凭据（TOKEN）：</label>
             <input name="token" class="form-control" type="text" value="">
-            <div class="form-text">如果没有设置 TOKEN 环境变量请留空。</div>
+            <div class="form-text">
+              <p>如果没有设置 TOKEN 环境变量请留空。</p>
+            </div>
           </div>
         </div>
 
@@ -162,7 +174,7 @@
           return response.json();
         } else {
           console.log(response);
-          throw '加载失败';
+          return response.text().then(text => Promise.reject(text));
         }
       }).then(data => {
         voices = data;
@@ -175,13 +187,14 @@
       let voiceElement = document.getElementsByName('voiceName')[0];
       voiceElement.innerHTMl = '';
       data.forEach(item => {
-        if (['zh-CN', 'zh-TW', 'zh-HK'].includes(item['Locale'])) {
-          let option = document.createElement('option');
-          option.value = item['ShortName'];
-          option.innerText = (item['LocalName'] ?? item['ShortName']) + '-' + item['LocaleName'];
-          voiceElement.appendChild(option);
-          voices[item['ShortName']] = item;
+        let option = document.createElement('option');
+        option.value = item['ShortName'];
+        option.innerText = (item['LocalName'] ?? item['ShortName']) + '-' + item['LocaleName'];
+        if (item['ShortName'] == 'zh-CN-XiaoxiaoNeural') {
+          option.selected = true;
         }
+        voiceElement.appendChild(option);
+        voices[item['ShortName']] = item;
       });
       updateConfigName();
     }
@@ -207,8 +220,8 @@
       }
     }
 
-    function createSSML(text, voiceName, styleName, styleDegree) {
-      let ssml = `\
+    function createSSML(text, voiceName, styleName, styleDegree, lexicon) {
+      let ssml = lexicon === '' ? `\
         <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
           <voice name="${voiceName}">\
             <mstts:express-as style="${styleName}" styledegree="${styleDegree}">\
@@ -217,7 +230,17 @@
               </prosody >\
             </mstts:express-as>
           </voice >\
-        </speak > `
+        </speak > `: `\
+        <speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">\
+          <voice name="${voiceName}">\
+            <lexicon uri="${lexicon}"/>
+            <mstts:express-as style="${styleName}" styledegree="${styleDegree}">\
+              <prosody rate="0%" pitch="0%">\
+                  ${text}\
+              </prosody >\
+            </mstts:express-as>
+          </voice >\
+        </speak > `;
 
       return ssml;
     }
@@ -229,9 +252,10 @@
       let voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       let styleName = document.getElementsByName('styleName')[0].value;
       let styleDegree = document.getElementsByName('styleDegree')[0].value;
+      let lexicon = document.getElementsByName('lexicon')[0].value;
       let token = document.getElementsByName('token')[0].value;
       let previewText = document.getElementsByName('previewText')[0].value;
-      let ssml = createSSML(previewText, voiceName, styleName, styleDegree)
+      let ssml = createSSML(previewText, voiceName, styleName, styleDegree, lexicon)
       if (token) {
         headers['Authorization'] = 'Bearer ' + token;
       }
@@ -274,6 +298,7 @@
       let styleName = document.getElementsByName('styleName')[0].value;
       let styleDegree = document.getElementsByName('styleDegree')[0].value;
       let voiceFormat = document.getElementsByName('voiceFormat')[0].value;
+      let lexicon = document.getElementsByName('lexicon')[0].value;
       let token = document.getElementsByName('token')[0].value;
       let previewText = document.getElementsByName('previewText')[0].value;
       let url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/azure')
@@ -282,6 +307,7 @@
         + '&styleName=' + styleName
         + '&styleDegree=' + styleDegree
         + '&voiceFormat=' + voiceFormat
+        + '&lexicon=' + encodeURI(lexicon)
         + '&token=' + token;
       let svg = new QRCode(url).svg();
       let modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
