@@ -27,6 +27,12 @@
 
 请参考下列部署方式。
 
+### 部署到 Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwxxxcxx%2Fms-ra-forwarder&env=TOKEN&envDescription=%E8%AE%BF%E9%97%AE%E4%BB%A4%E7%89%8C&project-name=ms-ra-forwarder&repository-name=ms-ra-forwarder)
+
+~~请先 Fork 一份代码然后部署到自己的 Vercel 中 。参考 [演示视频](https://www.youtube.com/watch?v=vRC6umZp8hI)。~~
+
 
 ### 部署到 Railway
 
@@ -76,11 +82,6 @@ services:
 
 在 `docker-compose.yml` 目录下执行 `docker compose up -d`。
 
-### 部署到 Vercel
-
-请先 Fork 一份代码然后部署到自己的 Vercel 中 。参考 [演示视频](https://www.youtube.com/watch?v=vRC6umZp8hI)。
-
-**注：现在不是很推荐使用 Vercel 部署**
 
 
 ### 手动运行
