@@ -25,7 +25,7 @@
     <div class="row">
       <div class="col">
         <div class="alert alert-primary" role="alert">
-          现在可以使用 Azure 版本的 API 啦！<a href="/azure.html">点我查看</a>！
+          <strike>现在可以使用 Azure 版本的 API 啦！<a href="/azure.html">点我查看</a>！</strike>（Azure 已经把接口下线了，现在处于不可用的状态）
         </div>
       </div>
     </div>
@@ -116,11 +116,11 @@
         <div class="modal-body">
           <div id="legadoUrlQRCode" style="text-align:center">
           </div>
-          <textarea id="legadoUrl" class="form-control" readonly rows="3" cols="2" value></textarea>
-          <div>
+          <div class="row">
+            <textarea id="legadoUrl" class="form-control" readonly rows="3" cols="2" value></textarea>
           </div>
-          <div class="alert alert-primary" role="alert">
-            请在阅读的朗读引擎设置中选择网络导入此链接。
+          <div class="row" style="margin-top: 10px;">
+            <a id="legadoImportButton" class="btn btn-primary" href="">一键导入到阅读</a>
           </div>
         </div>
       </div>
@@ -240,6 +240,7 @@
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = url;
+      document.getElementById('legadoImportButton').href = 'legado://import/httpTTS?src=' + encodeURI(url);
     }
   </script>
 </body>
