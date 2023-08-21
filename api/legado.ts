@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { FORMAT_CONTENT_TYPE } from '../service/edge'
 module.exports = async (request: Request, response: Response) => {
+  console.log('Import url: ' + request.url)
   let api = request.query['api']
   let name = request.query['name'] ?? '大声朗读'
   let voiceName = request.query['voiceName'] ?? 'zh-CN-XiaoxiaoNeural'
   let styleName = request.query['styleName']
   let styleDegree = request.query['styleDegree']
-  let voiceFormat =
-    request.query['voiceFormat'] ?? 'audio-16khz-32kbitrate-mono-mp3'
+  let voiceFormat = request.query['voiceFormat']
   let lexicon = request.query['lexicon'] ?? ''
   let token = request.query['token'] ?? ''
 
@@ -35,7 +35,7 @@ module.exports = async (request: Request, response: Response) => {
   let ssml =
     `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">` +
     `<voice name="${voiceName}">` +
-    (lexicon==='' ? '' : `<lexicon uri="${lexicon}"/>`)+
+    (lexicon === '' ? '' : `<lexicon uri="${lexicon}"/>`) +
     (styleName
       ? `<mstts:express-as style="${styleName}" styledegree="${styleDegree}">`
       : ``) +
