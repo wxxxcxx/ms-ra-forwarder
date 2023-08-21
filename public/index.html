@@ -230,17 +230,17 @@
       let voiceFormat = document.getElementsByName('voiceFormat')[0].value;
       let token = document.getElementsByName('token')[0].value;
       let previewText = document.getElementsByName('previewText')[0].value;
-      let url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURI(window.location.protocol + '//' + window.location.host + '/api/ra')
-        + '&name=' + encodeURI(name)
-        + '&voiceName=' + voiceName
-        + '&voiceFormat=' + voiceFormat
-        + '&token=' + token;
+      let url = window.location.protocol + '//' + window.location.host + '/api/legado?api=' + encodeURIComponent(window.location.protocol + '//' + window.location.host + '/api/ra')
+        + '&name=' + encodeURIComponent(name)
+        + '&voiceName=' + encodeURIComponent(voiceName)
+        + '&voiceFormat=' + encodeURIComponent(voiceFormat)
+        + '&token=' + encodeURIComponent(token);
       let svg = new QRCode(url).svg();
       let modal = new bootstrap.Modal(document.getElementById('legadoUrlModal'))
       modal.show();
       document.getElementById('legadoUrlQRCode').innerHTML = svg;
       document.getElementById('legadoUrl').value = url;
-      document.getElementById('legadoImportButton').href = 'legado://import/httpTTS?src=' + encodeURI(url);
+      document.getElementById('legadoImportButton').href = 'legado://import/httpTTS?src=' + encodeURIComponent(url);
     }
   </script>
 </body>
