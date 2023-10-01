@@ -150,3 +150,7 @@ Content-Type: text/plain
 - 本项目使用的是 Edge 浏览器“大声朗读”和 Azure TTS 演示页面的接口，不保证后续可用性和稳定性。
 
 - **本项目仅供学习和参考，请勿商用。**
+
+感谢以下组织或个人对本项目的支持
+
+![Jetbrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png#80){width=40px height=40px}
