@@ -153,4 +153,4 @@ Content-Type: text/plain
 
 感谢以下组织或个人对本项目的支持
 
-![Jetbrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png#80){width=40px height=40px}
+<img width="80" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" />
