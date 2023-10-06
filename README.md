@@ -140,6 +140,6 @@ Content-Type: text/plain
 2022-06-16：Edge 浏览器提供的接口现在已经不能设置讲话风格了，若发现不能正常使用，请参考 [#12](https://github.com/wxxxcxx/ms-ra-forwarder/issues/12#issuecomment-1157271193) 获取更新。
 
 
-感谢以下组织或个人对本项目的支持
+感谢以下组织/个人对本项目的支持
 
 <img width="80" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" />
