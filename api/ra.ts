@@ -15,7 +15,7 @@ module.exports = async (request: Request, response: Response) => {
   }
 
   try {
-    let format = request.headers['format'] || 'audio-16khz-32kbitrate-mono-mp3'
+    let format = request.headers['format'] || 'audio-24khz-48kbitrate-mono-mp3'
     if (Array.isArray(format)) {
       throw `无效的音频格式：${format}`
     }
