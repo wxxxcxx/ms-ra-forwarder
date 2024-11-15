@@ -1,5 +1,6 @@
 import { randomBytes } from 'crypto'
 import { WebSocket } from 'ws'
+import * as crypto from "crypto";
 
 export const FORMAT_CONTENT_TYPE = new Map([
   ['raw-16khz-16bit-mono-pcm', 'audio/basic'],
@@ -51,9 +52,18 @@ export class Service {
     this.bufferMap = new Map()
   }
 
+  private sha256(input: string): string {
+    return crypto.createHash("sha256").update(input).digest("hex");
+  }
+
   private async connect(): Promise<WebSocket> {
     const connectionId = randomBytes(16).toString('hex').toLowerCase()
-    let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
+    const now = Date.now();
+    const ticks = BigInt(now) * 10000n + 116444736000000000n;
+    const adjustedTicks = ticks - (ticks % 3000000000n);
+    const inputString = adjustedTicks.toString() + "6A5AA1D4EAFF4E9FB37E23D68491D6F4";
+    const hash = this.sha256(inputString).toUpperCase();
+    let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}&Sec-MS-GEC=${hash}&Sec-MS-GEC-Version=1-103.0.5060.66`
     let ws = new WebSocket(url, {
       host: 'speech.platform.bing.com',
       origin: 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
