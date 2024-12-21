@@ -2,10 +2,14 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "commonjs",
-        "target": "ES6",
+        "target": "ESNext",
         "declaration": true,
         "outDir": "dist",
-        "sourceMap": true
+        "sourceMap": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./*"]
+        }
     },
     "typedocOptions": {
         "entryPoints": ["src/app.ts"],
