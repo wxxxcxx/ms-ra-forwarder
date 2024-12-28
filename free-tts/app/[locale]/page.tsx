@@ -1,19 +1,12 @@
 import Image from "next/image";
-
-
-export async function generateStaticParams() {
-  return [{ locale: 'en-US' }, { locale: 'zh-CN' }]
-}
-
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ locale: string }>
-}) {
+import { getCurrentLocale, getTranslation } from "@/locales/server";
+export default async function Home() {
+  const t = await getTranslation()
+  const locale = await getCurrentLocale()
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1>{("title")} - {(await params).locale}</h1>
+        <h1>{("title")} - {locale}= {t('hello.world')}</h1>
         <Image
           className="dark:invert"
           src="/next.svg"

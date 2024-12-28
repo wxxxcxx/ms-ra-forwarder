@@ -1,4 +1,9 @@
-export const LOCALES = ['en-US', 'zh-CN'];
-export const DEFAULT_LOCALE = 'zh-CN';
+const localeMap = {
+    'en': 'en',
+    'zh': 'zh'
+}
 
-export type Locale = (typeof LOCALES)[number];
+export type Locale = keyof typeof localeMap
+export const LOCALES: Locale[] = Object.keys(localeMap) as Locale[];
+export const DEFAULT_LOCALE: Locale = LOCALES[1];
+
