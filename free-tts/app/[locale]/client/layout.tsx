@@ -1,15 +1,24 @@
+'use client'
 // app/[locale]/client/layout.tsx
-import { ReactElement } from 'react'
-import { TranslationProviderClient } from '@/locales/client'
- 
-// If you are using Next.js < 15, you don't need to await `params`:
-// export default function SubLayout({ params: { locale }, children }: { params: { locale: string }, children: ReactElement }) {
-export default async function SubLayout({ params, children }: { params: Promise<{ locale: string }>, children: ReactElement }) {
-  const { locale } = await params
- 
-  return (
-    <TranslationProviderClient locale={locale}>
-      {children}
-    </TranslationProviderClient>
-  )
+import { TranslationProviderClient } from '@/locales/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ComponentType } from 'react';
+
+const queryClient = new QueryClient()
+
+export function withClientLayout<T extends Object>(
+  WrappedComponent: ComponentType<T>
+) {
+  return function WithClientLayout(props: T & {
+    locale: string
+  }) {
+    const locale = props.locale
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TranslationProviderClient locale={locale}>
+          <WrappedComponent {...props} />
+        </TranslationProviderClient>
+      </QueryClientProvider>
+    );
+  };
 }
