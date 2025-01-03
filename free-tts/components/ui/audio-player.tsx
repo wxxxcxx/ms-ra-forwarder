@@ -1,9 +1,10 @@
 import clsx from "clsx"
 import { AudioLines, PauseCircle, PlayCircle } from "lucide-react"
-import React, { useEffect } from "react"
+import React from "react"
 import { useAudio } from "react-use"
-import { Button } from "../shadcn/ui/button"
 import { useToast } from "../shadcn/hooks/use-toast"
+import { Button } from "../shadcn/ui/button"
+import { Slider } from "../shadcn/ui/slider"
 
 function formatTime(time: number) {
     const minutes = Math.floor(time / 60)
@@ -34,11 +35,15 @@ const AudioPlayer = React.forwardRef<
         ref={ref}
     >
         <AudioLines />
-        <span className={clsx('text-xs')}>
-            <span className={clsx('text-gray-500')}>{formatTime(audioState.time)}</span>
-            <span className={clsx('text-gray-500')}>/</span>
-            <span className={clsx('text-gray-500')}>{formatTime(audioState.duration)}</span>
-        </span>
+        <div className={clsx('flex relative w-full h-full')}>
+            <sub className={clsx('text-gray-500 text-xs absolute left-0')}>{formatTime(audioState.time)}</sub>
+            <Slider className={clsx('flex-1')} value={[audioState.time]} max={audioState.duration} step={0.01}
+                onValueChange={(value) => {
+                    audioControls.seek(value[0])
+                }}
+            />
+            <sub className={clsx('text-gray-500 text-xs absolute right-0')}>{formatTime(audioState.duration)}</sub>
+        </div>
         <Button
             className={clsx('px-1.5 py-1 [&_svg]:size-5')}
             variant={'ghost'}
@@ -70,3 +75,4 @@ const AudioPlayer = React.forwardRef<
 AudioPlayer.displayName = "AudioPlayer"
 
 export { AudioPlayer }
+
