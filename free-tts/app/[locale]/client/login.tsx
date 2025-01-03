@@ -1,13 +1,13 @@
 'use client'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/shadcn/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/shadcn/ui/form";
+import { Input } from "@/components/shadcn/ui/input";
 import { useCurrentLocale, useTranslation } from "@/locales/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { withClientLayout } from "./layout";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/ui/button";
 import { login } from "@/app/actions/login";
 import router from "next/router";
 import { useActionState } from "react";

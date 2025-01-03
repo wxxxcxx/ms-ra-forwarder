@@ -1,4 +1,4 @@
-const languageRegionMap = new Map<string, string>([
+const localeMap = new Map<string, string>([
     ["af-ZA", "南非荷兰语（南非）"],
     ["sq-AL", "阿尔巴尼亚语（阿尔巴尼亚）"],
     ["am-ET", "阿姆哈拉语（埃塞俄比亚）"],
@@ -141,8 +141,8 @@ const languageRegionMap = new Map<string, string>([
     ["zu-ZA", "祖鲁语（南非）"]
 ]);
 
-export function localeName(key: string) {
-    const value = languageRegionMap.get(key);
+export function getLocaleFriendlyName(key: string) {
+    const value = localeMap.get(key);
     if (value) {
         return value
     }

@@ -1,9 +1,11 @@
 import { EdgeTTSClient } from './client'
 import { Speech, SpeechBoundary, TTSOptions, TTSService, Voice } from '../tts-service'
 import { SSML } from '../ssml'
+import { getFriendlyVoiceName } from './voice-map'
 
 
 export class EdgeTTSService implements TTSService {
+
     async convert(text: string, options: TTSOptions): Promise<Speech> {
         const ssml = new SSML(text, options.voice, options.volume, options.rate, options.pitch)
         return await this.convertSSML(ssml.toString())
@@ -11,8 +13,8 @@ export class EdgeTTSService implements TTSService {
     private async convertSSML(ssml: string): Promise<Speech> {
         const result = await EdgeTTSClient.convert(ssml, {
             format: "audio-24khz-96kbitrate-mono-mp3",
-            sentenceBoundaryEnabled: true,
-            wordBoundaryEnabled: true,
+            sentenceBoundaryEnabled: false,
+            wordBoundaryEnabled: false,
         })
         const sentenceBoundaries = result.metadata.filter(data => {
             return data["Type"] === "SentenceBoundary"
@@ -44,13 +46,13 @@ export class EdgeTTSService implements TTSService {
             wordBoundaries: wordBoundaries
         }
     }
-    async voices(): Promise<Array<Voice>> {
+    async fetchVoices(): Promise<Array<Voice>> {
         const data = await EdgeTTSClient.voices()
         let voices = data.map((item: any) => {
             const voice: Voice = {
                 label: item['FriendlyName'],
                 gender: item['Gender'],
-                value: item['ShortName'],
+                value: item['Name'],
                 locale: item['Locale'],
                 format: item['SuggestedCodec'],
                 voicePersonalities: item['VoiceTag']['VoicePersonalities']?.reduce((acc: Record<string, string>, item: string) => {

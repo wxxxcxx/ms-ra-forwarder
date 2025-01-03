@@ -32,5 +32,5 @@ export interface Speech {
 
 export interface TTSService {
     convert(text: string, options: TTSOptions): Promise<Speech>
-    voices(): Promise<Array<Voice>>
+    fetchVoices(): Promise<Array<Voice>>
 }
