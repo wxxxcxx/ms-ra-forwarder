@@ -24,5 +24,6 @@
     "@types/ws": "^8.5.3",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
-  }
+  },
+  "packageManager": "yarn@4.3.0+sha512.1606bef7c84bc7d83b8576063de2fd08f7d69f9939015bed800f9585a002390268ecc777e9feeba7e26e9556aef6beaad4806968db2182ab5dd3e955ab3b9a0b"
 }
