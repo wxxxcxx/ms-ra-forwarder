@@ -8,7 +8,7 @@ const personalityMap = new Map<string, string>([
     ["Humorious", "幽默"],
 ])
 
-export function personalityName(key?: string) {
+export function getFirendlyPersonalityName(key?: string) {
     if (!key) {
         return "默认"
     }

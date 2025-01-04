@@ -15,15 +15,15 @@ const voiceMap = new Map<string, string>([
     ["zh-CN-shaanxi-XiaoniNeural", "晓妮"]
 ])
 
-export function voiceName(key: string, defaultName: string) {
+export function getFriendlyVoiceName(key: string, defaultName: string) {
     if (voiceMap.has(key)) {
-        return voiceMap.get(key)
+        return voiceMap.get(key)!
     }
     const items = defaultName.split("-")
     if (items.length != 2) {
         return defaultName
     } else {
-        const name = items[1].trim()
+        const name = items[0].trim()
         return name
     }
 }

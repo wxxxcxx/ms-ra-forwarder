@@ -1,6 +1,11 @@
-import { arrayBufferToString, concatArrayBuffers } from '@/utils/misc'
+import { arrayBufferToString, concatArrayBuffers } from '../utils'
 import axios from 'axios'
+import { createHash } from 'node:crypto'
 import { WebSocket } from 'ws'
+
+export const CHROMIUM_FULL_VERSION = '130.0.2849.68'
+export const TRUSTED_CLIENT_TOKEN = '6A5AA1D4EAFF4E9FB37E23D68491D6F4'
+const WINDOWS_FILE_TIME_EPOCH = 11644473600n
 
 class MessageHeader {
     requestId: string
@@ -75,9 +80,22 @@ export class EdgeTTSClient {
     public static async voices(): Promise<any> {
         const url = 'https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4'
         const response = await axios.get(url)
-        const data = await response.data()
+        const data = response.data
         return data
     }
+
+    private static generateSecMsGecToken() {
+        const ticks = BigInt(Math.floor((Date.now() / 1000) + Number(WINDOWS_FILE_TIME_EPOCH))) * 10000000n
+        const roundedTicks = ticks - (ticks % 3000000000n)
+
+        const strToHash = `${roundedTicks}${TRUSTED_CLIENT_TOKEN}`
+
+        const hash = createHash('sha256')
+        hash.update(strToHash, 'ascii')
+
+        return hash.digest('hex').toUpperCase()
+    }
+
     private static generateId(): String {
         const charset = "abcdef0123456789";
         let randomString = "";
@@ -89,13 +107,15 @@ export class EdgeTTSClient {
     }
     private static async createWS(): Promise<WebSocket> {
         const connectionId = this.generateId()
-        let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=${connectionId}`
+        const secMsGec = this.generateSecMsGecToken()
+        let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=${TRUSTED_CLIENT_TOKEN}&Sec-MS-GEC=${secMsGec}&Sec-MS-GEC-Version=1-${CHROMIUM_FULL_VERSION}&ConnectionId=${connectionId}`
+        // let url = 'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&Sec-MS-GEC=3354FF87541D813A7A03BFA8F5CD8B0DEE6A396F4F1BCC85950A833875F756FE&Sec-MS-GEC-Version=1-131.0.2903.112&ConnectionId=2b492d9fa38b65b24c77b930eb7f6622'
         const client = new WebSocket(url, {
+            host: 'speech.platform.bing.com',
+            origin: 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
             headers: {
                 'User-Agent':
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.66 Safari/537.36 Edg/103.0.1264.44',
-                'Host': 'speech.platform.bing.com',
-                "Origin": 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0',
             },
         })
         return new Promise((resolve, reject) => {
@@ -112,7 +132,6 @@ export class EdgeTTSClient {
     public static async convert(ssml: string, options: ClientOptions): Promise<ConvertResult> {
         let convertResult = new Promise<ConvertResult>(async (resolve, reject) => {
             try {
-
                 let audio = new ArrayBuffer(0)
                 let metadata: any = []
                 const requestId = this.generateId()
@@ -123,25 +142,28 @@ export class EdgeTTSClient {
                     }
                 }
                 ws.onmessage = (message) => {
-                    if (message.data instanceof ArrayBuffer) {
-                        let data = message.data
+                    console.debug('收到消息：', message.data instanceof Buffer, message.data)
+
+                    if (message.data instanceof Buffer) {
+                        let messageData = new Uint8Array(message.data).buffer
                         const headerRangeByteCount = 2
-                        let [headerStart, headerLength] = Array.from(new Uint8Array(data.slice(0, 2)))
-                        const headerData = data.slice(headerStart, headerRangeByteCount + headerLength)
+                        let [headerStart, headerLength] = Array.from(new Uint8Array(messageData.slice(0, 2)))
+                        const headerData = messageData.slice(headerStart, headerRangeByteCount + headerLength)
                         const headerPayload = headerData.slice(headerRangeByteCount, headerData.byteLength)
                         let headerString = arrayBufferToString(headerPayload)
                         const header = MessageHeader.parse(headerString)
                         console.debug('收到消息：', header)
-                        data = data.slice(headerLength + headerRangeByteCount)
+                        const data = messageData.slice(headerLength + headerRangeByteCount)
                         if (header.requestId === requestId) {
                             audio = concatArrayBuffers(audio, data)
                         }
                     } else if (typeof message.data === 'string') {
                         const spliter = '\r\n\r\n';
-                        const headerStringEnd = message.data.indexOf(spliter) + spliter.length
-                        const headerString = message.data.slice(0, headerStringEnd)
+                        const messageData = message.data as string
+                        const headerStringEnd = messageData.indexOf(spliter) + spliter.length
+                        const headerString = messageData.slice(0, headerStringEnd)
                         const header = MessageHeader.parse(headerString)
-                        const body = message.data.slice(headerStringEnd)
+                        const body = messageData.slice(headerStringEnd)
                         console.debug('收到消息：', body)
                         switch (header.path) {
                             case 'turn.start': {
@@ -175,29 +197,30 @@ export class EdgeTTSClient {
                     'Path:speech.config\r\n\r\n' +
                     JSON.stringify(config)
                 console.debug(`开始转换：${requestId}...`)
-                console.debug(`准备发送配置请求：${requestId}\n`, configMessage)
-                ws!.send({
-                    data: configMessage,
-                    success: () => {
-                        // 发送SSML消息
-                        let ssmlMessage =
-                            `X-Timestamp:${Date()}\r\n` +
-                            `X-RequestId:${requestId}\r\n` +
-                            `Content-Type:application/ssml+xml\r\n` +
-                            `Path:ssml\r\n\r\n` +
-                            ssml
-                        console.debug(`发送转换信息：${requestId}\n`, ssmlMessage)
-                        ws.send({
-                            data: ssmlMessage,
-                            fail: (error) => {
-                                reject(error)
-                            }
-                        })
-                    },
-                    fail: (error) => {
-                        reject(error)
+                console.debug(`准备发送配置请求：\n${configMessage}`)
+                ws!.send(
+                    configMessage,
+                    (error) => {
+                        if (error) {
+                            reject(error)
+                        } else {
+                            // 发送SSML消息
+                            let ssmlMessage =
+                                `X-Timestamp:${Date()}\r\n` +
+                                `X-RequestId:${requestId}\r\n` +
+                                `Content-Type:application/ssml+xml\r\n` +
+                                `Path:ssml\r\n\r\n` +
+                                ssml
+                            console.debug(`发送转换信息：\n${ssmlMessage}`)
+                            ws.send(
+                                ssmlMessage, (error) => {
+                                    if (error) {
+                                        reject(error)
+                                    }
+                                })
+                        }
                     }
-                })
+                )
             } catch (e) {
                 reject(e)
             }
