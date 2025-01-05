@@ -1,14 +1,14 @@
 import { TTSOptionsSchema } from "@/service/tts-service";
-import { json } from "body-parser";
+import { useCallback } from "react";
 import { useLocalStorage } from "react-use";
-import { string, z } from "zod";
+import { z } from "zod";
 
 export const HistoryRecordSchame = z.object({
     id: z.string().uuid(),
     uri: z.string(),
     text: z.string(),
     options: TTSOptionsSchema,
-    createAt: z.date()
+    createAt: z.number()
 })
 
 export type HistoryRecord = z.infer<typeof HistoryRecordSchame>
@@ -34,21 +34,18 @@ export default function useHistory() {
             }
         },
     })
-    function save(data: HistoryRecord) {
+
+    const save = useCallback((data: HistoryRecord) => {
         const record = HistoryRecordSchame.parse(data)
-        set(history => {
-            if (history) {
-                return [record, ...history]
-            } else {
-                return [record]
-            }
-        })
-    }
-    function remove(id: string) {
-        set(history => {
-            return history?.filter(h => h.id != id) ?? []
-        })
-    }
+        if (history) {
+            set([record, ...history])
+        } else {
+            set([record])
+        }
+    }, [set, history])
+    const remove = useCallback((id: string) => {
+        set(history?.filter(h => h.id != id) ?? [])
+    }, [set, history])
 
     return {
         history: history ?? [],

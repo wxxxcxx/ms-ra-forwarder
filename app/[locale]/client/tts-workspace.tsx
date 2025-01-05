@@ -1,32 +1,27 @@
 'use client'
-import { HTMLAttributes, useMemo, useState } from "react"
-import { withClientLayout } from "./layout"
-import clsx from "clsx"
-import { Textarea } from "@/components/shadcn/ui/textarea"
-import VoicePreference from "./voice-preference"
-import { Button } from "@/components/shadcn/ui/button"
-import { useTextToSpeach } from "@/app/hooks/actions"
+import { useTextToSpeach, useVoice, useVoices } from "@/app/hooks/actions"
 import { useToast } from "@/components/shadcn/hooks/use-toast"
-import { AudioPlayer } from "@/components/ui/audio-player"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useLocales, useVoice, useVoiceLocale, useVoices } from "@/app/hooks/actions";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/shadcn/ui/command";
-import { Label } from "@/components/shadcn/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/shadcn/ui/popover";
-import { Slider } from "@/components/shadcn/ui/slider";
-import { useTranslation } from "@/locales/client";
-import { getFriendlyVoiceName } from "@/service/edge-tts-service/voice-map";
-import { TTSOptions, TTSOptionsSchema } from "@/service/tts-service";
-import { Check, ChevronsUpDown, LoaderCircle, MapPin, RotateCw, Smile, Speech } from "lucide-react";
+import { Button } from "@/components/shadcn/ui/button"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/shadcn/ui/command"
 import { Form, FormField, FormItem, FormMessage } from "@/components/shadcn/ui/form"
+import { Label } from "@/components/shadcn/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/shadcn/ui/popover"
+import { Slider } from "@/components/shadcn/ui/slider"
+import { Textarea } from "@/components/shadcn/ui/textarea"
 import { getFirendlyPersonalityName } from "@/service/edge-tts-service/personality-map"
+import { getFriendlyVoiceName } from "@/service/edge-tts-service/voice-map"
+import { TTSOptions, TTSOptionsSchema } from "@/service/tts-service"
+import { zodResolver } from "@hookform/resolvers/zod"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
+import clsx from "clsx"
+import { Check, ChevronsUpDown, LoaderCircle, RotateCw, Smile, Speech } from "lucide-react"
+import { HTMLAttributes, useMemo } from "react"
+import { useForm } from "react-hook-form"
+import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
-import { useLocalStorage } from "react-use"
-import useHistory from "@/app/hooks/history"
-import { v4 as uuidv4 } from 'uuid';
+import { withClientLayout } from "./layout"
 import { useTTSContext } from "./tts-context"
+import { motion } from "motion/react"
 
 const TTSRequestSchame = z.object({
     options: TTSOptionsSchema,
@@ -79,9 +74,10 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
             }
             const audioData = await textToSpeach({ text: data.text, options: data.options })
             const audioUri = `data:audio/mp3;base64,${audioData}`
+            console.debug('textToSpeach', audioUri)
             save({
                 id: uuidv4(),
-                createAt: new Date(),
+                createAt: Date.now(),
                 text: data.text,
                 options: data.options,
                 uri: audioUri
@@ -96,12 +92,18 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
     })
 
     return <div {...props}>
-        <div className={clsx('flex')}>
+        <form
+            className={clsx('flex flex-col-reverse size-full gap-4',
+                'md:flex-row-reverse xl:flex-row'
+            )}
+            onSubmit={onSubmit}>
             <Form {...form}>
-                <form
-                    className={clsx('flex')}
-                    onSubmit={onSubmit}>
-                    <div className={clsx('flex flex-col gap-2')}>
+                <div className={clsx('flex flex-col justify-between gap-2',
+                )}>
+                    <div className={clsx(
+                        'grid grid-cols-[repeat(2,minmax(10rem,1fr))] place-content-start gap-2',
+                        'md:w-64 md:grid-cols-[repeat(1,minmax(10rem,1fr))]'
+                    )}>
                         <FormField name='options.voice' control={form.control}
                             render={({ field }) => (
                                 <FormItem>
@@ -110,9 +112,9 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                             <Button
                                                 variant="outline"
                                                 role="combobox"
-                                                className="justify-between w-64"
+                                                className="justify-between w-full"
                                             >
-                                                <span className={clsx('flex items-center gap-1 text-sm opacity-50')}><Speech />发音人</span>
+                                                <span className={clsx('flex justify-between items-center gap-1 text-sm opacity-50 w-16 truncate')}><Speech />发音人</span>
                                                 <span className={clsx('ml-2 flex-1 text-left truncate')}>
                                                     {field.value
                                                         ? getFriendlyVoiceName(field.value, field.value)
@@ -121,7 +123,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                                 <ChevronsUpDown className="opacity-50" />
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="p-0 w-64">
+                                        <PopoverContent className="p-0 w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height]">
                                             <Command>
                                                 <CommandInput placeholder="Search voice..." />
                                                 <CommandList>
@@ -173,9 +175,9 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                             <Button
                                                 variant="outline"
                                                 role="combobox"
-                                                className="justify-between w-64"
+                                                className="justify-between w-full"
                                             >
-                                                <span className={clsx('flex items-center gap-1 text-sm opacity-50')}><Smile className="h-4 w-4" />风格</span>
+                                                <span className={clsx('flex justify-between items-center gap-1 text-sm opacity-50 w-16 truncate')}><Smile className="h-4 w-4" />风格</span>
                                                 <span className={clsx('ml-2 flex-1 text-left truncate')}>
                                                     {field.value
                                                         ? getFirendlyPersonalityName(field.value)
@@ -184,7 +186,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                                 <ChevronsUpDown className="opacity-50" />
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="p-0 w-64">
+                                        <PopoverContent className="p-0 w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height]">
                                             <Command>
                                                 <CommandInput placeholder="Search voice..." />
                                                 <CommandList>
@@ -250,7 +252,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                         <FormField name='options.pitch' control={form.control}
                             render={({ field }) => (
                                 <FormItem>
-                                    <span className={clsx('flex gap-2 items-center w-64')}>
+                                    <span className={clsx('flex gap-2 items-center w-full')}>
                                         <Label>{field.name}</Label>
                                         <Slider
                                             min={-100} max={100} step={1}
@@ -274,7 +276,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                         <FormField name='options.rate' control={form.control}
                             render={({ field }) => (
                                 <FormItem>
-                                    <span className={clsx('flex gap-2 items-center w-64')}>
+                                    <span className={clsx('flex gap-2 items-center w-full')}>
                                         <Label>{field.name}</Label>
                                         <Slider
                                             min={-100} max={100} step={1}
@@ -295,20 +297,23 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                 </FormItem>
                             )}
                         ></FormField>
-                        <Button
-                            onClick={onSubmit}>
-                            {isTextToSpeachPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : 'Generate'}
-                        </Button>
                     </div>
-                    <FormField name="text" control={form.control} render={({ field }) => (
-                        <FormItem>
-                            <Textarea className={clsx('flex-1')} value={field.value} onChange={e => { field.onChange(e.target.value) }} />
-                            <FormMessage></FormMessage>
-                        </FormItem>
-                    )}></FormField>
-                </form>
+                    <Button
+                        className={clsx('-col-end-1 -row-start-1-1')}
+                        onClick={onSubmit}>
+                        {isTextToSpeachPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : 'Generate'}
+                    </Button>
+                </div>
+                <FormField name="text" control={form.control} render={({ field }) => (
+                    <FormItem className={clsx('flex-1',
+                        'lg:h-full'
+                    )}>
+                        <Textarea className={clsx('size-full resize-none')} value={field.value} onChange={e => { field.onChange(e.target.value) }} />
+                        <FormMessage></FormMessage>
+                    </FormItem>
+                )}></FormField>
             </Form>
-        </div>
+        </form>
     </div>
 }
 

@@ -120,16 +120,19 @@ export class EdgeTTSClient {
         })
         return new Promise((resolve, reject) => {
             client.onopen = () => {
+                console.debug('WebSocket connected')
                 resolve(client)
             }
 
             client.onerror = (error) => {
+                console.error('WebSocket error:', error)
                 reject(error)
             }
         })
     }
 
     public static async convert(ssml: string, options: ClientOptions): Promise<ConvertResult> {
+        console.debug('start convert', JSON.stringify(ssml), JSON.stringify(options))
         let convertResult = new Promise<ConvertResult>(async (resolve, reject) => {
             try {
                 let audio = new ArrayBuffer(0)
@@ -137,13 +140,22 @@ export class EdgeTTSClient {
                 const requestId = this.generateId()
                 const ws = await this.createWS()
                 ws.onclose = (r) => {
+                    console.debug(`Websocket closed with ${r.code}`)
                     if (r.code !== 1000) {
                         reject(new Error(`WebSocket closed with code ${r.code}: ${r.reason}`))
                     }
                 }
                 ws.onmessage = (message) => {
-                    console.debug('收到消息：', message.data instanceof Buffer, message.data)
-
+                    const messageType = message.data.valueOf()
+                    let typeName = 'unknow'
+                    if (messageType instanceof Buffer) {
+                        typeName = 'buffer'
+                    } else if (typeof messageType === 'string') {
+                        typeName = 'string'
+                    } else {
+                        typeName = 'object'
+                    }
+                    console.debug(`Received ${typeName} message`,)
                     if (message.data instanceof Buffer) {
                         let messageData = new Uint8Array(message.data).buffer
                         const headerRangeByteCount = 2
@@ -152,8 +164,8 @@ export class EdgeTTSClient {
                         const headerPayload = headerData.slice(headerRangeByteCount, headerData.byteLength)
                         let headerString = arrayBufferToString(headerPayload)
                         const header = MessageHeader.parse(headerString)
-                        console.debug('收到消息：', header)
                         const data = messageData.slice(headerLength + headerRangeByteCount)
+                        console.debug('Received binary data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Length:', data.byteLength)
                         if (header.requestId === requestId) {
                             audio = concatArrayBuffers(audio, data)
                         }
@@ -164,7 +176,7 @@ export class EdgeTTSClient {
                         const headerString = messageData.slice(0, headerStringEnd)
                         const header = MessageHeader.parse(headerString)
                         const body = messageData.slice(headerStringEnd)
-                        console.debug('收到消息：', body)
+                        console.debug('Received text data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Body', body)
                         switch (header.path) {
                             case 'turn.start': {
                                 break
@@ -182,6 +194,7 @@ export class EdgeTTSClient {
                             case 'turn.end': {
                                 if (header.requestId === requestId) {
                                     resolve({ audio, metadata })
+                                    console.debug(`Client close requestId:${requestId}`)
                                     ws.close(1000, '正常关闭')
                                 }
                                 break
@@ -198,7 +211,7 @@ export class EdgeTTSClient {
                     JSON.stringify(config)
                 console.debug(`开始转换：${requestId}...`)
                 console.debug(`准备发送配置请求：\n${configMessage}`)
-                ws!.send(
+                ws.send(
                     configMessage,
                     (error) => {
                         if (error) {
