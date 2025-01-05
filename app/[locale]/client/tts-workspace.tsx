@@ -21,7 +21,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
 import { withClientLayout } from "./layout"
 import { useTTSContext } from "./tts-context"
-import { motion } from "motion/react"
+import { SSML } from '@/service/ssml'
+import axios from "axios"
 
 const TTSRequestSchame = z.object({
     options: TTSOptionsSchema,
@@ -72,9 +73,19 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                 })
                 return
             }
-            const audioData = await textToSpeach({ text: data.text, options: data.options })
-            const audioUri = `data:audio/mp3;base64,${audioData}`
-            console.debug('textToSpeach', audioUri)
+            const response = await axios.get('/api/text-to-speech', {
+                responseType: 'blob',
+                params: {
+                    ...data.options,
+                    text: data.text
+                }
+            })
+            const audioData = response.data
+          
+            const audioUri = URL.createObjectURL(audioData)
+            // TODO: use indexDB
+            // const audioData = await textToSpeach({ text: data.text, options: data.options })
+            // const audioUri = `data:audio/mp3;base64,${base64Audio}`
             save({
                 id: uuidv4(),
                 createAt: Date.now(),
