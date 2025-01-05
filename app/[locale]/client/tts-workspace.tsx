@@ -13,6 +13,7 @@ import { getFriendlyVoiceName } from "@/service/edge-tts-service/voice-map"
 import { TTSOptions, TTSOptionsSchema } from "@/service/tts-service"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
+import axios from "axios"
 import clsx from "clsx"
 import { Check, ChevronsUpDown, LoaderCircle, RotateCw, Smile, Speech } from "lucide-react"
 import { HTMLAttributes, useMemo } from "react"
@@ -21,8 +22,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
 import { withClientLayout } from "./layout"
 import { useTTSContext } from "./tts-context"
-import { SSML } from '@/service/ssml'
-import axios from "axios"
 
 const TTSRequestSchame = z.object({
     options: TTSOptionsSchema,
@@ -46,7 +45,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
             acc[voice.locale].push(voice)
             return acc
         }, {} as Record<string, typeof voicesQuery.data>) ?? {}
-    }, [voicesQuery.data])
+    }, [voicesQuery])
     const { mutateAsync: textToSpeach, isPending: isTextToSpeachPending } = useTextToSpeach()
 
     const { saveHistoryRecord: save } = useTTSContext()

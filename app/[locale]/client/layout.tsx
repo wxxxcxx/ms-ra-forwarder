@@ -6,7 +6,7 @@ import { ComponentType } from 'react';
 
 const queryClient = new QueryClient()
 
-export function withClientLayout<T extends Object>(
+export function withClientLayout<T extends object>(
   WrappedComponent: ComponentType<T>
 ) {
   return function WithClientLayout(props: T & {

@@ -22,13 +22,14 @@ interface AudioPlayerProps extends React.HTMLAttributes<HTMLDivElement> {
 const AudioPlayer = React.forwardRef<
     HTMLDivElement,
     AudioPlayerProps
->(({ className, src, showVolume = false, controls = true, autoPlay = false, ...props }, ref) => {
+>(({ className, src, showVolume = false, controls = true, autoPlay = false, }, ref) => {
     const { toast } = useToast()
-    const [audioElement, audioState, audioControls, audioRef] = useAudio({
+    const [audioElement, audioState, audioControls] = useAudio({
         src: src,
-        autoPlay: false,
-        controls: true,
-        className: 'hidden'
+        autoPlay: autoPlay,
+        controls: controls,
+        className: 'hidden',
+
     })
     return <div
         className={clsx("h-9 flex items-center gap-2 justify-between", className)}
@@ -55,6 +56,7 @@ const AudioPlayer = React.forwardRef<
                         audioControls.pause()
                     }
                 } catch (error) {
+                    console.error(error)
                     toast({
                         title: 'Error',
                         description: 'Failed to play audio',

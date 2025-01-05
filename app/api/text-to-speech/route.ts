@@ -19,6 +19,7 @@ export async function GET(request: Request) {
             try {
                 return z.number().min(min).max(max).parse(Number(paramValue));
             } catch (error) {
+                console.error(`Invalid ${paramName} value: ${paramValue}`);
                 throw new Error(`Invalid ${paramName} value`);
             }
         };
@@ -40,7 +41,7 @@ export async function GET(request: Request) {
         const speech = await service.convert(text, options)
         const audioBlob = new Blob([speech.audio], { type: 'audio/mpeg' });
         return new Response(audioBlob, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } })
-    } catch (error: any) {
-        return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    } catch (error) {
+        return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
     }
 }

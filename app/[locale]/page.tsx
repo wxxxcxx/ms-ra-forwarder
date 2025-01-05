@@ -1,13 +1,13 @@
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/shadcn/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/shadcn/ui/breadcrumb";
+import { Button } from "@/components/shadcn/ui/button";
 import { Separator } from "@/components/shadcn/ui/separator";
 import { getCurrentLocale } from "@/locales/server";
 import clsx from "clsx";
+import { ArrowRightFromLine } from "lucide-react";
 import TTSContextProvider from "./client/tts-context";
 import TtsHistory from "./client/tts-history";
 import TTSWorkspace from "./client/tts-workspace";
-import { ArrowRightFromLine } from "lucide-react";
-import { Button } from "@/components/shadcn/ui/button";
 
 export default async function Home() {
   const locale = await getCurrentLocale()

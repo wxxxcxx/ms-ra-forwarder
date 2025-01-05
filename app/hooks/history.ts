@@ -30,6 +30,7 @@ export default function useHistory() {
                     return []
                 }
             } catch (error) {
+                console.error(error)
                 return []
             }
         },
