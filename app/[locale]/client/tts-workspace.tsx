@@ -81,11 +81,12 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
             })
             const audioData = response.data
           
-            const audioUri = URL.createObjectURL(audioData)
-            // TODO: use indexDB
-            // const audioData = await textToSpeach({ text: data.text, options: data.options })
-            // const audioUri = `data:audio/mp3;base64,${base64Audio}`
-            save({
+            const reader = new FileReader()
+            const audioUri = await new Promise<string>((resolve) => {
+                reader.onload = () => resolve(reader.result as string)
+                reader.readAsDataURL(audioData)
+            })
+            await save({
                 id: uuidv4(),
                 createAt: Date.now(),
                 text: data.text,

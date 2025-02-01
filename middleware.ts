@@ -1,6 +1,6 @@
 import { createI18nMiddleware } from 'next-international/middleware'
-import { NextRequest, NextResponse } from 'next/server'
-import { DEFAULT_LOCALE, Locale, LOCALES } from './locales'
+import { NextRequest } from 'next/server'
+import { DEFAULT_LOCALE, LOCALES } from './locales'
 
 const I18nMiddleware = createI18nMiddleware({
     urlMappingStrategy: 'rewriteDefault',
