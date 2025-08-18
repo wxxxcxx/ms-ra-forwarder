@@ -1,6 +1,5 @@
 import { EdgeTTSService } from "@/service/edge-tts-service"
-import { TTSOptions, TTSOptionsSchema } from "@/service/tts-service"
-import { z } from "zod"
+import { TTSOptions } from "@/service/tts-service"
 
 export async function GET(request: Request) {
     try {
@@ -9,16 +8,25 @@ export async function GET(request: Request) {
             return new Response('Unauthorized', { status: 401 })
         }
         const { searchParams } = new URL(request.url)
-        const text = z.string({ required_error: 'Text is required' }).parse(searchParams.get('text'))
-        const voice = z.string({ required_error: 'Voice is required' }).parse(searchParams.get('voice'))
+        const text = String(searchParams.get('text') ?? '')
+        if (!text) {
+            return new Response(JSON.stringify({ error: 'Text is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+        }
+        const voice = String(searchParams.get('voice') ?? '')
+        if (!voice) {
+            return new Response(JSON.stringify({ error: 'Voice is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+        }
         const parseNumberParam = (paramName: string, defaultValue: number, min: number, max: number) => {
             const paramValue = searchParams.get(paramName);
             if (paramValue === null || paramValue === undefined) {
                 return defaultValue;
             }
             try {
-                return z.number().min(min).max(max).parse(Number(paramValue));
-            } catch (error) {
+                const num = Number(paramValue)
+                if (Number.isNaN(num)) throw new Error('NaN')
+                if (num < min || num > max) throw new Error('out of range')
+                return num
+            } catch {
                 console.error(`Invalid ${paramName} value: ${paramValue}`);
                 throw new Error(`Invalid ${paramName} value`);
             }
@@ -28,16 +36,14 @@ export async function GET(request: Request) {
         const rate = parseNumberParam('rate', 0, -100, 100);
         const volume = parseNumberParam('volume', 100, -100, 100);
         const personality = searchParams.get('personality') ?? undefined;
-        const format = searchParams.get('format') ?? undefined;
         const service = new EdgeTTSService()
-        const options: TTSOptions = TTSOptionsSchema.parse({
+        const options: TTSOptions = {
             voice,
             volume,
             rate,
             pitch,
-            format,
             personality,
-        })
+        }
         const speech = await service.convert(text, options)
         const audioBlob = new Blob([speech.audio], { type: 'audio/mpeg' });
         return new Response(audioBlob, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } })

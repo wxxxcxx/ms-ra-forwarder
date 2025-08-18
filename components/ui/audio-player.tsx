@@ -14,7 +14,6 @@ function formatTime(time: number) {
 
 interface AudioPlayerProps extends React.HTMLAttributes<HTMLDivElement> {
     src: string
-    showVolume?: boolean
     controls?: boolean
     autoPlay?: boolean
 }
@@ -22,7 +21,7 @@ interface AudioPlayerProps extends React.HTMLAttributes<HTMLDivElement> {
 const AudioPlayer = React.forwardRef<
     HTMLDivElement,
     AudioPlayerProps
->(({ className, src, showVolume = false, controls = true, autoPlay = false, }, ref) => {
+>(({ className, src, controls = true, autoPlay = false, }, ref) => {
     const { toast } = useToast()
     const [audioElement, audioState, audioControls] = useAudio({
         src: src,

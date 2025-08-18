@@ -1,5 +1,5 @@
 'use client'
-import { useTextToSpeach, useVoice, useVoices } from "@/app/hooks/actions"
+import { useVoice, useVoices } from "@/app/hooks/actions"
 import { useToast } from "@/components/shadcn/hooks/use-toast"
 import { Button } from "@/components/shadcn/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/shadcn/ui/command"
@@ -20,8 +20,8 @@ import { HTMLAttributes, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
-import { withClientLayout } from "./layout"
 import { useTTSContext } from "./tts-context"
+import Link from "next/link"
 
 const TTSRequestSchame = z.object({
     options: TTSOptionsSchema,
@@ -29,12 +29,11 @@ const TTSRequestSchame = z.object({
 })
 
 export interface TTSWorkspaceProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-    locale: string,
     options?: TTSOptions
     text?: string
 }
 
-function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
+export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
     const { toast } = useToast()
 
     const voicesQuery = useVoices()
@@ -46,7 +45,6 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
             return acc
         }, {} as Record<string, typeof voicesQuery.data>) ?? {}
     }, [voicesQuery])
-    const { mutateAsync: textToSpeach, isPending: isTextToSpeachPending } = useTextToSpeach()
 
     const { saveHistoryRecord: save } = useTTSContext()
 
@@ -63,7 +61,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
     const currentVoice = useVoice(form.getValues('options.voice'))
 
     const onSubmit = form.handleSubmit(async data => {
-        try {
+        try { 
             if (!data) {
                 toast({
                     title: 'Error',
@@ -93,7 +91,7 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                 options: data.options,
                 uri: audioUri
             })
-        } catch (error) {
+        } catch {
             toast({
                 title: 'Error',
                 description: 'Failed to generate audio',
@@ -101,6 +99,22 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
             })
         }
     })
+
+    const legadoImportLink = useMemo(()=>{
+        const values = form.getValues()
+        if (!values) {
+            return ''
+        }
+        const protocol = typeof window !== 'undefined' && window.location.protocol
+        const host = typeof window !== 'undefined' && window.location.host
+        const queryString = Object.entries(values.options).reduce((acc, [key, value]) => {
+            acc += `${key}=${value}&`
+            return acc
+        }, "")
+        const importUrl = `${protocol}//${host}/api/legado-import?${queryString}`
+        return importUrl
+        // return `legado://import/httpTTS?src=${encodeURIComponent(importUrl)}`
+    },[form])
 
     return <div {...props}>
         <form
@@ -211,8 +225,8 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                                         >
                                                             <div>
                                                                 <CommandItem
-                                                                    value={undefined}
-                                                                    onSelect={(value: string) => {
+                                                                    value={undefined as unknown as string}
+                                                                    onSelect={() => {
                                                                         field.onChange(undefined)
                                                                     }}
                                                                 >
@@ -238,7 +252,6 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                                                             field.onChange(value)
                                                                         }}
                                                                     >
-
                                                                         {getFirendlyPersonalityName(personality)}
                                                                         <Check
                                                                             className={clsx(
@@ -246,7 +259,6 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                                                                 field.value === personality ? "opacity-100" : "opacity-0"
                                                                             )}
                                                                         />
-
                                                                     </CommandItem>
                                                                 </div>
                                                             </PopoverPrimitive.Close>
@@ -260,72 +272,72 @@ function TTSWorkspace({ locale, ...props }: TTSWorkspaceProps) {
                                 </FormItem>
                             )}
                         ></FormField>
-                        <FormField name='options.pitch' control={form.control}
-                            render={({ field }) => (
+                        <div className={clsx('space-y-1')}>
+                            <Label className={clsx('flex justify-between items-center gap-1 text-sm opacity-50 w-16 truncate')}>语速</Label>
+                            <FormField name="options.rate" control={form.control} render={({ field }) => (
                                 <FormItem>
-                                    <span className={clsx('flex gap-2 items-center w-full')}>
-                                        <Label>{field.name}</Label>
-                                        <Slider
-                                            min={-100} max={100} step={1}
-                                            value={[field.value ?? 0]}
-                                            onValueChange={(value) => field.onChange(value[0])}
-                                            className={clsx('h-9 flex-1')} >
-                                            <span className={clsx('flex gap-2 items-center text-[0.5rem] text-gray-500')}>{field.value}%</span>
-                                        </Slider>
-                                        <Button variant={'ghost'} size={'sm'} className={clsx('px-2')}
-                                            onClick={() => {
-                                                field.onChange(0)
-                                            }}
-                                        >
-                                            <RotateCw />
-                                        </Button>
-                                    </span>
-                                    <FormMessage />
+                                    <Slider
+                                        value={[field.value ?? 0]}
+                                        onValueChange={(value) => field.onChange(value[0])}
+                                        min={-100}
+                                        max={100}
+                                        step={1}
+                                    />
                                 </FormItem>
-                            )}
-                        ></FormField>
-                        <FormField name='options.rate' control={form.control}
-                            render={({ field }) => (
+                            )} />
+                        </div>
+                        <div className={clsx('space-y-1')}>
+                            <Label className={clsx('flex justify-between items-center gap-1 text-sm opacity-50 w-16 truncate')}>语调</Label>
+                            <FormField name="options.pitch" control={form.control} render={({ field }) => (
                                 <FormItem>
-                                    <span className={clsx('flex gap-2 items-center w-full')}>
-                                        <Label>{field.name}</Label>
-                                        <Slider
-                                            min={-100} max={100} step={1}
-                                            value={[field.value ?? 0]}
-                                            onValueChange={(value) => field.onChange(value[0])}
-                                            className={clsx('h-9 flex-1')} >
-                                            <span className={clsx('flex gap-2 items-center text-[0.5rem] text-gray-500')}>{field.value}%</span>
-                                        </Slider>
-                                        <Button variant={'ghost'} size={'sm'} className={clsx('px-2')}
-                                            onClick={() => {
-                                                field.onChange(0)
-                                            }}
-                                        >
-                                            <RotateCw />
-                                        </Button>
-                                    </span>
-                                    <FormMessage />
+                                    <Slider
+                                        value={[field.value ?? 0]}
+                                        onValueChange={(value) => field.onChange(value[0])}
+                                        min={-100}
+                                        max={100}
+                                        step={1}
+                                    />
                                 </FormItem>
-                            )}
-                        ></FormField>
+                            )} />
+                        </div>
+                        <div className={clsx('space-y-1')}>
+                            <Label className={clsx('flex justify-between items-center gap-1 text-sm opacity-50 w-16 truncate')}>音量</Label>
+                            <FormField name="options.volume" control={form.control} render={({ field }) => (
+                                <FormItem>
+                                    <Slider
+                                        value={[field.value ?? 0]}
+                                        onValueChange={(value) => field.onChange(value[0])}
+                                        min={-100}
+                                        max={100}
+                                        step={1}
+                                    />
+                                </FormItem>
+                            )} />
+                        </div>
+                        <div className={clsx('space-y-1')}></div>
+                        <div className={clsx('')}>
+                            <Button type="submit" className={clsx('w-full')}>
+                                生成
+                            </Button>
+                        </div>
+                        <div className={clsx('')}>
+                            <Link className={clsx('underline text-sm text-sky-500')} href={"legado://import/httpTTS?src=" + encodeURIComponent(legadoImportLink)}>
+                                导入到阅读3（legado）
+                            </Link>
+                        </div>
                     </div>
-                    <Button
-                        className={clsx('-col-end-1 -row-start-1-1')}
-                        onClick={onSubmit}>
-                        {isTextToSpeachPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : 'Generate'}
-                    </Button>
                 </div>
-                <FormField name="text" control={form.control} render={({ field }) => (
-                    <FormItem className={clsx('flex-1',
-                        'lg:h-full'
-                    )}>
-                        <Textarea className={clsx('size-full resize-none')} value={field.value} onChange={e => { field.onChange(e.target.value) }} />
-                        <FormMessage></FormMessage>
-                    </FormItem>
-                )}></FormField>
             </Form>
+
+            <div className={clsx('flex-1 flex flex-col gap-2 border-r border-input pr-4 overflow-hidden')}>
+                <Label className={clsx('flex items-center gap-1 text-sm opacity-50')}>
+                    <RotateCw className="h-4 w-4" />
+                    内容
+                </Label>
+                <Textarea className={clsx('flex-1 resize-none h-full')} placeholder={'请输入内容'}
+                    {...form.register('text')}
+                />
+            </div>
         </form>
     </div>
 }
-
-export default withClientLayout(TTSWorkspace)

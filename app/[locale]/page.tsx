@@ -2,15 +2,13 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/shadcn/ui/breadcrumb";
 import { Button } from "@/components/shadcn/ui/button";
 import { Separator } from "@/components/shadcn/ui/separator";
-import { getCurrentLocale } from "@/locales/server";
 import clsx from "clsx";
 import { ArrowRightFromLine } from "lucide-react";
-import TTSContextProvider from "./client/tts-context";
-import TtsHistory from "./client/tts-history";
-import TTSWorkspace from "./client/tts-workspace";
+import TTSContextProvider from "@/components/tts-context";
+import TtsHistory from "@/components/tts-history";
+import TTSWorkspace from "@/components/tts-workspace";
 
 export default async function Home() {
-  const locale = await getCurrentLocale()
   return (
     <div className="flex flex-col h-screen w-screen font-[family-name:var(--font-geist-sans)]">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b justify-between">
@@ -38,8 +36,8 @@ export default async function Home() {
           <div className={clsx('size-full p-4 flex flex-col rounded-md border border-input shadow-sm gap-4',
             'xl:flex-row'
           )}>
-            <TTSWorkspace locale={locale} className={clsx('flex-1')} />
-            <TtsHistory locale={locale}
+            <TTSWorkspace className={clsx('flex-1')} />
+            <TtsHistory 
               className={clsx('h-full overflow-hidden')}
             ></TtsHistory>
           </div>

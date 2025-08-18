@@ -1,22 +1,18 @@
 'use client'
 import { useToast } from "@/components/shadcn/hooks/use-toast"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/shadcn/ui/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/shadcn/ui/card"
 import { AudioPlayer } from "@/components/ui/audio-player"
 import clsx from "clsx"
 import dayjs from "dayjs"
 import { HTMLAttributes } from "react"
-import { withClientLayout } from "./layout"
 import { useTTSContext } from "./tts-context"
 import { Button } from "@/components/shadcn/ui/button"
 import { Trash } from "lucide-react"
 import { ScrollArea } from "@/components/shadcn/ui/scroll-area"
 
+export type TTSHistoryProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'>
 
-export interface TTSHistoryProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-    locale: string,
-}
-
-function TTSHistory({ locale, ...props }: TTSHistoryProps) {
+export default function TTSHistory({ ...props }: TTSHistoryProps) {
     const { toast } = useToast()
     const ttsContext = useTTSContext()
 
@@ -64,5 +60,3 @@ function TTSHistory({ locale, ...props }: TTSHistoryProps) {
         </ScrollArea>
     </div>
 }
-
-export default withClientLayout(TTSHistory)

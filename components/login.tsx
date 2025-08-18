@@ -2,18 +2,15 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/shadcn/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/shadcn/ui/form";
 import { Input } from "@/components/shadcn/ui/input";
-import { useCurrentLocale, useTranslation } from "@/locales/client";
+import { useTranslation } from "@/locales/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { withClientLayout } from "./layout";
 import { Button } from "@/components/shadcn/ui/button";
 import { login } from "@/app/actions/login";
-import router from "next/router";
-import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 
-function Page() {
+export default function Page() {
 
     const t = useTranslation()
     const formSchema = z.object({
@@ -74,5 +71,3 @@ function Page() {
 
     )
 }
-
-export default withClientLayout(Page)
