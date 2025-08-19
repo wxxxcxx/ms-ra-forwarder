@@ -147,7 +147,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
         }
     })
 
-    const legadoImportLink = useMemo(() => {
+    const legadoApiLink = useMemo(() => {
         const values = form.getValues()
         if (!values || typeof window === 'undefined') {
             return ''
@@ -158,16 +158,20 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
             acc += `${key}=${value}&`
             return acc
         }, "")
-        const importUrl = `${protocol}//${host}/api/legado-import?${queryString}`
-        return `legado://import/httpTTS?src=${encodeURIComponent(importUrl)}`
+        const apiUrl = `${protocol}//${host}/api/legado-import?${queryString}`
+        return apiUrl
     }, [form])
+
+    const legadoImportLink = useMemo(() => {
+        return `legado://import/httpTTS?src=${encodeURIComponent(legadoApiLink)}`
+    }, [legadoApiLink])
 
     // 生成二维码
     const generateQrCode = async () => {
-        if (!legadoImportLink) return
+        if (!legadoApiLink) return
 
         try {
-            const qrDataUrl = await QRCode.toDataURL(legadoImportLink, {
+            const qrDataUrl = await QRCode.toDataURL(legadoApiLink, {
                 width: 256,
                 margin: 2,
                 color: {
