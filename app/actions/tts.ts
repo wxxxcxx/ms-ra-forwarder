@@ -5,7 +5,7 @@ import { TTSOptions, Voice } from '@/service/tts-service'
 import Keyv from 'keyv'
 
 const voicesCache = new Keyv<Voice[]>(undefined, {
-    ttl: 1000,
+    ttl: 1000 * 60 * 60, // 1小时缓存
 })
 
 async function getVoices() {

@@ -7,7 +7,7 @@ import dayjs from "dayjs"
 import { HTMLAttributes } from "react"
 import { useTTSContext } from "./tts-context"
 import { Button } from "@/components/shadcn/ui/button"
-import { Trash } from "lucide-react"
+import { CircleX, Trash } from "lucide-react"
 import { ScrollArea } from "@/components/shadcn/ui/scroll-area"
 
 export type TTSHistoryProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'>
@@ -18,7 +18,7 @@ export default function TTSHistory({ ...props }: TTSHistoryProps) {
 
     return <div {...props}>
         <ScrollArea className={clsx('size-full')}>
-            <div className={clsx('w-full flex flex-col gap-2 ')}>
+            <div className={clsx('w-full flex flex-col gap-2 pr-6  pt-4')}>
                 {ttsContext.history.map(record => (
                     <Card key={record.id} className="w-full rounded-md shadow-sm hover:bg-muted relative group">
                         <Button
@@ -38,7 +38,7 @@ export default function TTSHistory({ ...props }: TTSHistoryProps) {
                                 })
                             }}
                         >
-                            <Trash className="opacity-70" />
+                            <CircleX className="opacity-70" />
                         </Button>
                         <CardHeader>
                             <AudioPlayer className={clsx('w-full')} src={record.uri}></AudioPlayer>
