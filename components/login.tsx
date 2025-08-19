@@ -2,7 +2,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/shadcn/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/shadcn/ui/form";
 import { Input } from "@/components/shadcn/ui/input";
-import { useTranslation } from "@/locales/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,10 +10,8 @@ import { login } from "@/app/actions/login";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-
-    const t = useTranslation()
     const formSchema = z.object({
-        token: z.string().min(1, { message: t('login.token.required') }),
+        token: z.string().min(1, { message: '令牌是必需的' }),
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -30,30 +27,30 @@ export default function Page() {
             if (success) {
                 router.push('/')
             } else {
-                form.setError('root', { type: 'manual', message: t('error.invalid_token') })
+                form.setError('root', { type: 'manual', message: '令牌无效' })
             }
         } catch (error) {
             console.error(error)
-            form.setError('root', { type: 'manual', message: t('error.unknown') })
+            form.setError('root', { type: 'manual', message: '未知错误' })
         }
     })
     return (
         <form onSubmit={handleSubmit}>
             <Card className="w-[350px]">
                 <CardHeader>
-                    <CardTitle>{t('title')}</CardTitle>
-                    <CardDescription>{t('description')}</CardDescription>
+                    <CardTitle>免费TTS</CardTitle>
+                    <CardDescription>免费TTS是一个免费的文本转语音服务，允许您将文本转换为多种语言和语音。</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
                         <FormField name="token" control={form.control} render={({ field }) => (
                             <FormItem>
-                                <FormLabel>{t('login.token')}</FormLabel>
+                                <FormLabel>令牌</FormLabel>
                                 <FormControl>
-                                    <Input {...field} placeholder={t('login.token.placeholder')} />
+                                    <Input {...field} placeholder="请输入您的令牌" />
                                 </FormControl>
                                 <FormDescription>
-                                    {t('login.token.description')}
+                                    输入您的令牌登录
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -64,7 +61,7 @@ export default function Page() {
                     </Form>
                 </CardContent>
                 <CardFooter className="flex justify-end">
-                    <Button type="submit">{t('login.button.confirm')}</Button>
+                    <Button type="submit">登录</Button>
                 </CardFooter>
             </Card>
         </form>

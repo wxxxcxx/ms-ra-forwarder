@@ -16,7 +16,7 @@ import * as PopoverPrimitive from "@radix-ui/react-popover"
 import axios from "axios"
 import clsx from "clsx"
 import { Check, ChevronsUpDown, LoaderCircle, RotateCw, Smile, Speech } from "lucide-react"
-import { HTMLAttributes, useMemo } from "react"
+import { HTMLAttributes, useMemo, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
@@ -35,6 +35,11 @@ export interface TTSWorkspaceProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 
 export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
     const { toast } = useToast()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const voicesQuery = useVoices()
 
@@ -102,11 +107,11 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
 
     const legadoImportLink = useMemo(()=>{
         const values = form.getValues()
-        if (!values) {
+        if (!values || typeof window === 'undefined') {
             return ''
         }
-        const protocol = typeof window !== 'undefined' && window.location.protocol
-        const host = typeof window !== 'undefined' && window.location.host
+        const protocol = window.location.protocol
+        const host = window.location.host
         const queryString = Object.entries(values.options).reduce((acc, [key, value]) => {
             acc += `${key}=${value}&`
             return acc
@@ -321,7 +326,12 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                             </Button>
                         </div>
                         <div className={clsx('')}>
-                            <Link className={clsx('underline text-sm text-sky-500')} href={"legado://import/httpTTS?src=" + encodeURIComponent(legadoImportLink)}>
+                            <Link 
+                                className={clsx('underline text-sm text-sky-500', {
+                                    'opacity-50 pointer-events-none': !mounted || !legadoImportLink
+                                })} 
+                                href={mounted && legadoImportLink ? "legado://import/httpTTS?src=" + encodeURIComponent(legadoImportLink) : "#"}
+                            >
                                 导入到阅读3（legado）
                             </Link>
                         </div>
