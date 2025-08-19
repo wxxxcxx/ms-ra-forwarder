@@ -54,7 +54,7 @@ export default function Home() {
           )}>
             <TTSWorkspace className={clsx('flex-1')} />
             <TtsHistory 
-              className={clsx('h-full overflow-hidden')}
+              className={clsx('h-full overflow-hidden xl:w-80')}
             ></TtsHistory>
           </div>
         </TTSContextProvider>

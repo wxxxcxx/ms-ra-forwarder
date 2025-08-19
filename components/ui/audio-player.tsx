@@ -31,11 +31,11 @@ const AudioPlayer = React.forwardRef<
 
     })
     return <div
-        className={clsx("h-9 flex items-center gap-2 justify-between", className)}
+        className={clsx("flex items-center gap-2 justify-between", className)}
         ref={ref}
     >
         <AudioLines />
-        <div className={clsx('flex relative w-full h-full')}>
+        <div className={clsx('flex relative flex-1 h-full py-6')}>
             <sub className={clsx('text-gray-500 text-xs absolute left-0')}>{formatTime(audioState.time)}</sub>
             <Slider className={clsx('flex-1')} value={[audioState.time]} max={audioState.duration} step={0.01}
                 onValueChange={(value) => {

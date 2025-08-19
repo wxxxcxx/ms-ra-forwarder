@@ -18,42 +18,52 @@ export default function TTSHistory({ ...props }: TTSHistoryProps) {
 
     return <div {...props}>
         <ScrollArea className={clsx('size-full')}>
-            <div className={clsx('w-full flex flex-col gap-2 pr-6  pt-4')}>
+            <div className={clsx('w-full flex flex-col gap-2')}>
                 {ttsContext.history.map(record => (
                     <Card key={record.id} className="w-full rounded-md shadow-sm hover:bg-muted relative group">
-                        <Button
-                            className={clsx(
-                                'absolute right-0 top-0 translate-x-1/2 -translate-y-1/2',
-                                'rounded-full aspect-square overflow-hidden text-xs h-6 p-0',
-                                'group-hover:opacity-80 opacity-0 transition-opacity duration-300'
-                            )}
-                            variant={'default'}
-                            size={'sm'}
-                            onClick={() => {
-                                console.log(record.id)
-                                ttsContext.removeHistoryRecord(record.id)
-                                toast({
-                                    title: 'Success',
-                                    description: 'Remove history successfully',
-                                })
-                            }}
-                        >
-                            <CircleX className="opacity-70" />
-                        </Button>
-                        <CardHeader>
-                            <AudioPlayer className={clsx('w-full')} src={record.uri}></AudioPlayer>
+
+                        <CardHeader className="flex items-start justify-between w-full overflow-hidden">
+                            <div className="flex-1 min-w-0 pr-2">
+                                <p className="text-sm leading-5 break-words" style={{
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 3,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}>
+                                    {record.text}
+                                </p>
+                            </div>
                         </CardHeader>
-                        <CardContent className={clsx('text-xs opacity-70 w-full h-10 overflow-hidden text-ellipsis')}>
-                            {record.text}
+                        <CardContent className={clsx('w-full overflow-auto space-y-4')}>
+                            <AudioPlayer className={clsx('w-full overflow-hidden')} src={record.uri}></AudioPlayer>
+                            <Button
+                                variant={'destructive'}
+                                size={'sm'}
+                                className="w-full"
+                                onClick={() => {
+                                    console.log(record.id)
+                                    ttsContext.removeHistoryRecord(record.id)
+                                    toast({
+                                        title: 'Success',
+                                        description: 'Remove history successfully',
+                                    })
+                                }}
+                            >
+                                <CircleX className="opacity-70" />
+                                删除
+                            </Button>
                         </CardContent>
-                        <CardFooter className="flex justify-between gap-2">
+                        <CardFooter className="w-full mt-2 flex flex-col md:flex-row xl:flex-col justify-between gap-1 overflow-hidden">
                             <span className={clsx('text-[0.5rem] truncate flex-1 opacity-50')}>
                                 {record.options.voice}
                             </span>
                             <span className={clsx('text-[0.5rem] truncate flex-1 text-right opacity-50')}>
                                 {dayjs(record.createAt).format('YYYY-MM-DD HH:mm:ss')}
                             </span>
+
                         </CardFooter>
+
                     </Card>
                 ))}
             </div>

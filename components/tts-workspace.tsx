@@ -154,13 +154,12 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
         }
         const protocol = window.location.protocol
         const host = window.location.host
-        const queryString = Object.entries(values.options).reduce((acc, [key, value]) => {
-            acc += `${key}=${value}&`
-            return acc
-        }, "")
+        const queryString = Object.entries(values.options)
+            .filter(([, value]) => value != null)
+            .map(([key, value]) => `${key}=${value}`).join('&')
         const apiUrl = `${protocol}//${host}/api/legado-import?${queryString}`
         return apiUrl
-    }, [form])
+    }, [form.getValues()])
 
     const legadoImportLink = useMemo(() => {
         return `legado://import/httpTTS?src=${encodeURIComponent(legadoApiLink)}`
@@ -464,8 +463,15 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                         </div>
                         <div className={clsx('space-y-1')}></div>
                         <div className={clsx('space-y-3')}>
-                            <Button type="submit" className={clsx('w-full')}>
-                                转换
+                            <Button type="submit" className={clsx('w-full')} disabled={form.formState.isSubmitting}>
+                                {form.formState.isSubmitting ? (
+                                    <span className={clsx('flex justify-between items-center gap-1 text-sm opacity-50 truncate')}>
+                                        <LoaderCircle className="h-4 w-4 animate-spin" />
+                                        <span className={clsx('ml-2')}>转换中...</span>
+                                    </span>
+                                ) : (
+                                    '转换'
+                                )}
                             </Button>
 
                             {/* 导入到阅读APP区域 */}
