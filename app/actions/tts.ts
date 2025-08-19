@@ -9,7 +9,8 @@ const voicesCache = new Keyv<Voice[]>(undefined, {
 })
 
 async function getVoices() {
-    let voices = await voicesCache.get('voices')
+    let voices: Voice[] | undefined = await voicesCache.get('voices')
+
     if (!voices) {
         const service = new EdgeTTSService()
         voices = await service.fetchVoices()
