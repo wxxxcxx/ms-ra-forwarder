@@ -196,8 +196,8 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                 <div className={clsx('flex flex-col justify-between gap-2',
                 )}>
                     <div className={clsx(
-                        'grid grid-cols-[repeat(2,minmax(10rem,1fr))] place-content-start gap-2',
-                        'md:w-64 md:grid-cols-[repeat(1,minmax(10rem,1fr))]'
+                        'grid grid-cols-1 place-content-start gap-2',
+                        'md:w-80 md:grid-cols-[repeat(1,minmax(10rem,1fr))]'
                     )}>
                         {/* 地区选择器 */}
                         <div>
