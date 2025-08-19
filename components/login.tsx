@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/shadcn/ui/button";
 import { login } from "@/app/actions/login";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Page() {
     const formSchema = z.object({
@@ -21,17 +22,28 @@ export default function Page() {
         },
     });
     const router = useRouter()
+    
+    // 检查是否已经登录
+    useEffect(() => {
+        const savedToken = localStorage.getItem('auth_token')
+        if (savedToken) {
+            router.push('/')
+        }
+    }, [router])
+    
     const handleSubmit = form.handleSubmit(async (data) => {
         try {
-            const success = await login(data.token)
-            if (success) {
+            const result = await login(data.token)
+            if (result && result.success) {
+                // 保存token到localStorage
+                localStorage.setItem('auth_token', result.token)
                 router.push('/')
             } else {
                 form.setError('root', { type: 'manual', message: '令牌无效' })
             }
         } catch (error) {
             console.error(error)
-            form.setError('root', { type: 'manual', message: '未知错误' })
+            form.setError('root', { type: 'manual', message: '登录失败，请检查令牌是否正确' })
         }
     })
     return (

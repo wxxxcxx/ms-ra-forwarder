@@ -1,23 +1,64 @@
 export async function GET(request: Request) {
     try {
+        const authorization = request.headers.get('authorization')
+        const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
+
+        // 如果设置了环境变量，则需要验证token
+        if (requiredToken) {
+            if (!authorization || authorization !== 'Bearer ' + requiredToken) {
+                return new Response('Unauthorized', { status: 401 })
+            }
+        }
         // get query
         const { searchParams } = new URL(request.url)
-        const queryString = Array.from(searchParams.entries()).reduce((acc, [key, value]) => {
-            acc += `${key}=${value}&`
-            return acc
-        }, "")
+        const voice = String(searchParams.get('voice') ?? '')
+        if (!voice) {
+            return new Response(JSON.stringify({ error: 'Voice is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+        }
+        const parseNumberParam = (paramName: string, defaultValue: number, min: number, max: number) => {
+            const paramValue = searchParams.get(paramName);
+            if (paramValue === null || paramValue === undefined) {
+                return defaultValue;
+            }
+            try {
+                const num = Number(paramValue)
+                if (Number.isNaN(num)) throw new Error('NaN')
+                if (num < min || num > max) throw new Error('out of range')
+                return num
+            } catch {
+                console.error(`Invalid ${paramName} value: ${paramValue}`);
+                throw new Error(`Invalid ${paramName} value`);
+            }
+        };
+        const pitch = parseNumberParam('pitch', 0, -100, 100);
+        const volume = parseNumberParam('volume', 100, -100, 100);
+        const personality = searchParams.get('personality') ?? undefined;
+        const options = {
+            voice,
+            volume,
+            pitch,
+            personality,
+        }
+        let queryString = Object.entries(options).map(([key, value]) => {
+            return `${key}=${value}`
+        }).join('&')
+        queryString = `${queryString}&rate={{(speakSpeed - 10) * 2}}`
         const protocol = request.headers.get('referer')?.startsWith('https') ? 'https' : 'http'
         const host = request.headers.get('host')
-        const apiUrl = `${protocol}://${host}/api/text-to-speech`
-        const ttsUrl = `${apiUrl}?${encodeURIComponent(queryString)}&text=${encodeURIComponent("{{java.encodeURI(speakText)}}")}`
+        const baseUrl = `${protocol}://${host}/api/text-to-speech`
+        const apiUrl = `${baseUrl}?${queryString}&text={{java.encodeURI(speakText)}}`
+        const header = {
+            Authorization: 'Bearer ' + requiredToken,
+        }
         const data = {
-            name: 'TTS',
+            name: voice,
             contentType: 'audio/mpeg',
             id: Date.now(),
             loginCheckJs: '',
             loginUi: '',
             loginUrl: '',
-            url:ttsUrl
+            url: apiUrl,
+            header: header
         }
         return new Response(JSON.stringify(data), { status: 200, headers: { 'Content-Type': 'application/json' } })
     } catch (error) {

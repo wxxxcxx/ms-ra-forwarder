@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
 import { useTTSContext } from "./tts-context"
 import Link from "next/link"
+import { useAuth } from "@/app/hooks/auth"
 
 const TTSRequestSchame = z.object({
     options: TTSOptionsSchema,
@@ -36,6 +37,7 @@ export interface TTSWorkspaceProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
     const { toast } = useToast()
     const [mounted, setMounted] = useState(false)
+    const { getToken } = useAuth()
 
     useEffect(() => {
         setMounted(true)
@@ -66,7 +68,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
     const currentVoice = useVoice(form.getValues('options.voice'))
 
     const onSubmit = form.handleSubmit(async data => {
-        try { 
+        try {
             if (!data) {
                 toast({
                     title: 'Error',
@@ -75,15 +77,25 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                 })
                 return
             }
+            // 获取当前用户的token
+            const token = getToken()
+            const headers: Record<string, string> = {}
+            
+            // 如果有token，添加到请求头
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`
+            }
+            
             const response = await axios.get('/api/text-to-speech', {
                 responseType: 'blob',
                 params: {
                     ...data.options,
                     text: data.text
-                }
+                },
+                headers
             })
             const audioData = response.data
-          
+
             const reader = new FileReader()
             const audioUri = await new Promise<string>((resolve) => {
                 reader.onload = () => resolve(reader.result as string)
@@ -105,7 +117,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
         }
     })
 
-    const legadoImportLink = useMemo(()=>{
+    const legadoImportLink = useMemo(() => {
         const values = form.getValues()
         if (!values || typeof window === 'undefined') {
             return ''
@@ -119,7 +131,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
         const importUrl = `${protocol}//${host}/api/legado-import?${queryString}`
         return importUrl
         // return `legado://import/httpTTS?src=${encodeURIComponent(importUrl)}`
-    },[form])
+    }, [form])
 
     return <div {...props}>
         <form
@@ -326,10 +338,10 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                             </Button>
                         </div>
                         <div className={clsx('')}>
-                            <Link 
+                            <Link
                                 className={clsx('underline text-sm text-sky-500', {
                                     'opacity-50 pointer-events-none': !mounted || !legadoImportLink
-                                })} 
+                                })}
                                 href={mounted && legadoImportLink ? "legado://import/httpTTS?src=" + encodeURIComponent(legadoImportLink) : "#"}
                             >
                                 导入到阅读3（legado）

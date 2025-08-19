@@ -4,8 +4,13 @@ import { TTSOptions } from "@/service/tts-service"
 export async function GET(request: Request) {
     try {
         const authorization = request.headers.get('authorization')
-        if (process.env.TOKEN && authorization !== 'Bearer ' + process.env.TOKEN) {
-            return new Response('Unauthorized', { status: 401 })
+        const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
+        
+        // 如果设置了环境变量，则需要验证token
+        if (requiredToken) {
+            if (!authorization || authorization !== 'Bearer ' + requiredToken) {
+                return new Response('Unauthorized', { status: 401 })
+            }
         }
         const { searchParams } = new URL(request.url)
         const text = String(searchParams.get('text') ?? '')
