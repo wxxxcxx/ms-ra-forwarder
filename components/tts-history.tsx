@@ -1,14 +1,14 @@
 'use client'
 import { useToast } from "@/components/shadcn/hooks/use-toast"
+import { Button } from "@/components/shadcn/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/shadcn/ui/card"
+import { ScrollArea } from "@/components/shadcn/ui/scroll-area"
 import { AudioPlayer } from "@/components/ui/audio-player"
 import clsx from "clsx"
 import dayjs from "dayjs"
+import { CircleX } from "lucide-react"
 import { HTMLAttributes } from "react"
 import { useTTSContext } from "./tts-context"
-import { Button } from "@/components/shadcn/ui/button"
-import { CircleX, Trash } from "lucide-react"
-import { ScrollArea } from "@/components/shadcn/ui/scroll-area"
 
 export type TTSHistoryProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'>
 

@@ -50,8 +50,8 @@ export default function Page() {
         <form onSubmit={handleSubmit}>
             <Card className="w-[350px]">
                 <CardHeader>
-                    <CardTitle>免费TTS</CardTitle>
-                    <CardDescription>免费TTS是一个免费的文本转语音服务，允许您将文本转换为多种语言和语音。</CardDescription>
+                    <CardTitle>MS Read Aloud Forwarder</CardTitle>
+                    <CardDescription>MS Read Aloud Forwarder是一个免费的文本转语音服务，允许您将文本转换为多种语言和语音。</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>

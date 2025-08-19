@@ -8,7 +8,7 @@ import { Label } from "@/components/shadcn/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/shadcn/ui/popover"
 import { Slider } from "@/components/shadcn/ui/slider"
 import { Textarea } from "@/components/shadcn/ui/textarea"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/shadcn/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/shadcn/ui/dialog"
 import { getFirendlyPersonalityName } from "@/service/edge-tts-service/personality-map"
 import { getFriendlyVoiceName } from "@/service/edge-tts-service/voice-map"
 import { getLocaleFriendlyName } from "@/service/edge-tts-service/locale-map"
@@ -17,13 +17,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 import axios from "axios"
 import clsx from "clsx"
-import { Check, ChevronsUpDown, LoaderCircle, RotateCw, Smile, Speech, QrCode, Globe, Copy, FileText } from "lucide-react"
+import { Check, ChevronsUpDown, LoaderCircle, Smile, Speech, QrCode, Globe, Copy } from "lucide-react"
 import { HTMLAttributes, useMemo, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { v4 as uuidv4 } from 'uuid'
 import { z } from "zod"
 import { useTTSContext } from "./tts-context"
-import Link from "next/link"
+import Image from "next/image"
 import { useAuth } from "@/app/hooks/auth"
 import QRCode from 'qrcode'
 
@@ -39,16 +39,14 @@ export interface TTSWorkspaceProps extends Omit<HTMLAttributes<HTMLDivElement>, 
 
 export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
     const { toast } = useToast()
-    const [mounted, setMounted] = useState(false)
+
     const [selectedLocale, setSelectedLocale] = useState<string>('')
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
     const [showQrDialog, setShowQrDialog] = useState(false)
     const { getToken } = useAuth()
     const { saveHistoryRecord: save } = useTTSContext()
 
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+
 
     const voicesQuery = useVoices() // 查询所有发音人列表，不使用selectedLocale过滤
 
@@ -179,7 +177,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
             })
             setQrCodeDataUrl(qrDataUrl)
             setShowQrDialog(true)
-        } catch (error) {
+        } catch {
             toast({
                 title: '错误',
                 description: '生成二维码失败',
@@ -523,9 +521,11 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                 </DialogHeader>
                 <div className="flex flex-col items-center space-y-4">
                     {qrCodeDataUrl && (
-                        <img
+                        <Image
                             src={qrCodeDataUrl}
                             alt="QR Code"
+                            width={256}
+                            height={256}
                             className="w-64 h-64"
                         />
                     )}

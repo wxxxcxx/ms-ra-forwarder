@@ -27,7 +27,7 @@ export default function Home() {
     <div className="flex flex-col h-screen w-screen font-[family-name:var(--font-geist-sans)]">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b justify-between">
         <div className="flex items-center gap-2 px-3">
-          <h1 className={clsx('text-2xl font-bold')}>Free TTS</h1>
+          <h1 className={clsx('text-2xl font-bold')}>MS Read Aloud Forwarder</h1>
           <Separator orientation="vertical" className="mr-2 h-4" />
           <Breadcrumb>
             <BreadcrumbList>
