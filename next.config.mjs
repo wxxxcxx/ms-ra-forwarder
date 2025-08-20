@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    allowedDevOrigins: ['*.localhost', '*.cms.localhost'],
+    output: "standalone",
+};
 
 export default nextConfig;
