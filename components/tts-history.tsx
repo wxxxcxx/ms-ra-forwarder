@@ -16,12 +16,11 @@ export default function TTSHistory({ ...props }: TTSHistoryProps) {
     const { toast } = useToast()
     const ttsContext = useTTSContext()
 
-    return <div {...props}>
-        <ScrollArea className={clsx('size-full')}>
-            <div className={clsx('w-full flex flex-col gap-2')}>
+    return <div {...props} className={clsx('w-full max-w-full overflow-hidden', props.className)}>
+        <ScrollArea className={clsx('size-full overflow-hidden')}>
+            <div className={clsx('w-full max-w-full flex flex-col gap-2')}>
                 {ttsContext.history.map(record => (
-                    <Card key={record.id} className="w-full rounded-md shadow-sm hover:bg-muted relative group">
-
+                    <Card key={record.id} className="w-full max-w-full rounded-md shadow-sm hover:bg-muted relative group overflow-hidden">
                         <CardHeader className="flex items-start justify-between w-full overflow-hidden">
                             <div className="flex-1 min-w-0 pr-2">
                                 <p className="text-sm leading-5 break-words" style={{
@@ -35,8 +34,8 @@ export default function TTSHistory({ ...props }: TTSHistoryProps) {
                                 </p>
                             </div>
                         </CardHeader>
-                        <CardContent className={clsx('w-full overflow-auto space-y-4')}>
-                            <AudioPlayer className={clsx('w-full overflow-hidden')} src={record.uri}></AudioPlayer>
+                        <CardContent className={clsx('w-full max-w-full overflow-hidden space-y-4')}>
+                            <AudioPlayer className={clsx('w-full max-w-full overflow-hidden')} src={record.uri}></AudioPlayer>
                             <Button
                                 variant={'destructive'}
                                 size={'sm'}
@@ -54,11 +53,11 @@ export default function TTSHistory({ ...props }: TTSHistoryProps) {
                                 删除
                             </Button>
                         </CardContent>
-                        <CardFooter className="w-full mt-2 flex flex-col md:flex-row xl:flex-col justify-between gap-1 overflow-hidden">
-                            <span className={clsx('text-[0.5rem] truncate flex-1 opacity-50')}>
+                        <CardFooter className="w-full max-w-full mt-2 flex flex-col md:flex-row xl:flex-col justify-between gap-1 overflow-hidden">
+                            <span className={clsx('text-[0.5rem] truncate flex-1 opacity-50 min-w-0')}>
                                 {record.options.voice}
                             </span>
-                            <span className={clsx('text-[0.5rem] truncate flex-1 text-right opacity-50')}>
+                            <span className={clsx('text-[0.5rem] truncate flex-1 text-right opacity-50 min-w-0')}>
                                 {dayjs(record.createAt).format('YYYY-MM-DD HH:mm:ss')}
                             </span>
 

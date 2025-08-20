@@ -486,7 +486,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                                         disabled={!form.getValues('options.voice')}
                                         onClick={() => {
                                             // Open import link in new window
-                                            window.open(legadoImportLink, '_blank')
+                                            window.open(legadoImportLink)
                                         }}
                                     >
                                         <Copy className="h-4 w-4" />
@@ -508,7 +508,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                                     </Button>
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                    选择发音人后可复制链接或扫描二维码导入TTS配置到阅读APP
+                                    选择发音人后可点击按钮或扫描二维码导入TTS配置到阅读APP
                                 </p>
                             </div>
                         </div>
@@ -540,7 +540,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                         />
                     )}
                     <p className="text-sm text-muted-foreground text-center">
-                        使用阅读APP扫描此二维码即可导入TTS配置
+                        使用浏览器扫描此二维码后复制内容导入TTS配置
                     </p>
                 </div>
             </DialogContent>

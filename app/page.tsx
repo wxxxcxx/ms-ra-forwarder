@@ -24,7 +24,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-col w-screen lg:h-screen font-[family-name:var(--font-geist-sans)]">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b justify-between">
         <div className="flex items-center gap-2 px-3">
           <h1 className={clsx('text-2xl font-bold')}>MS Read Aloud Forwarder</h1>

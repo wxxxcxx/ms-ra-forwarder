@@ -31,21 +31,21 @@ const AudioPlayer = React.forwardRef<
 
     })
     return <div
-        className={clsx("flex items-center gap-2 justify-between", className)}
+        className={clsx("flex items-center gap-2 justify-between w-full max-w-full overflow-hidden", className)}
         ref={ref}
     >
-        <AudioLines />
-        <div className={clsx('flex relative flex-1 h-full py-6')}>
-            <sub className={clsx('text-gray-500 text-xs absolute left-0')}>{formatTime(audioState.time)}</sub>
-            <Slider className={clsx('flex-1')} value={[audioState.time]} max={audioState.duration} step={0.01}
+        <AudioLines className="flex-shrink-0" />
+        <div className={clsx('flex items-center gap-2 flex-1 min-w-0 max-w-full overflow-hidden')}>
+            <sub className={clsx('text-gray-500 text-xs whitespace-nowrap flex-shrink-0')}>{formatTime(audioState.time)}</sub>
+            <Slider className={clsx('flex-1 min-w-0 max-w-full')} value={[audioState.time]} max={audioState.duration} step={0.01}
                 onValueChange={(value) => {
                     audioControls.seek(value[0])
                 }}
             />
-            <sub className={clsx('text-gray-500 text-xs absolute right-0')}>{formatTime(audioState.duration)}</sub>
+            <sub className={clsx('text-gray-500 text-xs whitespace-nowrap flex-shrink-0')}>{formatTime(audioState.duration)}</sub>
         </div>
         <Button
-            className={clsx('px-1.5 py-1 [&_svg]:size-5')}
+            className={clsx('px-1.5 py-1 [&_svg]:size-5 flex-shrink-0')}
             variant={'ghost'}
             onClick={() => {
                 try {
