@@ -58,7 +58,7 @@ export async function GET(request: Request) {
             loginUi: '',
             loginUrl: '',
             url: apiUrl,
-            header: header
+            header: JSON.stringify(header)
         }
         return new Response(JSON.stringify(data), { status: 200, headers: { 'Content-Type': 'application/json' } })
     } catch (error) {
