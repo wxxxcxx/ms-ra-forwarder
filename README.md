@@ -4,6 +4,8 @@
 
 ### 部署到 Vercel
 
+部署时请删除原项目重新部署。
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwxxxcxx%2Fms-ra-forwarder&env=TOKEN&envDescription=%E8%AE%BF%E9%97%AE%E4%BB%A4%E7%89%8C&project-name=ms-ra-forwarder&repository-name=ms-ra-forwarder)
 
 
@@ -103,7 +105,7 @@ GET /api/text-to-speech?voice=Microsoft+Server+Speech+Text+to+Speech+Voice+(zh-C
 
 ## 重要更改
 
-**2025-08-20：使用NextJs重构项目，修复了无法合成的问题。**
+**2025-08-20：使用NextJs重构项目，修复了无法合成的问题。部署时请删除原项目重新部署。**
 
 2023-04-19：Azure 下线了演示页面的试用功能，导致 Azure 版接口无法使用了，请各位迁移到 Edge 浏览器的接口吧。
 

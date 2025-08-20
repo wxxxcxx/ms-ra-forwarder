@@ -154,9 +154,13 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
         }
         const protocol = window.location.protocol
         const host = window.location.host
-        const queryString = Object.entries(values.options)
+        let queryString = Object.entries(values.options)
             .filter(([, value]) => value != null)
             .map(([key, value]) => `${key}=${value}`).join('&')
+        const token = getToken()
+        if (token) {
+            queryString += `&token=${token}`
+        }
         const apiUrl = `${protocol}//${host}/api/legado-import?${queryString}`
         return apiUrl
     }, [form.getValues()])

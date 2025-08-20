@@ -1,16 +1,16 @@
 export async function GET(request: Request) {
     try {
-        const authorization = request.headers.get('authorization')
         const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
-
+        const { searchParams } = new URL(request.url)
+        const token = searchParams.get('token')
         // 如果设置了环境变量，则需要验证token
         if (requiredToken) {
-            if (!authorization || authorization !== 'Bearer ' + requiredToken) {
+            if (!token || token !== requiredToken) {
                 return new Response('Unauthorized', { status: 401 })
             }
         }
         // get query
-        const { searchParams } = new URL(request.url)
+
         const voice = String(searchParams.get('voice') ?? '')
         if (!voice) {
             return new Response(JSON.stringify({ error: 'Voice is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
