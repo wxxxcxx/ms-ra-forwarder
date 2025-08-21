@@ -43,7 +43,7 @@ export async function GET(request: Request) {
             return `${key}=${value}`
         }).join('&')
         queryString = `${queryString}&rate={{(speakSpeed - 10) * 2}}`
-        const protocol = request.headers.get('x-forwarded-proto') ? "https" : "http";
+        const protocol = searchParams.get('protocol') || 'http';
         const host = request.headers.get('host')
         const baseUrl = `${protocol}://${host}/api/text-to-speech`
         const apiUrl = `${baseUrl}?${queryString}&text={{java.encodeURI(speakText)}}`

@@ -152,16 +152,17 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
         if (!values || typeof window === 'undefined') {
             return ''
         }
-        const protocol = window.location.protocol
+        const protocol = window.location.protocol.replace(":", "")
         const host = window.location.host
         let queryString = Object.entries(values.options)
-            .filter(([, value]) => value != null)
+            .filter(([, value]) => value != null && value != undefined)
             .map(([key, value]) => `${key}=${value}`).join('&')
+        queryString += `&protocol=${protocol}`
         const token = getToken()
         if (token) {
             queryString += `&token=${token}`
         }
-        const apiUrl = `${protocol}//${host}/api/legado-import?${queryString}`
+        const apiUrl = `${protocol}://${host}/api/legado-import?${queryString}`
         return apiUrl
     }, [form.getValues()])
 
@@ -543,6 +544,7 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                             className="w-64 h-64"
                         />
                     )}
+                    <p className="text-sm text-muted-foreground">{legadoApiLink}</p>
                     <p className="text-sm text-muted-foreground text-center">
                         使用浏览器扫描此二维码后复制内容导入TTS配置
                     </p>
