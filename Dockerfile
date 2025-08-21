@@ -33,8 +33,6 @@ ENV PORT=3000
 RUN apk add --no-cache curl
 
 # 拷贝构建产物
-# drizzle 目录（如果用了 Drizzle ORM standalone）
-COPY --from=builder /app/drizzle ./drizzle
 # public 静态资源
 COPY --from=builder /app/public ./public
 # standalone 输出目录（包含 server.js 和 package.json）
