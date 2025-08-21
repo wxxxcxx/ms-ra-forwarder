@@ -38,7 +38,6 @@ jobs:
         platforms: |
           linux/amd64
           linux/arm64/v8
-          linux/s390x
         tags: |
           ${{ env.DOCKER_REPOSITORY }}:${{ env.DATE_TAG }}
           ${{ env.DOCKER_REPOSITORY }}:latest
