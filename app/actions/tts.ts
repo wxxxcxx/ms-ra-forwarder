@@ -33,8 +33,13 @@ export async function listVoices(locale?: string) {
 }
 
 export async function textToSpeach(text: string, options: TTSOptions) {
-    const service = new EdgeTTSService()
-    const data = await service.convert(text, options)
-    const base64Audio = Buffer.from(data.audio).toString('base64')
-    return base64Audio
+    try {
+        const service = new EdgeTTSService()
+        const data = await service.convert(text, options)
+        const base64Audio = Buffer.from(data.audio).toString('base64')
+        return base64Audio
+    } catch (error) {
+        console.log('textToSpeach error', error)
+        throw error
+    }
 }
