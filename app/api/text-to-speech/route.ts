@@ -1,11 +1,11 @@
 import { EdgeTTSService } from "@/service/edge-tts-service"
 import { TTSOptions } from "@/service/tts-service"
-
+Error.stackTraceLimit = Infinity;
 export async function GET(request: Request) {
     try {
         const authorization = request.headers.get('authorization')
         const requiredToken = process.env.MS_RA_FORWARDER_TOKEN || process.env.TOKEN
-        
+
         // 如果设置了环境变量，则需要验证token
         if (requiredToken) {
             if (!authorization || authorization !== 'Bearer ' + requiredToken) {
@@ -54,6 +54,7 @@ export async function GET(request: Request) {
         return new Response(audioBlob, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } })
     } catch (error) {
         console.log('textToSpeach error', error)
+        console.log("Full stack", (error as Error).stack)
         return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
     }
 }
