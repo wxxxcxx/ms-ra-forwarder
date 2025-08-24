@@ -53,6 +53,7 @@ export async function GET(request: Request) {
         const audioBlob = new Blob([speech.audio], { type: 'audio/mpeg' });
         return new Response(audioBlob, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } })
     } catch (error) {
+        console.log('textToSpeach error', error)
         return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
     }
 }

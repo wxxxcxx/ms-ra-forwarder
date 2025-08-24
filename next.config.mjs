@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    allowedDevOrigins: ['*.localhost', '*.cms.localhost'],
     output: "standalone",
 };
 
