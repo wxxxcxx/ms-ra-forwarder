@@ -138,7 +138,8 @@ export default function TTSWorkspace({ ...props }: TTSWorkspaceProps) {
                 options: data.options,
                 uri: audioUri
             })
-        } catch {
+        } catch (error) {
+            console.error('onSubmit error', error)
             toast({
                 title: 'Error',
                 description: 'Failed to generate audio',

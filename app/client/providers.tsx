@@ -1,4 +1,5 @@
 'use client'
+import { Toaster } from '@/components/shadcn/ui/toaster';
 // app/client/layout.tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -11,6 +12,7 @@ export function Providers(
   return (
     <QueryClientProvider client={queryClient}>
       {children}
+      <Toaster />
     </QueryClientProvider>
   );
 
