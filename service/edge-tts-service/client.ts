@@ -3,7 +3,7 @@ import axios from 'axios'
 import { createHash } from 'node:crypto'
 import { WebSocket } from 'ws'
 
-export const CHROMIUM_FULL_VERSION = '130.0.2849.68'
+export const CHROMIUM_FULL_VERSION = '144.0.3719.82'
 export const TRUSTED_CLIENT_TOKEN = '6A5AA1D4EAFF4E9FB37E23D68491D6F4'
 const WINDOWS_FILE_TIME_EPOCH = 11644473600n
 
@@ -109,13 +109,12 @@ export class EdgeTTSClient {
         const connectionId = this.generateId()
         const secMsGec = this.generateSecMsGecToken()
         let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=${TRUSTED_CLIENT_TOKEN}&Sec-MS-GEC=${secMsGec}&Sec-MS-GEC-Version=1-${CHROMIUM_FULL_VERSION}&ConnectionId=${connectionId}`
-        // let url = 'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&Sec-MS-GEC=3354FF87541D813A7A03BFA8F5CD8B0DEE6A396F4F1BCC85950A833875F756FE&Sec-MS-GEC-Version=1-131.0.2903.112&ConnectionId=2b492d9fa38b65b24c77b930eb7f6622'
         const client = new WebSocket(url, {
             host: 'speech.platform.bing.com',
             origin: 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
             headers: {
                 'User-Agent':
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0',
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0',
             },
         })
         return new Promise((resolve, reject) => {
