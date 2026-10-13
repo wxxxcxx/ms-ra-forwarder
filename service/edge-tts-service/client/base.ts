@@ -1,4 +1,4 @@
-import { arrayBufferToString, concatArrayBuffers } from '../utils'
+import { arrayBufferToString, concatArrayBuffers } from '../../utils'
 import axios from 'axios'
 import { createHash } from 'node:crypto'
 import { WebSocket } from 'ws'
@@ -6,6 +6,43 @@ import { WebSocket } from 'ws'
 export const CHROMIUM_FULL_VERSION = '144.0.3719.82'
 export const TRUSTED_CLIENT_TOKEN = '6A5AA1D4EAFF4E9FB37E23D68491D6F4'
 const WINDOWS_FILE_TIME_EPOCH = 11644473600n
+
+/** 仅允许向微软这两台 TTS 主机发请求：EndpointConfig 是模块内硬编码常量，
+ *  这里再加一道校验，防止未来新增配置时把内部 token 送到别处。 */
+const ALLOWED_TTS_HOSTS = new Set(['speech.platform.bing.com', 'api.msedgeservices.com'])
+
+/** 校验通过后原样返回该 URL；主机不在白名单或 URL 非法则抛错（调用方不再直传未校验 URL）。 */
+function allowlistedTtsUrl(url: string): string {
+    let host: string
+    try {
+        host = new URL(url).hostname.toLowerCase()
+    } catch {
+        throw new Error('Refused outbound TTS request with invalid URL')
+    }
+    if (!ALLOWED_TTS_HOSTS.has(host)) {
+        throw new Error(`Refused outbound TTS request to non-allowlisted host: ${host}`)
+    }
+    return url
+}
+
+/** 组装 WebSocket 完整 URL：基址先过白名单，其余 query 均为本机生成的鉴权值与常量。 */
+function buildWsUrl(config: EndpointConfig, secMsGec: string, connectionId: string): string {
+    const base = allowlistedTtsUrl(config.wsBaseUrl)
+    return `${base}?${config.tokenParamName}=${TRUSTED_CLIENT_TOKEN}&Sec-MS-GEC=${secMsGec}&Sec-MS-GEC-Version=1-${CHROMIUM_FULL_VERSION}&ConnectionId=${connectionId}`
+}
+
+export interface EndpointConfig {
+    /** 日志与调试用名，如 'v1' / 'v2' */
+    name: string
+    /** 音色列表完整 URL（含鉴权 query） */
+    voicesUrl: string
+    /** WebSocket 基址（不含 query），如 wss://.../edge/v1 */
+    wsBaseUrl: string
+    /** token 的 query 参数名：v1 用 TrustedClientToken，v2 用 Ocp-Apim-Subscription-Key */
+    tokenParamName: string
+    /** 握手 host 头 */
+    host: string
+}
 
 class MessageHeader {
     requestId: string
@@ -69,18 +106,50 @@ export interface ClientOptions {
     wordBoundaryEnabled?: boolean
 }
 
-export interface ConvertResult {
-    audio: ArrayBuffer
-    metadata: any[]
+/** 微软音色列表条目（audio.metadata 以外的另一个 JSON 边界）。 */
+export interface EdgeVoiceInfo {
+    Name: string
+    ShortName: string
+    Gender: string
+    Locale: string
+    FriendlyName: string
+    SuggestedCodec: string
+    VoiceTag: {
+        VoicePersonalities?: string[]
+    }
 }
 
-export class EdgeTTSClient {
+export interface SpeechMetadataText {
+    Text: string
+    // 微软实际下发的是 number；service/edge-tts-service/index.ts 按 string 消费（历史现状，保持不动）。
+    Length: string
+}
+
+export interface SpeechMetadataData {
+    Offset: number
+    Duration: number
+    text: SpeechMetadataText
+}
+
+/** audio.metadata 消息里的单条元数据（100ns ticks，见 service/edge-tts-service/index.ts 换算）。 */
+export interface SpeechMetadata {
+    Type: string
+    Data: SpeechMetadataData
+}
+
+export interface ConvertResult {
+    audio: ArrayBuffer
+    metadata: SpeechMetadata[]
+}
+
+/** v1/v2 共享的协议实现：唯一差异由 EndpointConfig 注入。 */
+export class EdgeTTSCore {
     private constructor() {
     }
-    public static async voices(): Promise<any> {
-        const url = 'https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=6A5AA1D4EAFF4E9FB37E23D68491D6F4'
-        const response = await axios.get(url)
-        const data = response.data
+
+    public static async voices(config: EndpointConfig): Promise<EdgeVoiceInfo[]> {
+        const response = await axios.get(allowlistedTtsUrl(config.voicesUrl))
+        const data = response.data as EdgeVoiceInfo[]
         return data
     }
 
@@ -96,7 +165,7 @@ export class EdgeTTSClient {
         return hash.digest('hex').toUpperCase()
     }
 
-    private static generateId(): String {
+    private static generateId(): string {
         const charset = "abcdef0123456789";
         let randomString = "";
         for (let i = 0; i < 32; i++) { // 16字节 * 2字符/字节 = 32字符
@@ -105,12 +174,13 @@ export class EdgeTTSClient {
         }
         return randomString;
     }
-    private static async createWS(): Promise<WebSocket> {
+
+    private static async createWS(config: EndpointConfig): Promise<WebSocket> {
         const connectionId = this.generateId()
         const secMsGec = this.generateSecMsGecToken()
-        let url = `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=${TRUSTED_CLIENT_TOKEN}&Sec-MS-GEC=${secMsGec}&Sec-MS-GEC-Version=1-${CHROMIUM_FULL_VERSION}&ConnectionId=${connectionId}`
+        const url = buildWsUrl(config, secMsGec, connectionId)
         const client = new WebSocket(url, {
-            host: 'speech.platform.bing.com',
+            host: config.host,
             origin: 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
             headers: {
                 'User-Agent':
@@ -130,14 +200,14 @@ export class EdgeTTSClient {
         })
     }
 
-    public static async convert(ssml: string, options: ClientOptions): Promise<ConvertResult> {
+    public static async convert(config: EndpointConfig, ssml: string, options: ClientOptions): Promise<ConvertResult> {
         console.debug('start convert', JSON.stringify(ssml), JSON.stringify(options))
-        let convertResult = new Promise<ConvertResult>(async (resolve, reject) => {
+        const convertResult = new Promise<ConvertResult>(async (resolve, reject) => {
             try {
                 let audio = new ArrayBuffer(0)
-                let metadata: any = []
+                const metadata: SpeechMetadata[] = []
                 const requestId = this.generateId()
-                const ws = await this.createWS()
+                const ws = await this.createWS(config)
                 ws.onclose = (r) => {
                     console.debug(`Websocket closed with ${r.code}`)
                     if (r.code !== 1000) {
@@ -156,12 +226,12 @@ export class EdgeTTSClient {
                     }
                     console.debug(`Received ${typeName} message`,)
                     if (message.data instanceof Buffer) {
-                        let messageData = new Uint8Array(message.data).buffer
+                        const messageData = new Uint8Array(message.data).buffer
                         const headerRangeByteCount = 2
-                        let [headerStart, headerLength] = Array.from(new Uint8Array(messageData.slice(0, 2)))
+                        const [headerStart, headerLength] = Array.from(new Uint8Array(messageData.slice(0, 2)))
                         const headerData = messageData.slice(headerStart, headerRangeByteCount + headerLength)
                         const headerPayload = headerData.slice(headerRangeByteCount, headerData.byteLength)
-                        let headerString = arrayBufferToString(headerPayload)
+                        const headerString = arrayBufferToString(headerPayload)
                         const header = MessageHeader.parse(headerString)
                         const data = messageData.slice(headerLength + headerRangeByteCount)
                         console.debug('Received binary data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Length:', data.byteLength)
@@ -202,12 +272,12 @@ export class EdgeTTSClient {
                     }
                 }
                 // 发送配置消息
-                let config = createConfigMessage(options)
-                let configMessage =
+                const configMessagePayload = createConfigMessage(options)
+                const configMessage =
                     `X-Timestamp:${Date()}\r\n` +
                     'Content-Type:application/json; charset=utf-8\r\n' +
                     'Path:speech.config\r\n\r\n' +
-                    JSON.stringify(config)
+                    JSON.stringify(configMessagePayload)
                 console.debug(`开始转换：${requestId}...`)
                 console.debug(`准备发送配置请求：\n${configMessage}`)
                 ws.send(
@@ -217,7 +287,7 @@ export class EdgeTTSClient {
                             reject(error)
                         } else {
                             // 发送SSML消息
-                            let ssmlMessage =
+                            const ssmlMessage =
                                 `X-Timestamp:${Date()}\r\n` +
                                 `X-RequestId:${requestId}\r\n` +
                                 `Content-Type:application/ssml+xml\r\n` +
