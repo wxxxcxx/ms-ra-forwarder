@@ -1,11 +1,27 @@
 import { arrayBufferToString, concatArrayBuffers } from '../../utils'
 import axios from 'axios'
-import { createHash } from 'node:crypto'
+import { randomBytes } from 'node:crypto'
 import { WebSocket } from 'ws'
+import { generateSecMsGec } from '../sec-ms-gec'
 
 export const CHROMIUM_FULL_VERSION = '144.0.3719.82'
 export const TRUSTED_CLIENT_TOKEN = '6A5AA1D4EAFF4E9FB37E23D68491D6F4'
-const WINDOWS_FILE_TIME_EPOCH = 11644473600n
+/** 微软当前只接受 "2-<chromium 版本>" 形式的令牌版本号，旧的 "1-" 会直接 403。 */
+export const SEC_MS_GEC_VERSION = `2-${CHROMIUM_FULL_VERSION}`
+const USER_AGENT =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0'
+/** 握手超时：拿不到 upgrade 响应时尽早失败，交给聚合层换后端重试。 */
+const WS_HANDSHAKE_TIMEOUT_MS = 12000
+
+/**
+ * 详细协议日志（每条 WS 消息的收发），默认关闭：Vercel Hobby 的日志窗口很小，
+ * 全开会被噪音淹没。深度排查时置 EDGE_TTS_DEBUG=1 再部署。
+ */
+function debugLog(...args: unknown[]): void {
+    if (process.env.EDGE_TTS_DEBUG === '1') {
+        console.debug('[edge-tts-debug]', ...args)
+    }
+}
 
 /** 仅允许向微软这两台 TTS 主机发请求：EndpointConfig 是模块内硬编码常量，
  *  这里再加一道校验，防止未来新增配置时把内部 token 送到别处。 */
@@ -28,7 +44,7 @@ function allowlistedTtsUrl(url: string): string {
 /** 组装 WebSocket 完整 URL：基址先过白名单，其余 query 均为本机生成的鉴权值与常量。 */
 function buildWsUrl(config: EndpointConfig, secMsGec: string, connectionId: string): string {
     const base = allowlistedTtsUrl(config.wsBaseUrl)
-    return `${base}?${config.tokenParamName}=${TRUSTED_CLIENT_TOKEN}&Sec-MS-GEC=${secMsGec}&Sec-MS-GEC-Version=1-${CHROMIUM_FULL_VERSION}&ConnectionId=${connectionId}`
+    return `${base}?${config.tokenParamName}=${TRUSTED_CLIENT_TOKEN}&Sec-MS-GEC=${secMsGec}&Sec-MS-GEC-Version=${SEC_MS_GEC_VERSION}&ConnectionId=${connectionId}`
 }
 
 export interface EndpointConfig {
@@ -153,18 +169,6 @@ export class EdgeTTSCore {
         return data
     }
 
-    private static generateSecMsGecToken() {
-        const ticks = BigInt(Math.floor((Date.now() / 1000) + Number(WINDOWS_FILE_TIME_EPOCH))) * 10000000n
-        const roundedTicks = ticks - (ticks % 3000000000n)
-
-        const strToHash = `${roundedTicks}${TRUSTED_CLIENT_TOKEN}`
-
-        const hash = createHash('sha256')
-        hash.update(strToHash, 'ascii')
-
-        return hash.digest('hex').toUpperCase()
-    }
-
     private static generateId(): string {
         const charset = "abcdef0123456789";
         let randomString = "";
@@ -175,33 +179,50 @@ export class EdgeTTSCore {
         return randomString;
     }
 
+    /** 生成 32 位十六进制的 MUID，微软新版接口要求带上它。 */
+    private static generateMuid(): string {
+        return randomBytes(16).toString('hex').toUpperCase()
+    }
+
     private static async createWS(config: EndpointConfig): Promise<WebSocket> {
         const connectionId = this.generateId()
-        const secMsGec = this.generateSecMsGecToken()
+        const secMsGec = generateSecMsGec(undefined, TRUSTED_CLIENT_TOKEN)
         const url = buildWsUrl(config, secMsGec, connectionId)
         const client = new WebSocket(url, {
             host: config.host,
             origin: 'chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold',
+            handshakeTimeout: WS_HANDSHAKE_TIMEOUT_MS,
             headers: {
-                'User-Agent':
-                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0',
+                'User-Agent': USER_AGENT,
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache',
+                'Accept-Encoding': 'gzip, deflate, br, zstd',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Cookie': `muid=${this.generateMuid()};`,
             },
         })
         return new Promise((resolve, reject) => {
             client.onopen = () => {
-                console.debug('WebSocket connected')
+                debugLog('WebSocket connected')
                 resolve(client)
             }
 
             client.onerror = (error) => {
-                console.error('WebSocket error:', error)
                 reject(error)
             }
+
+            // 握手被拒（例如 403）时带上状态码，便于在部署日志里定位。
+            client.on('unexpected-response', (_request, response) => {
+                const error = new Error(`${config.name} 握手被拒绝: HTTP ${response.statusCode}`)
+                response.resume()
+                client.terminate()
+                reject(error)
+            })
         })
     }
 
     public static async convert(config: EndpointConfig, ssml: string, options: ClientOptions): Promise<ConvertResult> {
-        console.debug('start convert', JSON.stringify(ssml), JSON.stringify(options))
+        debugLog('start convert', JSON.stringify(ssml), JSON.stringify(options))
         const convertResult = new Promise<ConvertResult>(async (resolve, reject) => {
             try {
                 let audio = new ArrayBuffer(0)
@@ -209,7 +230,7 @@ export class EdgeTTSCore {
                 const requestId = this.generateId()
                 const ws = await this.createWS(config)
                 ws.onclose = (r) => {
-                    console.debug(`Websocket closed with ${r.code}`)
+                    debugLog(`Websocket closed with ${r.code}`)
                     if (r.code !== 1000) {
                         reject(new Error(`WebSocket closed with code ${r.code}: ${r.reason}`))
                     }
@@ -224,7 +245,7 @@ export class EdgeTTSCore {
                     } else {
                         typeName = 'object'
                     }
-                    console.debug(`Received ${typeName} message`,)
+                    debugLog(`Received ${typeName} message`,)
                     if (message.data instanceof Buffer) {
                         const messageData = new Uint8Array(message.data).buffer
                         const headerRangeByteCount = 2
@@ -234,7 +255,7 @@ export class EdgeTTSCore {
                         const headerString = arrayBufferToString(headerPayload)
                         const header = MessageHeader.parse(headerString)
                         const data = messageData.slice(headerLength + headerRangeByteCount)
-                        console.debug('Received binary data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Length:', data.byteLength)
+                        debugLog('Received binary data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Length:', data.byteLength)
                         if (header.requestId === requestId) {
                             audio = concatArrayBuffers(audio, data)
                         }
@@ -245,7 +266,7 @@ export class EdgeTTSCore {
                         const headerString = messageData.slice(0, headerStringEnd)
                         const header = MessageHeader.parse(headerString)
                         const body = messageData.slice(headerStringEnd)
-                        console.debug('Received text data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Body', body)
+                        debugLog('Received text data:', header.requestId, 'StreamId:', header.streamId, 'Path:', header.path, 'Body', body)
                         switch (header.path) {
                             case 'turn.start': {
                                 break
@@ -263,7 +284,7 @@ export class EdgeTTSCore {
                             case 'turn.end': {
                                 if (header.requestId === requestId) {
                                     resolve({ audio, metadata })
-                                    console.debug(`Client close requestId:${requestId}`)
+                                    debugLog(`Client close requestId:${requestId}`)
                                     ws.close(1000, '正常关闭')
                                 }
                                 break
@@ -278,8 +299,8 @@ export class EdgeTTSCore {
                     'Content-Type:application/json; charset=utf-8\r\n' +
                     'Path:speech.config\r\n\r\n' +
                     JSON.stringify(configMessagePayload)
-                console.debug(`开始转换：${requestId}...`)
-                console.debug(`准备发送配置请求：\n${configMessage}`)
+                debugLog(`开始转换：${requestId}...`)
+                debugLog(`准备发送配置请求：\n${configMessage}`)
                 ws.send(
                     configMessage,
                     (error) => {
@@ -293,7 +314,7 @@ export class EdgeTTSCore {
                                 `Content-Type:application/ssml+xml\r\n` +
                                 `Path:ssml\r\n\r\n` +
                                 ssml
-                            console.debug(`发送转换信息：\n${ssmlMessage}`)
+                            debugLog(`发送转换信息：\n${ssmlMessage}`)
                             ws.send(
                                 ssmlMessage, (error) => {
                                     if (error) {
